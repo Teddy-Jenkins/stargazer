@@ -27,7 +27,7 @@
 
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
-            <textarea type="text" name=data.description value={{data.description}} data-dtype="String" rows="17"></textarea>
+            {{editor content=data.description target="data.description" button=true owner=owner editable=editable}}
         </div>
 
         {{!-- Attributes Tab --}}
