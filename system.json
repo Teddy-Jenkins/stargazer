@@ -2,11 +2,11 @@
   "name": "stargazer",
   "title": "Stargazer",
   "description": "The Stargazer system for FoundryVTT!",
-  "version": "1.0.4",
+  "version": "1.0",
   "minimumCoreVersion": "0.7.5",
   "compatibleCoreVersion": "0.7.9",
   "templateVersion": 2,
-  "author": "John Doe",
+  "author": "Charlie L",
   "esmodules": ["module/stargazer.js"],
   "styles": ["css/stargazer.css"],
   "scripts": [],
@@ -24,6 +24,6 @@
   "secondaryTokenAttribute": "ar",
   "url": "",
   "manifest": "https://raw.githubusercontent.com/Teddy-Jenkins/stargazer/main/system.json",
-  "download": "",
+  "download": "https://github.com/Teddy-Jenkins/stargazer/archive/master.zip",
   "license": "LICENSE.txt"
 }
