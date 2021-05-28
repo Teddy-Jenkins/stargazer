@@ -1,0 +1,177 @@
+{
+  "Actor": {
+    "types": ["character", "npc", "starflyer"],
+    "templates": {
+      "base": {
+        "hp": {
+          "value": 0,
+          "min": -100,
+          "max": 0
+        },
+        "ar": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "sr": {
+          "value": 0,
+          "min": 0,
+          "max": 0
+        },
+        "evasion": {
+          "value": 0
+        },
+        "credits": {
+          "pocket": {
+            "value": 0
+          },
+          "bank": {
+            "value": 0
+          }
+        }
+      }
+    },
+    "character": {
+      "templates": ["base"],
+      "biography": "",
+      "attributes": {
+        "level": {
+          "value": 1
+        }
+      },
+      "abilities": {
+        "Physicality": {
+          "value": 0
+        },
+        "Constitution": {
+          "value": 0
+        },
+        "Brilliance": {
+          "value": 0
+        },
+        "Spirit": {
+          "value": 0
+        },
+        "Stability": {
+          "value": 0
+        },
+        "Luck": {
+          "value": 0
+        }
+      },
+
+      "skills": {
+        "Athletics": {
+          "value": 0,
+          "ability": "Physicality"
+        },
+        "Coordination": {
+          "value": 0,
+          "ability": "Physicality"
+        },
+        "Reflex": {
+          "value": 0,
+          "ability": "Physicality"
+        },
+        "Stealth": {
+          "value": 0,
+          "ability": "Physicality"
+        },
+        "Strength": {
+          "value": 0,
+          "ability": "Physicality"
+        },
+        "Endurance": {
+          "value": 0,
+          "ability": "Constitution"
+        },
+        "Analysis": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Deception": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Hacking": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Machinery": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Memory": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Menace": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Persuasion": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Piloting": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Science": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Survival": {
+          "value": 0,
+          "ability": "Brilliance"
+        },
+        "Empathy": {
+          "value": 0,
+          "ability": "Spirit"
+        },
+        "Intuition": {
+          "value": 0,
+          "ability": "Spirit"
+        },
+        "Faith": {
+          "value": 0,
+          "ability": "Spirit"
+        },
+        "Eldritch": {
+          "value": 0,
+          "ability": "Spirit"
+        },
+        "Fortitude": {
+          "value": 0,
+          "ability": "Stability"
+        }
+      }
+
+    }
+  },
+
+  "npc": {
+    "templates": ["base"]
+  },
+
+  "Item": {
+    "types": ["item", "feature", "spell"],
+    "templates": {
+      "base": {
+        "description": ""
+      }
+    },
+    "item": {
+      "templates": ["base"],
+      "quantity": 1,
+      "weight": 0
+    },
+    "feature": {
+      "templates": ["base"]
+    },
+    "spell": {
+      "templates": ["base"],
+      "spellLevel": 1
+    }
+  }
+}
