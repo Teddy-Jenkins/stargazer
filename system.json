@@ -23,7 +23,7 @@
   "primaryTokenAttribute": "hp",
   "secondaryTokenAttribute": "ar",
   "url": "",
-  "manifest": "https://raw.githubusercontent.com/Teddy-Jenkins/stargazer/main/system.json?token=AHD2UMG2UXEHXTWFINZW4ATAWBTVS",
+  "manifest": "https://raw.githubusercontent.com/Teddy-Jenkins/stargazer/main/system.json",
   "download": "",
   "license": "LICENSE.txt"
 }
