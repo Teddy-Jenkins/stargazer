@@ -186,7 +186,7 @@ p, h1, h2, h3, h4 {
 .boilerplate .sheet-body,
 .boilerplate .sheet-body .tab,
 .boilerplate .sheet-body .tab .editor {
-  height: 100%;
+  height: 100% !important;
 }
 
 .boilerplate .tox .tox-editor-container {
@@ -208,15 +208,23 @@ p, h1, h2, h3, h4 {
   border-bottom: 1px solid #AAA;
 }
 
+.tab, .editor {
+  height: 100% !important;
+}
+
 .boilerplate .tabs .item {
   line-height: 40px;
   font-weight: bold;
 }
 
+
 .boilerplate .tabs .item.active {
   text-decoration: underline;
   text-shadow: none;
+  height: 100%;
 }
+
+
 
 .boilerplate .items-list {
   list-style: none;
