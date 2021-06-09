@@ -6,8 +6,14 @@
       <div class="header-fields">
         <div class="img-row grid grid-3col">
           <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
-          <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
-          <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
+          <div>
+            <h2 >Pocket</h2>
+            <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
+          </div>
+          <div>
+            <h2>Bank</h2>
+            <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
+          </div>
         </div>
         
           <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
@@ -49,17 +55,14 @@
               </div>
             </div>
         </div>
-        {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-        use both the "grid" and "grid-Ncol" class where "N" can be any number
-        from 1 to 12 and will create that number of columns.  --}}
-        <div class="abilities grid grid-3col">
-          {{#each data.abilities as |ability key|}}
-            <div class="ability flexcol flex-group-center">
-              <label for="data.abilities.{{key}}.value" class="ability-mod rollable" data-roll="d10+@abilities.{{key}}.value" data-label="{{key}}">{{key}}</label>
-              <input type="text" name="data.abilities.{{key}}.value" value="{{ability.value}}" data-dtype="Number"/>
-            </div>
-          {{/each}}
-        </div>
+        {{!-- Skills Tab --}}
+      <div class="tab biography" data-group="primary" data-tab="skills">
+          <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
+          <div>
+                <h1>HELLO</h1>
+          </div>
+      </div>
+
       </div>
   </header>
 
@@ -73,21 +76,15 @@
   {{!-- Sheet Body --}}
   <section class="sheet-body">
 
-
-    
-
-      {{!-- Biography Tab --}}
+      {{!-- Skills Tab --}}
       <div class="tab biography" data-group="primary" data-tab="skills">
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
-          <div class="skills ">
+          <div class="skills">
             {{#each data.skills as |skill key|}}
-            {{#if skill.ability}}
-                <div class="skill flexrow " data-skill="{{key}}">
-                    <input type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                    <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
-                    <label class="skill-ability ">{{skill.ability}}</label>
+                <div class="skill flexcol " data-skill="{{key}}">
+                  <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
+                  <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
                 </div>
-                {{/if}}
             {{/each}}
           </div>
       </div>

@@ -39,111 +39,82 @@
           "value": 1
         }
       },
-      "abilities": {
-        "Physicality": {
-          "value": 0
-        },
-        "Constitution": {
-          "value": 0
-        },
-        "Brilliance": {
-          "value": 0
-        },
-        "Spirit": {
-          "value": 0
-        },
-        "Stability": {
-          "value": 0
-        },
-        "Luck": {
-          "value": 0
-        }
-      },
 
       "skills": {
         "Athletics": {
-          "value": 0,
-          "ability": "Physicality"
+          "value": 0
         },
         "Coordination": {
-          "value": 0,
-          "ability": "Physicality"
+          "value": 0
         },
-        "Reflex": {
-          "value": 0,
-          "ability": "Physicality"
-        },
-        "Stealth": {
-          "value": 0,
-          "ability": "Physicality"
-        },
-        "Strength": {
-          "value": 0,
-          "ability": "Physicality"
-        },
-        "Endurance": {
-          "value": 0,
-          "ability": "Constitution"
-        },
-        "Analysis": {
-          "value": 0,
-          "ability": "Brilliance"
+        "Composure": {
+          "value": 0
         },
         "Deception": {
-          "value": 0,
-          "ability": "Brilliance"
+          "value": 0
         },
-        "Hacking": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Machinery": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Memory": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Menace": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Persuasion": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Piloting": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Science": {
-          "value": 0,
-          "ability": "Brilliance"
-        },
-        "Survival": {
-          "value": 0,
-          "ability": "Brilliance"
+        "Dreams_Beyond": {
+          "value": 0
         },
         "Empathy": {
-          "value": 0,
-          "ability": "Spirit"
+          "value": 0
         },
-        "Intuition": {
-          "value": 0,
-          "ability": "Spirit"
+        "Endurance": {
+          "value": 0
         },
         "Faith": {
-          "value": 0,
-          "ability": "Spirit"
+          "value": 0
         },
-        "Eldritch": {
-          "value": 0,
-          "ability": "Spirit"
+        "First-Aid": {
+          "value": 0
         },
-        "Fortitude": {
-          "value": 0,
-          "ability": "Stability"
+        "Hacking": {
+          "value": 0
+        },
+        "Hate_Unending": {
+          "value": 0
+        },
+        "Information": {
+          "value": 0
+        },
+        "Insight": {
+          "value": 0
+        },
+        "Intimidation": {
+          "value": 0
+        },
+        "Logic": {
+          "value": 0
+        },
+        "Machinery": {
+          "value": 0
+        },
+        "Memory": {
+          "value": 0
+        },
+        "Mysticism": {
+          "value": 0
+        },
+        "Perfect_World": {
+          "value": 0
+        },
+        "Persuasion": {
+          "value": 0
+        },
+        "Piloting": {
+          "value": 0
+        },
+        "Reflex": {
+          "value": 0
+        },
+        "Singing_Gold": {
+          "value": 0
+        },
+        "Stealth": {
+          "value": 0
+        },
+        "Strength": {
+          "value": 0
         }
       }
 

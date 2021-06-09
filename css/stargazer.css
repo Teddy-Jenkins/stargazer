@@ -2,7 +2,6 @@
 /* Global styles */
 .window-app {
   font-family: "Roboto", sans-serif;
-  margin: 0 0 0 0 !important;
 }
 
 .rollable:hover, .rollable:focus {
@@ -11,13 +10,47 @@
   cursor: pointer;
 }
 
-/* .sheet-contents {
-  background-color: rgb(32, 32, 32);
+  .boilerplate .tox .tox-editor-container {
+  background: rgb(235, 56, 56);
 }
 
-p, h1, h2, h3, h4 {
-  color: white;
+
+/* Character sheet base changes START*/
+
+/* .rollable:hover, .rollable:focus {
+  color: #000;
+  text-shadow: 0 0 20px rgb(0, 132, 255);
+  cursor: pointer;
+}
+
+.tabs .item.active {
+  text-shadow: 0 0 20px rgb(0, 132, 255);
+}
+
+.item:hover, .item:focus{
+  color: #000;
+  text-shadow: 0 0 20px rgb(0, 132, 255);
+  cursor: pointer;
+}
+
+.sheet-contents {
+  background-color: rgb(14, 14, 14) !important;
+}
+
+.boilerplate .tox .tox-editor-container {
+  background: rgb(0, 132, 255);
+}
+
+a, p, input, h1, h2, h3, h4, label, .window-app {
+  color: white !important;
 } */
+
+/* Character sheet base changes END */
+
+h1, h2, h3, h4 {
+  border-bottom: none;
+  margin: auto;
+}
 
 .grid,
 .grid-2col {
@@ -177,6 +210,10 @@ p, h1, h2, h3, h4 {
   margin: 0;
 }
 
+.sheet-header{
+  max-height: 220px;
+}
+
 .boilerplate .sheet-tabs {
   -webkit-box-flex: 0;
   -ms-flex: 0;
@@ -189,8 +226,8 @@ p, h1, h2, h3, h4 {
   height: 100% !important;
 }
 
-.boilerplate .tox .tox-editor-container {
-  background: rgb(235, 56, 56);
+.sheet-body {
+  min-height: 50vh;
 }
 
 .boilerplate .tox .tox-edit-area {
@@ -264,4 +301,35 @@ p, h1, h2, h3, h4 {
   -ms-flex: 0 0 86px;
   flex: 0 0 86px;
   text-align: right;
+}
+
+.skills{
+  display: grid;
+  grid-template-rows: repeat(9, 60px);
+  gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr 1fr;
+  max-width: 100%;
+}
+
+.skill {
+  padding-top: 10px;
+}
+
+.skill-name{
+  max-width: 70%;
+  margin: auto;
+}
+
+.skill-input{
+  max-width: 40%;
+  margin: auto !important;
+  text-align: center !important;
+}
+
+.flexcol{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }

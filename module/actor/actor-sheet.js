@@ -25,9 +25,9 @@ export class StargazerActorSheet extends ActorSheet {
       cr.isCheckbox = cr.dtype === "Boolean";
     }
 
-    for (let attr of Object.values(data.data.attributes)) {
-      attr.isCheckbox = attr.dtype === "Boolean";
-    }
+    // for (let attr of Object.values(data.data.attributes)) {
+    //   attr.isCheckbox = attr.dtype === "Boolean";
+    // }
 
     for (let skill of Object.values(data.data.skills)) {
       skill.isCheckbox = skill.dtype === "Boolean";
