@@ -4,6 +4,23 @@
  */
 export class StargazerActor extends Actor {
 
+
+  /** @override */
+  static async create(data, options={}) {
+    data.token = data.token || {};
+    let defaults = {};
+    if (data.type === "character") {
+      defaults = {
+        actorLink: true,
+        disposition: 1,
+        vision: true,
+        dimSight: 0,
+        brightSight: 0,
+      };
+    }
+    mergeObject(data.token, defaults, {overwrite: false});
+    return super.create(data, options);
+  }
   /**
    * Augment the basic actor data with additional dynamic data.
    */
@@ -13,6 +30,8 @@ export class StargazerActor extends Actor {
     const actorData = this.data;
     const data = actorData.data;
     const flags = actorData.flags;
+
+    
 
     // Make separate methods for each Actor type (character, npc, etc.) to keep
     // things organized.
@@ -25,6 +44,8 @@ export class StargazerActor extends Actor {
   _prepareCharacterData(actorData) {
     const data = actorData.data;
 
+
+    
     // Make modifications to data here. For example:
 
     // Loop through ability scores, and add their modifiers to our sheet output.

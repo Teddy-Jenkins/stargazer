@@ -8,11 +8,11 @@
           <img class="profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
           <div>
             <h2 >Pocket</h2>
-            <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
+            <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
           </div>
           <div>
             <h2>Bank</h2>
-            <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
+            <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
           </div>
         </div>
         
@@ -27,31 +27,31 @@
             <div class="resource flex-group-center">
                 <label for="data.hp.value" class="resource-label">HP</label>
                 <div class="resource-content flexrow flex-center flex-between">
-                  <input type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number"/>
+                  <input type="text" name="data.hp.value" value="{{data.data.hp.value}}" data-dtype="Number"/>
                   <span> / </span>
-                  <input type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
+                  <input type="text" name="data.hp.max" value="{{data.data.hp.max}}" data-dtype="Number"/>
                 </div>
             </div>
             <div class="resource flex-group-center">
                 <label for="data.ar.value" class="resource-label">AR</label>
                 <div class="resource-content flexrow flex-center flex-between">
-                  <input type="text" name="data.ar.value" value="{{data.ar.value}}" data-dtype="Number"/>
+                  <input type="text" name="data.ar.value" value="{{data.data.ar.value}}" data-dtype="Number"/>
                   <span> / </span>
-                  <input type="text" name="data.ar.max" value="{{data.ar.max}}" data-dtype="Number"/>
+                  <input type="text" name="data.ar.max" value="{{data.data.ar.max}}" data-dtype="Number"/>
                 </div>
             </div>
             <div class="resource flex-group-center">
               <label for="data.sr.value" class="resource-label">SR</label>
               <div class="resource-content flexrow flex-center flex-between">
-                <input type="text" name="data.sr.value" value="{{data.sr.value}}" data-dtype="Number"/>
+                <input type="text" name="data.sr.value" value="{{data.data.sr.value}}" data-dtype="Number"/>
                 <span> / </span>
-                <input type="text" name="data.sr.max" value="{{data.sr.max}}" data-dtype="Number"/>
+                <input type="text" name="data.sr.max" value="{{data.data.sr.max}}" data-dtype="Number"/>
               </div>
             </div>
             <div class="resource flex-group-center">
               <label for="data.evasion.value" class="resource-label">Evasion</label>
               <div class="resource-content flexrow flex-center flex-between">
-                <input type="text" name="data.evasion.value" value="{{data.evasion.value}}" data-dtype="Number"/>
+                <input type="text" name="data.evasion.value" value="{{data.data.evasion.value}}" data-dtype="Number"/>
               </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
       <div class="tab biography" data-group="primary" data-tab="skills">
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
           <div class="skills">
-            {{#each data.skills as |skill key|}}
+            {{#each data.data.skills as |skill key|}}
                 <div class="skill flexcol " data-skill="{{key}}">
                   <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
                   <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>

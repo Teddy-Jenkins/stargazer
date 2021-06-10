@@ -19,19 +19,22 @@ export class StargazerActorSheet extends ActorSheet {
 
   /** @override */
   getData() {
-    const data = super.getData();
+    let data = super.getData();
+    data.pocket = data.actor.data.data.credits.pocket.value;
     data.dtypes = ["String", "Number", "Boolean"];
-    for (let cr of Object.values(data.data.credits)) {
-      cr.isCheckbox = cr.dtype === "Boolean";
-    }
+    // for (let cr of Object.values(data.data.credits)) {
+    //   cr.isCheckbox = cr.dtype === "Boolean";
+    // }
 
     // for (let attr of Object.values(data.data.attributes)) {
     //   attr.isCheckbox = attr.dtype === "Boolean";
     // }
 
-    for (let skill of Object.values(data.data.skills)) {
-      skill.isCheckbox = skill.dtype === "Boolean";
-    }
+    // for (let skill of Object.values(data.data.skills)) {
+    //   skill.isCheckbox = skill.dtype === "Boolean";
+    // }
+
+    
     // Prepare items.
     if (this.actor.data.type == 'character') {
       this._prepareCharacterItems(data);
@@ -123,7 +126,7 @@ export class StargazerActorSheet extends ActorSheet {
     html.find('.rollable').click(this._onRoll.bind(this));
 
     // Drag events for macros.
-    if (this.actor.owner) {
+    if (this.actor.isowner) {
       let handler = ev => this._onDragStart(ev);
       html.find('li.item').each((i, li) => {
         if (li.classList.contains("inventory-header")) return;
