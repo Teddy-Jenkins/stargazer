@@ -45,7 +45,13 @@ export class StargazerActor extends Actor {
     const data = actorData.data;
 
 
-    
+    (function() {
+      Handlebars.registerHelper('stripScripts', function(param) {
+          var regex = /(<([^>]+)>)/ig
+          return param.replace(regex, "");
+      });
+  
+  })();
     // Make modifications to data here. For example:
 
     // Loop through ability scores, and add their modifiers to our sheet output.

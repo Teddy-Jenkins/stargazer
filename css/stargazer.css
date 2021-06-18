@@ -14,7 +14,9 @@
   background: rgb(235, 56, 56);
 }
 
-
+#combat-round {
+  height: 7vh !important;
+}
 /* Character sheet base changes START*/
 
 /* .rollable:hover, .rollable:focus {
