@@ -17,6 +17,10 @@
 #combat-round {
   height: 7vh !important;
 }
+
+#chat-log {
+  max-width: 100%;
+}
 /* Character sheet base changes START*/
 
 /* .rollable:hover, .rollable:focus {
