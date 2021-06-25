@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "npc", "starflyer"],
+    "types": ["character", "NPC", "starflyer"],
     "templates": {
       "base": {
         "hp": {
@@ -18,14 +18,115 @@
           "min": 0,
           "max": 0
         },
+        
         "evasion": {
           "value": 0
         },
+
         "credits": {
           "pocket": {
             "value": 0
           },
           "bank": {
+            "value": 0
+          }
+        },
+
+        "skills": {
+          "Athletics": {
+            "value": 0,
+            "active": true
+          },
+          "Coordination": {
+            "value": 0,
+            "active": true
+          },
+          "Composure": {
+            "value": 0,
+            "active": true
+          },
+          "Deception": {
+            "value": 0,
+            "active": true
+          },
+          "Empathy": {
+            "value": 0,
+            "active": true
+          },
+          "Endurance": {
+            "value": 0,
+            "active": true
+          },
+          "Faith": {
+            "value": 0,
+            "active": true
+          },
+          "First-Aid": {
+            "value": 0,
+            "active": true
+          },
+          "Hacking": {
+            "value": 0,
+            "active": true
+          },
+          "Information": {
+            "value": 0,
+            "active": true
+          },
+          "Insight": {
+            "value": 0,
+            "active": true
+          },
+          "Intimidation": {
+            "value": 0,
+            "active": true
+          },
+          "Logic": {
+            "value": 0,
+            "active": true
+          },
+          "Machinery": {
+            "value": 0,
+            "active": true
+          },
+          "Memory": {
+            "value": 0,
+            "active": true
+          },
+          "Mysticism": {
+            "value": 0,
+            "active": true
+          },
+          "Persuasion": {
+            "value": 0,
+            "active": true
+          },
+          "Piloting": {
+            "value": 0,
+            "active": true
+          },
+          "Reflex": {
+            "value": 0,
+            "active": true
+          },
+          "Stealth": {
+            "value": 0,
+            "active": true
+          },
+          "Strength": {
+            "value": 0,
+            "active": true
+          }
+        },
+
+        "strain": {
+          "violence": {
+            "value": 0
+          },
+          "unnatural": {
+            "value": 0
+          },
+          "issolation": {
             "value": 0
           }
         }
@@ -38,95 +139,16 @@
         "level": {
           "value": 1
         }
-      },
-
-      "skills": {
-        "Athletics": {
-          "value": 0
-        },
-        "Coordination": {
-          "value": 0
-        },
-        "Composure": {
-          "value": 0
-        },
-        "Deception": {
-          "value": 0
-        },
-        "Dreams_Beyond": {
-          "value": 0
-        },
-        "Empathy": {
-          "value": 0
-        },
-        "Endurance": {
-          "value": 0
-        },
-        "Faith": {
-          "value": 0
-        },
-        "First-Aid": {
-          "value": 0
-        },
-        "Hacking": {
-          "value": 0
-        },
-        "Hate_Unending": {
-          "value": 0
-        },
-        "Information": {
-          "value": 0
-        },
-        "Insight": {
-          "value": 0
-        },
-        "Intimidation": {
-          "value": 0
-        },
-        "Logic": {
-          "value": 0
-        },
-        "Machinery": {
-          "value": 0
-        },
-        "Memory": {
-          "value": 0
-        },
-        "Mysticism": {
-          "value": 0
-        },
-        "Perfect_World": {
-          "value": 0
-        },
-        "Persuasion": {
-          "value": 0
-        },
-        "Piloting": {
-          "value": 0
-        },
-        "Reflex": {
-          "value": 0
-        },
-        "Singing_Gold": {
-          "value": 0
-        },
-        "Stealth": {
-          "value": 0
-        },
-        "Strength": {
-          "value": 0
-        }
       }
-
     }
   },
 
-  "npc": {
+  "NPC": {
     "templates": ["base"]
   },
 
   "Item": {
-    "types": ["item", "feature", "spell"],
+    "types": ["item", "feature", "weapon"],
     "templates": {
       "base": {
         "description": ""
@@ -140,9 +162,13 @@
     "feature": {
       "templates": ["base"]
     },
-    "spell": {
+    "weapon": {
       "templates": ["base"],
-      "spellLevel": 1
+      "quantity": 1,
+      "ammoMax": 0,
+      "ammoCurrent": 0,
+      "range": "",
+      "damage": ""
     }
   }
 }

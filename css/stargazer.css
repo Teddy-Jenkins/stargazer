@@ -217,7 +217,7 @@ h1, h2, h3, h4 {
 }
 
 .sheet-header{
-  max-height: 220px;
+  max-height: 280px;
 }
 
 .boilerplate .sheet-tabs {
@@ -338,4 +338,13 @@ h1, h2, h3, h4 {
     flex-direction: column;
     flex-wrap: wrap;
     justify-content: flex-start;
+}
+
+.ammo-label {
+  text-align: center;
+}
+
+.ammo {
+  max-width: 50%;
+  margin: auto;
 }

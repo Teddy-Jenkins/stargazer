@@ -55,11 +55,34 @@
               </div>
             </div>
         </div>
+
+        <div class="resources grid grid-3col">
+          {{!-- "flex-group-center" is also defined in the _grid.scss file
+          and it will add a small amount of padding, a border, and will
+          center all of its child elements content and text. --}}
+          <div class="resource flex-group-center">
+              <label for="data.strain.violence.value" class="resource-label">Violence</label>
+              <div class="resource-content flexrow flex-center flex-between">
+                <input type="text" name="data.strain.violence.value" value="{{data.data.strain.violence.value}}" data-dtype="Number"/>
+              </div>
+          </div>
+          <div class="resource flex-group-center">
+              <label for="data.strain.unnatural.value" class="resource-label">Unnatural</label>
+              <div class="resource-content flexrow flex-center flex-between">
+                <input type="text" name="data.strain.unnatural.value" value="{{data.data.strain.unnatural.value}}" data-dtype="Number"/>
+              </div>
+          </div>
+          <div class="resource flex-group-center">
+            <label for="data.strain.issolation.value" class="resource-label">Issolation</label>
+            <div class="resource-content flexrow flex-center flex-between">
+              <input type="text" name="data.strain.issolation.value" value="{{data.data.strain.issolation.value}}" data-dtype="Number"/>
+            </div>
+          </div>
+      </div>
         {{!-- Skills Tab --}}
       <div class="tab biography" data-group="primary" data-tab="skills">
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
           <div>
-                <h1>HELLO</h1>
           </div>
       </div>
 
@@ -81,10 +104,12 @@
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
           <div class="skills">
             {{#each data.data.skills as |skill key|}}
+            {{#if skill.active}}
                 <div class="skill flexcol " data-skill="{{key}}">
                   <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
                   <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
                 </div>
+                {{/if}}
             {{/each}}
           </div>
       </div>

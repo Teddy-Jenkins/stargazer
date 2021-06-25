@@ -56,18 +56,7 @@ export class StargazerActorSheet extends ActorSheet {
     // Initialize containers.
     const gear = [];
     const features = [];
-    const spells = {
-      0: [],
-      1: [],
-      2: [],
-      3: [],
-      4: [],
-      5: [],
-      6: [],
-      7: [],
-      8: [],
-      9: []
-    };
+    const weapons = [];
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
@@ -82,18 +71,16 @@ export class StargazerActorSheet extends ActorSheet {
       else if (i.type === 'feature') {
         features.push(i);
       }
-      // Append to spells.
-      else if (i.type === 'spell') {
-        if (i.data.spellLevel != undefined) {
-          spells[i.data.spellLevel].push(i);
-        }
+      // Append to weapons.
+      else if (i.type === 'weapon') {
+        features.push(i);
       }
     }
 
     // Assign and return
     actorData.gear = gear;
     actorData.features = features;
-    actorData.spells = spells;
+    actorData.weapons = weapons;
   }
 
   /* -------------------------------------------- */
