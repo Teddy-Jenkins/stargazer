@@ -46,10 +46,10 @@ export class StargazerActor extends Actor {
 
 
   
-      Handlebars.registerHelper('stripScripts', function(param) {
-          var regex = /(<([^>]+)>)/ig
-          return param.replace(regex, "");
-      });
+      // Handlebars.registerHelper('stripScripts', function(param) {
+      //     var regex = /(<([^>]+)>)/ig
+      //     return param.replace(regex, "");
+      // });
   
   // })();
     // Make modifications to data here. For example:
