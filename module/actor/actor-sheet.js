@@ -73,7 +73,7 @@ export class StargazerActorSheet extends ActorSheet {
       }
       // Append to weapons.
       else if (i.type === 'weapon') {
-        features.push(i);
+        weapons.push(i);
       }
     }
 

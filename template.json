@@ -148,7 +148,7 @@
   },
 
   "Item": {
-    "types": ["item", "feature", "weapon"],
+    "types": ["item", "weapon", "feature"],
     "templates": {
       "base": {
         "description": ""
@@ -159,9 +159,6 @@
       "quantity": 1,
       "weight": 0
     },
-    "feature": {
-      "templates": ["base"]
-    },
     "weapon": {
       "templates": ["base"],
       "quantity": 1,
@@ -169,6 +166,10 @@
       "ammoCurrent": 0,
       "range": "",
       "damage": ""
+    },
+    "feature": {
+      "templates": ["base"]
     }
+    
   }
 }
