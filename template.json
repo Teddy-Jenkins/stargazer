@@ -45,6 +45,10 @@
             "value": 0,
             "active": true
           },
+          "Connections": {
+            "value": 0,
+            "active": true
+          },
           "Deception": {
             "value": 0,
             "active": true
@@ -54,10 +58,6 @@
             "active": true
           },
           "Endurance": {
-            "value": 0,
-            "active": true
-          },
-          "Faith": {
             "value": 0,
             "active": true
           },
