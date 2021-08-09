@@ -91,7 +91,7 @@
 
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
-      <a class="item" data-tab="skills">Attributes</a>
+      <a class="item" data-tab="skills">Skills</a>
       <a class="item" data-tab="weapons">Weapons</a>
       <a class="item" data-tab="items">Items</a>
       <a class="item" data-tab="features">Features</a>
@@ -148,26 +148,44 @@
                 <div class="item-image"></div>
                 <div class="item-name">Name</div>
                 <div class="item-quantity">Quantity</div>
-                <div class="item-description">Description</div>
                 <div class="item-controls">
                   <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
                 </div>
               </li>
           {{#each actor.gear as |item id|}}
-              <li class="item flexrow" data-item-id="{{item._id}}">
+              <li class="item flexrow collapsible " data-item-id="{{item._id}}">
                   <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                  <h4 class="item-name">{{item.name}}</h4>
+                  <h4><a class="item-name">{{item.name}}</a></h4>
+                  
                   <h4 class="item-quantity">{{data.quantity}}</h4>
-                  <h4 class="item-description">{{data.description}}</h4>
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                   </div>
+                  
               </li>
+              <div class="content">
+                {{{data.description}}}
+              </div>
           {{/each}}
           </ol>
       </div>
+      <script>
+        var coll = document.getElementsByClassName("collapsible");
+        var i;
 
+        for (i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            var content = this.nextElementSibling;
+            if (content.style.maxHeight){
+              content.style.maxHeight = null;
+            } else {
+              content.style.maxHeight = content.scrollHeight + "px";
+            }
+          });
+        }
+      </script>
       {{!-- Owned Features Tab --}}
       <div class="tab features" data-group="primary" data-tab="features">
           <ol class="items-list">

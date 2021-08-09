@@ -20,7 +20,6 @@ export class StargazerActorSheet extends ActorSheet {
   /** @override */
   getData() {
     let data = super.getData();
-    data.pocket = data.actor.data.data.credits.pocket.value;
     data.dtypes = ["String", "Number", "Boolean"];
     // for (let cr of Object.values(data.data.credits)) {
     //   cr.isCheckbox = cr.dtype === "Boolean";

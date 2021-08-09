@@ -21,6 +21,15 @@
 #chat-log {
   max-width: 100%;
 }
+
+.content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  max-width: 80%;
+  margin: auto;
+}
+
 /* Character sheet base changes START*/
 
 /* .rollable:hover, .rollable:focus {

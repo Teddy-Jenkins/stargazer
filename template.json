@@ -53,10 +53,6 @@
             "value": 0,
             "active": true
           },
-          "Empathy": {
-            "value": 0,
-            "active": true
-          },
           "Endurance": {
             "value": 0,
             "active": true
@@ -144,7 +140,27 @@
   },
 
   "NPC": {
-    "templates": ["base"]
+    "templates": ["base"],
+    "ability-scores": {
+      "Physique": {
+        "value": 0
+      },
+      "Dexterity": {
+        "value": 0
+      },
+      "Intelligence": {
+        "value": 0
+      },
+      "Charisma": {
+        "value": 0
+      },
+      "Psyche": {
+        "value": 0
+      },
+      "Mysticism": {
+        "value": 0
+      }
+    }
   },
 
   "Item": {
