@@ -1,6 +1,6 @@
 {
   "Actor": {
-    "types": ["character", "NPC", "starflyer"],
+    "types": ["character", "npc"],
     "templates": {
       "base": {
         "hp": {
@@ -136,32 +136,42 @@
           "value": 1
         }
       }
-    }
-  },
-
-  "NPC": {
-    "templates": ["base"],
-    "ability-scores": {
-      "Physique": {
-        "value": 0
+    },
+    "npc": {
+      "templates": ["base"],
+      "attributes": {
+        "Physique": {
+          "value": 0,
+          "active": true
+        },
+        "Dexterity": {
+          "value": 0,
+          "active": true
+        },
+        "Intelligence": {
+          "value": 0,
+          "active": true
+        },
+        "Charisma": {
+          "value": 0,
+          "active": true
+        },
+        "Psyche": {
+          "value": 0,
+          "active": true
+        },
+        "Mysticism": {
+          "value": 0,
+          "active": true
+        }
       },
-      "Dexterity": {
-        "value": 0
-      },
-      "Intelligence": {
-        "value": 0
-      },
-      "Charisma": {
-        "value": 0
-      },
-      "Psyche": {
-        "value": 0
-      },
-      "Mysticism": {
-        "value": 0
+      "tl": {
+        "value": 1
       }
     }
   },
+
+  
 
   "Item": {
     "types": ["item", "weapon", "feature"],

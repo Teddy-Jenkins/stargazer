@@ -8,38 +8,47 @@ export class StargazerActorSheet extends ActorSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["stargazer", "sheet", "actor"],
-      template: "systems/stargazer/templates/actor/actor-sheet.html",
       width: 700,
       height: 800,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
     });
   }
 
+  /** @override */
+  get template() {
+    return `systems/stargazer/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+  }
   /* -------------------------------------------- */
 
   /** @override */
   getData() {
-    let data = super.getData();
-    data.dtypes = ["String", "Number", "Boolean"];
-    // for (let cr of Object.values(data.data.credits)) {
-    //   cr.isCheckbox = cr.dtype === "Boolean";
-    // }
+    const context = super.getData();
 
-    // for (let attr of Object.values(data.data.attributes)) {
-    //   attr.isCheckbox = attr.dtype === "Boolean";
-    // }
+    // Use a safe clone of the actor data for further operations.
+    const actorData = context.actor.data;
 
-    // for (let skill of Object.values(data.data.skills)) {
-    //   skill.isCheckbox = skill.dtype === "Boolean";
-    // }
+    // Add the actor's data to context.data for easier access, as well as flags.
+    context.data = actorData.data;
+    context.flags = actorData.flags;
+    context.dtypes = ["String", "Number", "Boolean"];
 
-    
-    // Prepare items.
-    if (this.actor.data.type == 'character') {
-      this._prepareCharacterItems(data);
+    // Prepare character data and items.
+    if (actorData.type == 'character') {
+      this._prepareItems(context);
     }
 
-    return data;
+    // Prepare NPC data and items.
+    if (actorData.type == 'npc') {
+      this._prepareItems(context);
+    }
+
+    // Add roll data for TinyMCE editors.
+    context.rollData = context.actor.getRollData();
+
+    // Prepare active effects
+    
+    
+    return context;
   }
 
   /**
@@ -49,8 +58,7 @@ export class StargazerActorSheet extends ActorSheet {
    *
    * @return {undefined}
    */
-  _prepareCharacterItems(sheetData) {
-    const actorData = sheetData.actor;
+  _prepareItems(context) {
 
     // Initialize containers.
     const gear = [];
@@ -59,8 +67,7 @@ export class StargazerActorSheet extends ActorSheet {
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
-    for (let i of sheetData.items) {
-      let item = i.data;
+    for (let i of context.items) {
       i.img = i.img || DEFAULT_TOKEN;
       // Append to gear.
       if (i.type === 'item') {
@@ -77,57 +84,62 @@ export class StargazerActorSheet extends ActorSheet {
     }
 
     // Assign and return
-    actorData.gear = gear;
-    actorData.features = features;
-    actorData.weapons = weapons;
+    context.gear = gear;
+    context.features = features;
+    context.weapons = weapons;
   }
 
+  _prepareCharacterData(context) {
+    // Handle ability scores.
+    for (let [k, v] of Object.entries(context.data.skills)) {
+      v.label = game.i18n.localize(CONFIG.STARGAZER.skills[k]) ?? k;
+    }
+  }
   /* -------------------------------------------- */
 
   /** @override */
   activateListeners(html) {
-    super.activateListeners(html);
+  super.activateListeners(html);
 
-    // Everything below here is only needed if the sheet is editable
-    if (!this.options.editable) return;
+  // Everything below here is only needed if the sheet is editable
+  if (!this.options.editable) return;
 
-    // Add Inventory Item
-    html.find('.item-create').click(this._onItemCreate.bind(this));
+  // Add Inventory Item
+  html.find('.item-create').click(this._onItemCreate.bind(this));
 
-    // Update Inventory Item
-    html.find('.item-edit').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      const item = this.actor.getOwnedItem(li.data("itemId"));
-      item.sheet.render(true);
+  // Update Inventory Item
+  html.find('.item-edit').click(ev => {
+    const li = $(ev.currentTarget).parents(".item");
+    const item = this.actor.getOwnedItem(li.data("itemId"));
+    item.sheet.render(true);
+  });
+
+  // Delete Inventory Item
+  html.find('.item-delete').click(ev => {
+    const li = $(ev.currentTarget).parents(".item");
+    this.actor.deleteOwnedItem(li.data("itemId"));
+    li.slideUp(200, () => this.render(false));
+  });
+
+  html.find('.rollable').click(this._onRoll.bind(this));
+
+  if (this.actor.owner) {
+    let handler = ev => this._onDragStart(ev);
+    html.find('li.item').each((i, li) => {
+      if (li.classList.contains("inventory-header")) return;
+      li.setAttribute("draggable", true);
+      li.addEventListener("dragstart", handler, false);
     });
-
-    // Delete Inventory Item
-    html.find('.item-delete').click(ev => {
-      const li = $(ev.currentTarget).parents(".item");
-      this.actor.deleteOwnedItem(li.data("itemId"));
-      li.slideUp(200, () => this.render(false));
-    });
-
-    // Rollable abilities.
-    html.find('.rollable').click(this._onRoll.bind(this));
-
-    // Drag events for macros.
-    if (this.actor.isowner) {
-      let handler = ev => this._onDragStart(ev);
-      html.find('li.item').each((i, li) => {
-        if (li.classList.contains("inventory-header")) return;
-        li.setAttribute("draggable", true);
-        li.addEventListener("dragstart", handler, false);
-      });
-    }
   }
+
+}
 
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
    * @param {Event} event   The originating click event
    * @private
    */
-  _onItemCreate(event) {
+   async _onItemCreate(event) {
     event.preventDefault();
     const header = event.currentTarget;
     // Get the type of item to create.
@@ -146,7 +158,7 @@ export class StargazerActorSheet extends ActorSheet {
     delete itemData.data["type"];
 
     // Finally, create the item!
-    return this.actor.createOwnedItem(itemData);
+    return await Item.create(itemData, {parent: this.actor});
   }
 
   /**
@@ -159,14 +171,27 @@ export class StargazerActorSheet extends ActorSheet {
     const element = event.currentTarget;
     const dataset = element.dataset;
 
-    if (dataset.roll) {
-      let roll = new Roll(dataset.roll, this.actor.data.data);
-      let label = dataset.label ? `Rolling ${dataset.label}` : '';
-      roll.roll().toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label
-      });
+    // Handle item rolls.
+    if (dataset.rollType) {
+      if (dataset.rollType == 'item') {
+        const itemId = element.closest('.item').dataset.itemId;
+        const item = this.actor.items.get(itemId);
+        if (item) return item.roll();
+      }
     }
+
+    if (dataset.roll) {
+      let label = dataset.label ? `Rolled ${dataset.label}` : '';
+      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
+      roll.toMessage({
+        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+        flavor: label,
+        rollMode: game.settings.get('core', 'rollMode'),
+      });
+      return roll;
+    }
+
+
   }
 
 }
