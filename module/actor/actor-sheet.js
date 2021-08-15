@@ -8,6 +8,7 @@ export class StargazerActorSheet extends ActorSheet {
   static get defaultOptions() {
     return mergeObject(super.defaultOptions, {
       classes: ["stargazer", "sheet", "actor"],
+      template: "systems/stargazer/templates/actor/actor-sheet.html",
       width: 700,
       height: 800,
       tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
