@@ -92,8 +92,7 @@
   {{!-- Sheet Tab Navigation --}}
   <nav class="sheet-tabs tabs" data-group="primary">
       <a class="item" data-tab="skills">Skills</a>
-      <a class="item" data-tab="weapons">Weapons</a>
-      <a class="item" data-tab="items">Items</a>
+      <a class="item" data-tab="items">Equipment</a>
       <a class="item" data-tab="features">Features</a>
   </nav>
 
@@ -116,38 +115,46 @@
       </div>
 
       <div class="tab weapons" data-group="primary" data-tab="weapons">
-        <ol class="items-list">
-            <li class="item flexrow item-header">
-              <div class="item-image"></div>
-              <div class="item-name">Name</div>
-              <div class="item-range">Range</div>
-              <div class="item-ammo">Ammo</div>
-              <div class="item-controls">
-                <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
-              </div>
-            </li>
-        {{#each weapons as |weapon id|}}
-            <li class="item flexrow" data-item-id="{{weapon._id}}">
-                <div class="item-image"><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
-                <h4 class="item-name">{{weapon.name}}</h4>
-                <h4 class="item-range">{{data.range}}</h4>
-                <h4 class="item-ammo">{{data.ammoCurrent}}/{{data.ammoMax}}</h4>
-                <div class="item-controls">
-                    <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                    <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                </div>
-            </li>
-        {{/each}}
-        </ol>
+        
     </div>
 
       {{!-- Owned Items Tab --}}
       <div class="tab items" data-group="primary" data-tab="items">
+        <h2>Weapons</h2>
+        <ol class="items-list">
+          <li class="item flexrow item-header">
+            <div class="item-image"></div>
+            <div class="item-name">Name</div>
+            <div class="item-range">Range</div>
+            <div class="item-ammo">Ammo</div>
+            <div class="item-controls">
+              <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
+            </div>
+          </li>
+        {{#each weapons as |weapon id|}}
+          <li class="item flexrow collapsible" data-item-id="{{weapon._id}}">
+              <div class="item-image"><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
+              <h4 class="item-name"><a class="item-name">{{weapon.name}}</a></h4>
+              <h4 class="item-range">{{data.range}}</h4>
+              <h4 class="item-ammo">{{data.ammoCurrent}}/{{data.ammoMax}}</h4>
+              <div class="item-controls">
+                  <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                  <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+              </div>
+          </li>
+          <div class="item-description">
+            {{{data.description}}}
+          </div>
+        {{/each}}
+        </ol>
+
+          <h2>Equipment</h2>
           <ol class="items-list">
               <li class="item flexrow item-header">
                 <div class="item-image"></div>
                 <div class="item-name">Name</div>
                 <div class="item-quantity">Quantity</div>
+                <div></div>
                 <div class="item-controls">
                   <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
                 </div>
@@ -158,6 +165,7 @@
                   <h4><a class="item-name">{{item.name}}</a></h4>
                   
                   <h4 class="item-quantity">{{data.quantity}}</h4>
+                  <h4></h4>
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
@@ -197,14 +205,17 @@
                 </div>
               </li>
           {{#each features as |feature id|}}
-              <li class="item flexrow" data-item-id="{{feature._id}}">
+              <li class="item flexrow collapsible" data-item-id="{{feature._id}}">
                   <div class="item-image"><img src="{{feature.img}}" title="{{feature.name}}" width="24" height="24"/></div>
-                  <h4 class="item-name">{{feature.name}}</h4>
+                  <h4><a class="item-name">{{feature.name}}</a></h4>
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                   </div>
               </li>
+              <div class="item-description">
+                {{{data.description}}}
+              </div>
           {{/each}}
           </ol>
       </div>
