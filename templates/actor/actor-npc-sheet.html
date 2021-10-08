@@ -115,123 +115,142 @@
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
         <a class="item" data-tab="skills">Skills</a>
-        <a class="item" data-tab="weapons">Weapons</a>
-        <a class="item" data-tab="items">Items</a>
+        <a class="item" data-tab="items">Equipment</a>
         <a class="item" data-tab="features">Features</a>
     </nav>
   
     {{!-- Sheet Body --}}
     <section class="sheet-body">
   
-        {{!-- Skills Tab --}}
-        <div class="tab biography" data-group="primary" data-tab="skills">
-            <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
-            <div class="skills">
-              {{#each data.skills as |skill key|}}
-              {{#if skill.active}}
-                  <div class="skill flexcol " data-skill="{{key}}">
-                    <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
-                    <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                  </div>
-                  {{/if}}
-              {{/each}}
-            </div>
-        </div>
+      {{!-- Skills Tab --}}
+      <div class="tab biography" data-group="primary" data-tab="skills">
+          <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
+          <div class="skills">
+            {{#each data.skills as |skill key|}}
+            {{#if skill.active}}
+                <div class="skill flexcol " data-skill="{{key}}">
+                  <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
+                  <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                </div>
+                {{/if}}
+            {{/each}}
+          </div>
+      </div>
+
+      <div class="tab weapons" data-group="primary" data-tab="weapons">
+        
+    </div>
   
-        <div class="tab weapons" data-group="primary" data-tab="weapons">
+    {{!-- Owned Items Tab --}}
+    <div class="tab items" data-group="primary" data-tab="items">
+      <h2>Attacks</h2>
+      <ol class="items-list">
+        <li class="item flexrow item-header">
+          <div class="item-image"></div>
+          <div class="item-name"">Name</div>
+          <div class="item-damage"">Damage</div>
+          <div class="item-range">Range</div>
+          <div class="item-ammo">Ammo</div>
+          <div class="item-controls">
+            <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
+          </div>
+        </li>
+      {{#each weapons as |weapon id|}}
+        <li class="item flexrow items-list-item" data-item-id="{{weapon._id}}">
+            <div class="item-image" ><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
+            <h4 class="item-name collapsible"><a class="item-name">{{weapon.name}}</a></h4>
+            <h4 class="item-damage rollable" data-roll="{{data.damage}}" data-label="{{damage}}"><a class="item-damage">{{data.damage}}</a></h4>
+            <h4 class="item-range">{{data.range}}</h4>
+            <h4 class="item-ammo">{{data.ammoCurrent}}/{{data.ammoMax}}</h4>
+            <div class="item-controls">
+                <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+            </div>
+        </li>
+        <div class="item-description">
+          {{{data.description}}}
+        </div>
+      {{/each}}
+      </ol>
+
+          <h2>Equipment</h2>
           <ol class="items-list">
               <li class="item flexrow item-header">
                 <div class="item-image"></div>
                 <div class="item-name">Name</div>
-                <div class="item-range">Range</div>
-                <div class="item-ammo">Ammo</div>
+                <div class="item-quantity">Quantity</div>
+                <div></div>
+                <div></div>
                 <div class="item-controls">
-                  <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
+                  <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
                 </div>
               </li>
-          {{#each weapons as |weapon id|}}
-              <li class="item flexrow" data-item-id="{{weapon._id}}">
-                  <div class="item-image"><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
-                  <h4 class="item-name">{{weapon.name}}</h4>
-                  <h4 class="item-range">{{data.range}}</h4>
-                  <h4 class="item-ammo">{{data.ammoCurrent}}/{{data.ammoMax}}</h4>
+          {{#each gear as |item id|}}
+              <li class="item flexrow items-list-item" data-item-id="{{item._id}}">
+                  <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+                  <h4 class="item-name collapsible"><a class="item-name">{{item.name}}</a></h4>
+                  <h4 class="item-quantity">{{data.quantity}}</h4>
+                  <h4></h4>
+                  <h4></h4>
+                  <div class="item-controls">
+                      <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+                      <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                  </div>
+                  
+              </li>
+              <div class="item-description">
+                {{{data.description}}}
+              </div>
+          {{/each}}
+          </ol>
+      </div>
+      
+      {{!-- Owned Features Tab --}}
+      <div class="tab features" data-group="primary" data-tab="features">
+          <ol class="items-list">
+              <li class="item flexrow item-header">
+                <div class="item-image"></div>
+                <div class="item-name">Name</div>
+                <div class="item-controls">
+                  <a class="item-control item-create" title="Create item" data-type="feature"><i class="fas fa-plus"></i> Add item</a>
+                </div>
+              </li>
+          {{#each features as |feature id|}}
+              <li class="item flexrow" data-item-id="{{feature._id}}">
+                  <div class="item-image"><img src="{{feature.img}}" title="{{feature.name}}" width="24" height="24"/></div>
+                  <h4><a class="item-name collapsible">{{feature.name}}</a></h4>
                   <div class="item-controls">
                       <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                       <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                   </div>
               </li>
+              <div class="item-description">
+                {{{data.description}}}
+              </div>
           {{/each}}
           </ol>
       </div>
-  
-        {{!-- Owned Items Tab --}}
-        <div class="tab items" data-group="primary" data-tab="items">
-            <ol class="items-list">
-                <li class="item flexrow item-header">
-                  <div class="item-image"></div>
-                  <div class="item-name">Name</div>
-                  <div class="item-quantity">Quantity</div>
-                  <div class="item-controls">
-                    <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
-                  </div>
-                </li>
-            {{#each gear as |item id|}}
-                <li class="item flexrow collapsible " data-item-id="{{item._id}}">
-                    <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                    <h4><a class="item-name">{{item.name}}</a></h4>
-                    
-                    <h4 class="item-quantity">{{data.quantity}}</h4>
-                    <div class="item-controls">
-                        <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                    </div>
-                    
-                </li>
-                <div class="item-description">
-                  {{{data.description}}}
-                </div>
-            {{/each}}
-            </ol>
-        </div>
-        <script>
-          var coll = document.getElementsByClassName("collapsible");
-          var i;
-  
-          for (i = 0; i < coll.length; i++) {
-            coll[i].addEventListener("click", function() {
-              this.classList.toggle("active");
-              var content = this.nextElementSibling;
-              if (content.style.maxHeight){
-                content.style.maxHeight = null;
-              } else {
-                content.style.maxHeight = content.scrollHeight + "px";
-              }
-            });
-          }
-        </script>
-        {{!-- Owned Features Tab --}}
-        <div class="tab features" data-group="primary" data-tab="features">
-            <ol class="items-list">
-                <li class="item flexrow item-header">
-                  <div class="item-image"></div>
-                  <div class="item-name">Name</div>
-                  <div class="item-controls">
-                    <a class="item-control item-create" title="Create item" data-type="feature"><i class="fas fa-plus"></i> Add item</a>
-                  </div>
-                </li>
-            {{#each features as |feature id|}}
-                <li class="item flexrow" data-item-id="{{feature._id}}">
-                    <div class="item-image"><img src="{{feature.img}}" title="{{feature.name}}" width="24" height="24"/></div>
-                    <h4 class="item-name">{{feature.name}}</h4>
-                    <div class="item-controls">
-                        <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                        <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                    </div>
-                </li>
-            {{/each}}
-            </ol>
-        </div>
-  
+
+      <script>
+        var coll = Array.from(document.getElementsByClassName("collapsible"));
+        var content = Array.from(document.getElementsByClassName("item-description"));
+        var i;
+
+        
+
+        for (let i = 0; i < coll.length; i++) {
+          coll[i].addEventListener("click", function() {
+            this.classList.toggle("active");
+            if (content[i].style.maxHeight){
+              content[i].style.maxHeight = null;
+            } else {
+              content[i].style.maxHeight = content[i].scrollHeight + "px";
+            }
+        });
+      }
+
+        
+      </script>
     </section>
   </form>
   
