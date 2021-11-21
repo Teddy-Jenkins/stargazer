@@ -4,31 +4,7 @@
   font-family: "Roboto", sans-serif;
 }
 
-.rollable:hover, .rollable:focus {
-  color: #000;
-  text-shadow: 0 0 10px red;
-  cursor: pointer;
-}
 
-  .boilerplate .tox .tox-editor-container {
-  background: rgb(235, 56, 56);
-}
-
-#combat-round {
-  height: 7vh !important;
-}
-
-#chat-log {
-  max-width: 100%;
-}
-
-.item-description {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.2s ease-out;
-  max-width: 80%;
-  margin: auto;
-}
 
 /* Character sheet base changes START*/
 
@@ -225,14 +201,6 @@ h1, h2, h3, h4 {
   margin: 0;
 }
 
-.sheet-header{
-  max-height: 280px;
-}
-
-.npc-header{
-  max-height: 345px;
-}
-
 .boilerplate .sheet-tabs {
   -webkit-box-flex: 0;
   -ms-flex: 0;
@@ -316,6 +284,95 @@ h1, h2, h3, h4 {
   -ms-flex: 0 0 86px;
   flex: 0 0 86px;
   text-align: right;
+}
+
+.rollable:hover, .rollable:focus {
+  color: #000;
+  text-shadow: 0 0 10px red;
+  cursor: pointer;
+}
+
+  .boilerplate .tox .tox-editor-container {
+  background: rgb(235, 56, 56);
+}
+
+#combat-round {
+  height: 7vh !important;
+}
+
+#chat-log {
+  max-width: 100%;
+}
+
+#actor-profile {
+  margin: auto !important;
+  height: 90px;
+  width: 90px;
+  border: none;
+}
+
+.sheet-header{
+  max-height: 275px;
+}
+
+.npc-header{
+  max-height: 370px;
+}
+
+.meta-stats{
+  display: grid;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr;
+}
+
+.level-container{
+  grid-column: 1;
+  grid-row: 1;
+}
+
+.xp-container{
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.xp{
+  border: none;
+  padding: 0;
+}
+
+.bank-container{
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.pocket-containerP{
+  grid-column: 2;
+  grid-row: 2;
+}
+
+.item-description {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  max-width: 80%;
+  margin: auto;
+}
+
+.augments-body{
+  display: grid !important;
+  grid-template-columns: 2fr .9fr;
+  align-content: flex-start;
+  gap: 10px;
+  margin: 10px 0;
+  padding: 0;
+}
+
+.augment-slot-title{
+  text-align: center;
+  margin-top: 15px;
+}
+
+.augment-slots {
 }
 
 .skills{

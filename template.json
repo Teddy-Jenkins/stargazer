@@ -23,6 +23,14 @@
           "value": 0
         },
 
+        "level": {
+          "value": 1,
+          "xp": {
+            "currentXp": 0,
+            "maximumXp": 10
+          }
+        },
+
         "credits": {
           "pocket": {
             "value": 0
@@ -115,15 +123,26 @@
           }
         },
 
-        "strain": {
-          "violence": {
-            "value": 0
+        "augments": {
+          "head": {
+            "availableSlots": 3,
+            "maximumSlots": 3
           },
-          "unnatural": {
-            "value": 0
+          "body": {
+            "availableSlots": 3,
+            "maximumSlots": 3
           },
-          "issolation": {
-            "value": 0
+          "leftArm": {
+            "availableSlots": 3,
+            "maximumSlots": 3
+          },
+          "rightArm": {
+            "availableSlots": 3,
+            "maximumSlots": 3
+          },
+          "legs": {
+            "availableSlots": 3,
+            "maximumSlots": 3
           }
         }
       }
@@ -174,17 +193,19 @@
   
 
   "Item": {
-    "types": ["item", "weapon", "feature"],
+    "types": ["item", "weapon", "feature", "augment"],
     "templates": {
       "base": {
         "description": ""
       }
     },
+
     "item": {
       "templates": ["base"],
       "quantity": 1,
       "weight": 0
     },
+
     "weapon": {
       "templates": ["base"],
       "quantity": 1,
@@ -193,9 +214,15 @@
       "range": "",
       "damage": ""
     },
+
     "feature": {
       "templates": ["base"]
+    },
+
+    "augment": {
+      "templates": ["base"],
+      "slotsRequired": "",
+      "type": ""
     }
-    
   }
 }
