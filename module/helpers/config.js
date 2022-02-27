@@ -1,10 +1,10 @@
-export const BOILERPLATE = {};
+export const STARGAZER = {};
 
 /**
  * The set of Ability Scores used within the sytem.
  * @type {Object}
  */
- BOILERPLATE.abilities = {
+ STARGAZER.abilities = {
   "str": "BOILERPLATE.AbilityStr",
   "dex": "BOILERPLATE.AbilityDex",
   "con": "BOILERPLATE.AbilityCon",
@@ -13,7 +13,7 @@ export const BOILERPLATE = {};
   "cha": "BOILERPLATE.AbilityCha"
 };
 
-BOILERPLATE.abilityAbbreviations = {
+STARGAZER.abilityAbbreviations = {
   "str": "BOILERPLATE.AbilityStrAbbr",
   "dex": "BOILERPLATE.AbilityDexAbbr",
   "con": "BOILERPLATE.AbilityConAbbr",

@@ -22,11 +22,11 @@
               </div>
             </div>
             <div class="pocket-container">
-              <h2 >Pocket</h2>
+              <h2>KR</h2>
               <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
             </div>
             <div class="bank-container">
-              <h2>Bank</h2>
+              <h2>Wealth</h2>
               <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
             </div>
           </div>
@@ -100,9 +100,17 @@
           <div class="skills">
             {{#each data.skills as |skill key|}}
             {{#if skill.active}}
-                <div class="skill flexcol " data-skill="{{key}}">
-                  <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value" data-label="{{key}}">{{key}}</h4>
-                  <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                <div class="skill" data-skill="{{key}}">
+
+                  <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
+
+                  <div>
+                    <h4 for="data.skills.{{key}}.value" class="skill-name rollable " data-roll="d10+@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value" data-label="{{key}}">{{key}}</h4>
+                    <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
+                  </div>
+
+                  <input class="skill-drawbacks" type="text" name="data.skills.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
+                
                 </div>
                 {{/if}}
             {{/each}}

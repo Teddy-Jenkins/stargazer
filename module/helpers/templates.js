@@ -6,10 +6,5 @@
  export const preloadHandlebarsTemplates = async function() {
   return loadTemplates([
 
-    // Actor partials.
-    "systems/stargazer/templates/actor/parts/actor-features.html",
-    "systems/stargazer/templates/actor/parts/actor-items.html",
-    "systems/stargazer/templates/actor/parts/actor-spells.html",
-    "systems/stargazer/templates/actor/parts/actor-effects.html",
   ]);
 };

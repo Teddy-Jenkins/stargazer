@@ -4,7 +4,7 @@ import { StargazerActorSheet } from "./actor/actor-sheet.js";
 import { StargazerItem } from "./item/item.js";
 import { StargazerItemSheet } from "./item/item-sheet.js";
 import { preloadHandlebarsTemplates } from "./helpers/templates.js";
-import { BOILERPLATE } from "./helpers/config.js";
+import { STARGAZER } from "./helpers/config.js";
 
 Hooks.once('init', function() {
 
@@ -16,7 +16,7 @@ Hooks.once('init', function() {
   };
 
   // Add custom constants for configuration.
-  CONFIG.BOILERPLATE = BOILERPLATE;
+  CONFIG.STARGAZER = STARGAZER;
 
   /**
    * Set an initiative formula for the system

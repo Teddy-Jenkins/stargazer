@@ -109,17 +109,21 @@ export class StargazerActorSheet extends ActorSheet {
   super.activateListeners(html);
 
   // Everything below here is only needed if the sheet is editable
-  if (!this.options.editable) return;
+  
 
-  // Add Inventory Item
-  html.find('.item-create').click(this._onItemCreate.bind(this));
+  
 
   // Update Inventory Item
   html.find('.item-edit').click(ev => {
     const li = $(ev.currentTarget).parents(".item");
-    const item = this.actor.getOwnedItem(li.data("itemId"));
+    const item = this.actor.items.get(li.data("itemId"));
     item.sheet.render(true);
   });
+
+  if (!this.options.editable) return;
+
+  // Add Inventory Item
+  html.find('.item-create').click(this._onItemCreate.bind(this));
 
   // Delete Inventory Item
   html.find('.item-delete').click(ev => {
@@ -130,7 +134,7 @@ export class StargazerActorSheet extends ActorSheet {
 
   html.find('.rollable').click(this._onRoll.bind(this));
 
-  if (this.actor.owner) {
+  if (this.actor.isowner) {
     let handler = ev => this._onDragStart(ev);
     html.find('li.item').each((i, li) => {
       if (li.classList.contains("inventory-header")) return;
@@ -173,7 +177,9 @@ export class StargazerActorSheet extends ActorSheet {
    * @param {Event} event   The originating click event
    * @private
    */
-  _onRoll(event) {
+
+  
+  async _onRoll(event) {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
@@ -188,8 +194,8 @@ export class StargazerActorSheet extends ActorSheet {
     }
 
     if (dataset.roll) {
-      let label = dataset.label ? `Rolled ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData()).roll();
+      let label = dataset.label ? `Roll: ${dataset.label}` : '';
+      let roll = new Roll(dataset.roll, this.actor.getRollData());
       roll.toMessage({
         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
         flavor: label,
@@ -197,8 +203,6 @@ export class StargazerActorSheet extends ActorSheet {
       });
       return roll;
     }
-
-
   }
 
 }

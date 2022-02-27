@@ -26,37 +26,26 @@ export class StargazerActor extends Actor {
    */
   prepareData() {
     super.prepareData();
-  }
-
-  prepareBaseData() {
-    // Data modifications in this step occur before processing embedded
-    // d
-  }
-
-  prepareDerivedData() {
     const actorData = this.data;
     const data = actorData.data;
-    const flags = actorData.flags.boilerplate || {};
-  
-    // Make separate methods for each Actor type (character, npc, etc.) to keep
-    // things organized.
-    this._prepareCharacterData(actorData);
-    this._prepareNpcData(actorData);
+    const flags = actorData.flags;
+
+    if (actorData.type === "character") this._prepareCharacterData(actorData);
+
+    if (actorData.type === "npc") this._prepareNpcData(actorData);
   }
+
 
   /**
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-
-    if (actorData.type !== 'character') return;
     const data = actorData.data;
     // Make modifications to data here.
 
   }
 
   _prepareNpcData(actorData) {
-    if (actorData.type !== 'npc') return;
   
     // Make modifications to data here. For example:
     const data = actorData.data;
