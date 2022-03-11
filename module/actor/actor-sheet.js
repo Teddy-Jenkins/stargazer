@@ -126,15 +126,11 @@ export class StargazerActorSheet extends ActorSheet {
   html.find('.item-create').click(this._onItemCreate.bind(this));
 
   // Delete Inventory Item
-  html.find('.item-delete').click(ev => {
-    const li = $(ev.currentTarget).parents(".item");
-    this.actor.deleteOwnedItem(li.data("itemId"));
-    li.slideUp(200, () => this.render(false));
-  });
+  html.find(".item-delete").click(this._onDeleteItem.bind(this));
 
   html.find('.rollable').click(this._onRoll.bind(this));
 
-  if (this.actor.isowner) {
+  if (this.actor.isOwner) {
     let handler = ev => this._onDragStart(ev);
     html.find('li.item').each((i, li) => {
       if (li.classList.contains("inventory-header")) return;
@@ -178,6 +174,14 @@ export class StargazerActorSheet extends ActorSheet {
    * @private
    */
 
+   async _onDeleteItem(event) {
+    event.preventDefault();
+
+    const itemId = event.currentTarget.closest(".item").dataset.itemId;
+    const item = this.actor.items.get(itemId);
+
+    await item.delete();
+  }
   
   async _onRoll(event) {
     event.preventDefault();
