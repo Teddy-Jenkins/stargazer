@@ -128,7 +128,12 @@ export class StargazerActorSheet extends ActorSheet {
   // Delete Inventory Item
   html.find(".item-delete").click(this._onDeleteItem.bind(this));
 
+  let edges = html.find('input.skill-edges');
+  let drawbacks = html.find('input.skill-drawbacks');
+
   html.find('.rollable').click(this._onRoll.bind(this));
+
+  
 
   if (this.actor.isOwner) {
     let handler = ev => this._onDragStart(ev);
@@ -182,8 +187,33 @@ export class StargazerActorSheet extends ActorSheet {
 
     await item.delete();
   }
+
+_roll(event, edges, drawbacks) {
+
+  const myContent = `
+
+<div class="my-class">
+<input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
+<input class="skill-drawbacks" type="text" name="data.skills.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
+</div>
+`;
+
+
+
+new Dialog({
+  title: "My Dialog Title",
+  content: myContent,
+  buttons: {
+    Roll: {
+      label: "Roll",
+      callback: () => {this._onRoll(event)},
+      icon: `<i class="fas fa-check"></i>`
+    }
+  }
+}).render(true);
+}
   
-  async _onRoll(event) {
+  async _onRoll(event, edges, drawbacks) {
     event.preventDefault();
     const element = event.currentTarget;
     const dataset = element.dataset;
@@ -206,6 +236,7 @@ export class StargazerActorSheet extends ActorSheet {
         rollMode: game.settings.get('core', 'rollMode'),
       });
       return roll;
+      
     }
   }
 

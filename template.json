@@ -6,17 +6,25 @@
         "hp": {
           "value": 0,
           "min": -100,
-          "max": 0
+          "max": 0,
+          "deathThreshold": -10
         },
         "ar": {
           "value": 0,
           "min": 0,
           "max": 0
         },
+
         "sr": {
           "value": 0,
           "min": 0,
           "max": 0
+        },
+
+        "ap": {
+          "value": 3,
+          "min": 0,
+          "max": 3
         },
         
         "evasion": {
@@ -183,7 +191,8 @@
           "legs": {
             "availableSlots": 3,
             "maximumSlots": 3
-          }
+          },
+          "placement": ""
         }
       }
     },
