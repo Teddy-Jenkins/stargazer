@@ -51,7 +51,7 @@
                 </div>
             </div>
             <div class="resource flex-group-center">
-                <label for="data.ar.value" class="resource-label">AR</label>
+                <label for="data.ar.value" class="resource-label rollable" data-roll="(@ar.value)d6cs>=5" data-label="Armor">AR</label>
                 <div class="resource-content flexrow flex-center flex-between">
                   <input type="text" name="data.ar.value" value="{{data.ar.value}}" data-dtype="Number"/>
                   <span> / </span>
@@ -59,7 +59,7 @@
                 </div>
             </div>
             <div class="resource flex-group-center">
-              <label for="data.sr.value" class="resource-label">SR</label>
+              <label for="data.sr.value" class="resource-label rollable" data-roll="(@sr.value)d6cs>=5" data-label="Shield">SR</label>
               <div class="resource-content flexrow flex-center flex-between">
                 <input type="text" name="data.sr.value" value="{{data.sr.value}}" data-dtype="Number"/>
                 <span> / </span>
