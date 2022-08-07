@@ -109,7 +109,7 @@
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
           <div class="skills">
             {{#each data.skills as |skill key|}}
-            {{#if skill.active}}
+            {{#if skill.new}}
                 <div class="skill" data-skill="{{key}}">
 
                   <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>

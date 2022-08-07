@@ -52,122 +52,162 @@
           "Athletics": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Coordination": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Composure": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
-          "Connections": {
+          "Culture": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
-          },
-          "Deception": {
-            "value": 0,
-            "active": true,
-            "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Endurance": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
+          },
+          "Faith": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false
           },
           "First-Aid": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
-          },
-          "Hacking": {
-            "value": 0,
-            "active": true,
-            "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Information": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Insight": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
-          "Intimidation": {
+          "Linguistics": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Logic": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
+          },
+          "Lore": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false
           },
           "Machinery": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
-          "Memory": {
+          "Navigation": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
-          "Mysticism": {
+          "Networking": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
-          },
-          "Persuasion": {
-            "value": 0,
-            "active": true,
-            "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Piloting": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Reflex": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
+          },
+          "Rhetoric": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false
           },
           "Stealth": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           },
           "Strength": {
             "value": 0,
             "active": true,
+            "new": true,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "marked": false
           }
         },
 
