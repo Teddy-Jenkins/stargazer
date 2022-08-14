@@ -43,14 +43,13 @@ h1, h2, h3, h4 {
   margin: auto;
 }
 
-.grid,
+.grid {
+  display: grid;
+}
 .grid-2col {
   display: grid;
   grid-column: span 2 / span 2;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 3px;
-  margin: 10px 0;
-  padding: 0;
 }
 
 .grid-3col {
@@ -81,6 +80,7 @@ h1, h2, h3, h4 {
 .grid-8col {
   grid-column: span 8 / span 8;
   grid-template-columns: repeat(8, minmax(0, 1fr));
+  grid-template-rows: repeat(5, 1fr);
 }
 
 .grid-9col {
@@ -182,18 +182,11 @@ h1, h2, h3, h4 {
   margin-right: 10px;
 } */
 
-.boilerplate .sheet-header .header-fields {
+/*.boilerplate .sheet-header .header-fields {
   -webkit-box-flex: 1;
   -ms-flex: 1;
   flex: 1;
-}
-
-.boilerplate .sheet-header h1.charname {
-  height: 50px;
-  padding: 0px;
-  margin: 5px 0;
-  border-bottom: 0;
-}
+} */
 
 .boilerplate .sheet-header h1.charname input {
   width: 100%;
@@ -309,13 +302,19 @@ nav.sheet-tabs {
 }
 
 #actor-profile {
-  margin: auto !important;
-  height: 90px;
-  width: 90px;
   border: none;
+  margin: 0 0 0 0;
 }
 
 .sheet-header{
+  max-height: 270px;
+}
+
+.header-fields .top-section{
+  height: 100% !important;
+}
+
+.top-section{
   max-height: 275px;
 }
 
@@ -323,20 +322,57 @@ nav.sheet-tabs {
   max-height: 370px;
 }
 
-.meta-stats{
+.portrait-section{
   display: grid;
-  grid-gap: 10px;
-  grid-template-columns: 1fr 1fr;
+  grid-row-gap: 2px;
+  grid-column: 1 / 3;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  align-items: center;
+  max-height: 27vh;
+  width: 100%;
+}
+
+.profile{
+  height: 18vh !important;
+  width: 100%;
+  grid-column: 1 / 4;
+  grid-row: 1 / 3;
+}
+
+.charname{
+  grid-column: 1 / 4;
+  grid-row: 4;
+  margin: 0 0 0 0;
+  text-align: center;
+  font-size: 1.5vw;
+  width: 100%;
+}
+
+.char-info {
+  display: grid;
+  grid-gap: 5px;
+  grid-column: 3 / 9;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+}
+
+.char-stats-container{
+  display: grid;
+  grid-column-gap: 5px;
+  grid-column: 1 / 6;
+  grid-row: 1;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
 }
 
 .level-container{
   grid-column: 1;
   grid-row: 1;
+  height: min-content;
 }
 
 .xp-container{
-  grid-column: 1;
-  grid-row: 2;
+  grid-column: 2;
+  grid-row: 1;
+  height: min-content;
 }
 
 .xp{
@@ -345,13 +381,44 @@ nav.sheet-tabs {
 }
 
 .bank-container{
-  grid-column: 2;
+  grid-column: 3;
   grid-row: 1;
+  height: min-content;
 }
 
-.pocket-containerP{
-  grid-column: 2;
-  grid-row: 2;
+.pocket-container{
+  grid-column: 4;
+  grid-row: 1;
+  height: min-content;
+}
+
+.iniquity-container{
+  grid-column: 5;
+  grid-row: 1;
+  height: min-content;
+}
+
+.character-notes{
+  background-color: rgb(209, 209, 202);
+  border-radius: 5px;
+  height: 21vh;
+  width: 100%;
+  grid-column: 1 / 5;
+  grid-row: 2 / 5;
+}
+
+.resources {
+  grid-column: 5;
+  grid-row: 2 / 6;
+}
+
+.resource {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+}
+
+.resource-content {
+  grid-gap: 3px;
 }
 
 .hp-input{
@@ -386,7 +453,7 @@ nav.sheet-tabs {
 .skills{
   display: grid;
   grid-template-rows: repeat(5, 60px);
-  gap: 10px;
+  grid-row-gap: 20px;
   grid-auto-flow: column;
   grid-auto-columns: 1fr 1fr;
   max-width: 100%;
@@ -395,19 +462,25 @@ nav.sheet-tabs {
 .skill {
   padding-top: 10px;
   display: grid;
-  grid-template-columns: 1fr 3fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   text-align: center;
+  place-items: center;
 }
 
 .skill-name{
   max-width: 70%;
   margin: auto;
+  grid-row: 1;
+  grid-column: 1 / span 3;
 }
 
 .skill-input{
   max-width: 40%;
   margin: auto !important;
   text-align: center !important;
+  grid-row: 2;
+  grid-column: 2;
 }
 
 .skill-edges{
@@ -417,6 +490,13 @@ nav.sheet-tabs {
   border: 1px solid green !important;
   margin: auto !important;
   text-align: center !important;
+  grid-row: 3;
+  grid-column: 1;
+}
+
+.skill-checkbox {
+  grid-row: 3;
+  grid-column: 2;
 }
 
 .skill-drawbacks{
@@ -425,6 +505,8 @@ nav.sheet-tabs {
   border: 1px solid orangered !important;
   margin: auto !important;
   text-align: center !important;
+  grid-row: 3;
+  grid-column: 3;
 }
 
 .flexcol{

@@ -36,6 +36,12 @@
           "xp": {
             "currentXp": 0,
             "maximumXp": 10
+          },
+          "iniquity": {
+            "value": 0
+          },
+          "characterNotes": {
+            "description": ""
           }
         },
 

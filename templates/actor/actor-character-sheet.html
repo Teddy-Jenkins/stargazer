@@ -4,84 +4,79 @@
   <header class="sheet-header">
       
       <div class="header-fields">
-        <div class="img-row grid grid-2col">
+        <div class="top-section grid grid-8col">
+        <div class="portrait-section">
           <img class="profile" id="actor-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
-          <div class="meta-stats">
-            <div class="level-container">
-              <h2 >Level</h2>
-              <h2 class="level"><input name="data.level.value" type="text" value="{{data.level.value}}" placeholder="Pocket" data-dtype="String"/></h2>
-            </div>
-            <div class="xp-container">
-              <h2 >XP</h2>
-              <div class="resource flex-group-center xp">
-                <div class="resource-content flexrow flex-center flex-between">
-                  <input type="text" name="data.level.xp.currentXp" value="{{data.level.xp.currentXp}}" data-dtype="Number"/>
-                  <span> / </span>
-                  <input type="text" name="data.level.xp.maximumXp" value="{{data.level.xp.maximumXp}}" data-dtype="Number"/>
+          <h2 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h2>
+        </div>
+          <div class="char-info">
+            <div class="char-stats-container">
+              <div class="level-container">
+                <h2 >Level</h2>
+                <h2 class="level"><input name="data.level.value" type="text" value="{{data.level.value}}" placeholder="Pocket" data-dtype="String"/></h2>
+              </div>
+              <div class="xp-container">
+                <h2 >XP</h2>
+                <div class="flex-group-center xp">
+                  <div class="resource-content flexrow flex-center flex-between">
+                    <input type="text" name="data.level.xp.currentXp" value="{{data.level.xp.currentXp}}" data-dtype="Number"/>
+                    <span> / </span>
+                    <input type="text" name="data.level.xp.maximumXp" value="{{data.level.xp.maximumXp}}" data-dtype="Number"/>
+                  </div>
                 </div>
               </div>
+              <div class="pocket-container">
+                <h2>KR</h2>
+                <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
+              </div>
+              <div class="bank-container">
+                <h2>Wealth</h2>
+                <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
+              </div>
+              <div class="iniquity-container">
+                <h2>Iniquity</h2>
+                <h2 class="iniquity"><input name="data.iniquity.value" type="text" value="{{data.iniquity.value}}" data-dtype="Number"/></h2>
+              </div>
             </div>
-            <div class="pocket-container">
-              <h2>KR</h2>
-              <h2 class="pocket"><input name="data.credits.pocket.value" type="text" value="{{data.credits.pocket.value}}" placeholder="Pocket" data-dtype="String"/></h2>
+            <div class="character-notes">
+              {{editor content=data.characterNotes.description target="data.characterNotes.description" button=true owner=owner editable=editable}}
             </div>
-            <div class="bank-container">
-              <h2>Wealth</h2>
-              <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
+            <div class="resources">
+              <div class="resource flex-group-center">
+                  <label for="data.hp.value" class="resource-label">HP</label>
+                  <div class="resource-content flexrow flex-center flex-between">
+                    <input class="hp-input" type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
+                    <input class="hp-input" type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number"/>
+                    <input class="hp-input" type="text" name="data.hp.deathThreshold" value="{{data.hp.deathThreshold}}" data-dtype="Number"/>
+                  </div>
+              </div>
+              <div class="resource flex-group-center">
+                  <label for="data.ar.value" class="resource-label rollable" data-roll="(@ar.value)d6cs>=4" data-label="Armor">AR</label>
+                  <div class="resource-content flexrow flex-center flex-between">
+                    <input type="text" name="data.ar.value" value="{{data.ar.value}}" data-dtype="Number"/>
+                    <input type="text" name="data.ar.max" value="{{data.ar.max}}" data-dtype="Number"/>
+                  </div>
+              </div>
+              <div class="resource flex-group-center">
+                <label for="data.sr.value" class="resource-label rollable" data-roll="(@sr.value)d6cs>=4" data-label="Shield">SR</label>
+                <div class="resource-content flexrow flex-center flex-between">
+                  <input type="text" name="data.sr.value" value="{{data.sr.value}}" data-dtype="Number"/>
+                  <input type="text" name="data.sr.max" value="{{data.sr.max}}" data-dtype="Number"/>
+                </div>
+              </div>
+              <div class="resource flex-group-center">
+                <label for="data.ap.value" class="resource-label">AP</label>
+                <div class="resource-content flexrow flex-center flex-between">
+                  <input type="text" name="data.ap.value" value="{{data.ap.value}}" data-dtype="Number"/>
+                  <input type="text" name="data.ap.max" value="{{data.ap.max}}" data-dtype="Number"/>
+                </div>
             </div>
           </div>
-        </div>
         
-          <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
-          {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
-          use both the "grid" and "grid-Ncol" class where "N" can be any number
-          from 1 to 12 and will create that number of columns.  --}}
-          <div class="resources grid grid-5col">
-            {{!-- "flex-group-center" is also defined in the _grid.scss file
-            and it will add a small amount of padding, a border, and will
-            center all of its child elements content and text. --}}
-            <div class="resource flex-group-center">
-                <label for="data.hp.value" class="resource-label">HP</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                  <input class="hp-input" type="text" name="data.hp.deathThreshold" value="{{data.hp.deathThreshold}}" data-dtype="Number"/>
-                  <span> / </span>
-                  <input class="hp-input" type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number"/>
-                  <span> / </span>
-                  <input class="hp-input" type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
-                </div>
-            </div>
-            <div class="resource flex-group-center">
-                <label for="data.ar.value" class="resource-label rollable" data-roll="(@ar.value)d6cs>=5" data-label="Armor">AR</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                  <input type="text" name="data.ar.value" value="{{data.ar.value}}" data-dtype="Number"/>
-                  <span> / </span>
-                  <input type="text" name="data.ar.max" value="{{data.ar.max}}" data-dtype="Number"/>
-                </div>
-            </div>
-            <div class="resource flex-group-center">
-              <label for="data.sr.value" class="resource-label rollable" data-roll="(@sr.value)d6cs>=5" data-label="Shield">SR</label>
-              <div class="resource-content flexrow flex-center flex-between">
-                <input type="text" name="data.sr.value" value="{{data.sr.value}}" data-dtype="Number"/>
-                <span> / </span>
-                <input type="text" name="data.sr.max" value="{{data.sr.max}}" data-dtype="Number"/>
-              </div>
-            </div>
-            <div class="resource flex-group-center">
-              <label for="data.evasion.value" class="resource-label">Evasion</label>
-              <div class="resource-content flexrow flex-center flex-between">
-                <input type="text" name="data.evasion.value" value="{{data.evasion.value}}" data-dtype="Number"/>
-              </div>
-            </div>
-            <div class="resource flex-group-center">
-              <label for="data.ap.value" class="resource-label">AP</label>
-              <div class="resource-content flexrow flex-center flex-between">
-                <input type="text" name="data.ap.value" value="{{data.ap.value}}" data-dtype="Number"/>
-                <span> / </span>
-                <input type="text" name="data.ap.max" value="{{data.ap.max}}" data-dtype="Number"/>
-              </div>
-          </div>
+          
+          
         </div>
-
+      </div>
         
         {{!-- Skills Tab --}}
       <div class="tab biography" data-group="primary" data-tab="skills">
@@ -112,16 +107,20 @@
             {{#if skill.new}}
                 <div class="skill" data-skill="{{key}}">
 
-                  <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
-
-                  <div>
                     <h4 for="data.skills.{{key}}.value" class="skill-name rollable" data-roll="d10+@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value" data-label="{{key}}">{{key}}</h4>
                     <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                  </div>
+                  
+                    <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
+                  
+                    <input class="skill-checkbox" name="data.skills.{{key}}.marked" type="checkbox" {{checked skill.marked}}>
 
-                  <input class="skill-drawbacks" type="text" name="data.skills.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
+                    <input class="skill-drawbacks" type="text" name="data.skills.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
+                 
+
+                  
                 
                 </div>
+
                 {{/if}}
             {{/each}}
           </div>
