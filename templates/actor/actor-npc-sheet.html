@@ -4,10 +4,12 @@
     <header class="sheet-header npc-header">
         
         <div class="header-fields">
-          <div class="img-row grid grid-4col">
-            <img class="profile" id="actor-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
-            <div>
-                <h2 >Threat Level</h2>
+          <div class="">
+            <div class="">
+              <img class="profile" id="actor-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
+              <h2 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h2>
+            </div>
+                <h2>Threat Level</h2>
                 <h2 class="pocket"><input name="data.tl.value" type="text" value="{{data.tl.value}}" placeholder="Ex: 3" data-dtype="String"/></h2>
             </div>
             <div>
@@ -18,10 +20,8 @@
               <h2>Bank</h2>
               <h2 class="bank"><input name="data.credits.bank.value" type="text" value="{{data.credits.bank.value}}" placeholder="Bank" data-dtype="String"/></h2>
             </div>
+            </div>
           </div>
-          
-          
-            <h1 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h1>
             {{!-- The grid classes are defined in scss/global/_grid.scss. To use,
             use both the "grid" and "grid-Ncol" class where "N" can be any number
             from 1 to 12 and will create that number of columns.  --}}
@@ -29,7 +29,7 @@
               {{!-- "flex-group-center" is also defined in the _grid.scss file
               and it will add a small amount of padding, a border, and will
               center all of its child elements content and text. --}}
-              <div class="resource flex-group-center">
+              <div class="flex-group-center">
                   <label for="data.hp.value" class="resource-label">HP</label>
                   <div class="resource-content flexrow flex-center flex-between">
                     <input class="hp-input" type="text" name="data.hp.deathThreshold" value="{{data.hp.deathThreshold}}" data-dtype="Number"/>
@@ -39,7 +39,7 @@
                     <input class="hp-input" type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
                   </div>
               </div>
-              <div class="resource flex-group-center">
+              <div class="flex-group-center">
                 <label for="data.ar.value" class="resource-label rollable" data-roll="(@ar.value)d6cs>=4" data-label="Armor">AR</label>
                 <div class="resource-content flexrow flex-center flex-between">
                   <input type="text" name="data.ar.value" value="{{data.ar.value}}" data-dtype="Number"/>
@@ -47,7 +47,7 @@
                   <input type="text" name="data.ar.max" value="{{data.ar.max}}" data-dtype="Number"/>
                 </div>
             </div>
-            <div class="resource flex-group-center">
+            <div class="flex-group-center">
               <label for="data.sr.value" class="resource-label rollable" data-roll="(@sr.value)d6cs>=4" data-label="Shield">SR</label>
               <div class="resource-content flexrow flex-center flex-between">
                 <input type="text" name="data.sr.value" value="{{data.sr.value}}" data-dtype="Number"/>
@@ -55,13 +55,7 @@
                 <input type="text" name="data.sr.max" value="{{data.sr.max}}" data-dtype="Number"/>
               </div>
             </div>
-              <div class="resource flex-group-center">
-                <label for="data.evasion.value" class="resource-label">Evasion</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                  <input type="text" name="data.evasion.value" value="{{data.evasion.value}}" data-dtype="Number"/>
-                </div>
-              </div>
-              <div class="resource flex-group-center">
+              <div class="flex-group-center">
                 <label for="data.ap.value" class="resource-label">AP</label>
                 <div class="resource-content flexrow flex-center flex-between">
                   <input type="text" name="data.ap.value" value="{{data.ap.value}}" data-dtype="Number"/>
