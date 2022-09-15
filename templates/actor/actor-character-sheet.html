@@ -4,7 +4,7 @@
   <header class="sheet-header">
       
       <div class="header-fields">
-        <div class="top-section grid grid-8col">
+        <div class="top-section grid top-section-grid">
         <div class="portrait-section">
           <img class="profile" id="actor-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
           <h2 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h2>
@@ -72,29 +72,19 @@
                 </div>
             </div>
           </div>
-        
-          
-          
         </div>
+          {{!-- Sheet Tab Navigation --}}
+        <nav class="sheet-tabs tabs" data-group="primary">
+            <a class="item" data-tab="skills">Skills</a>
+            <a class="item" data-tab="items">Equipment</a>
+            <a class="item" data-tab="augments">Augments</a>
+            <a class="item" data-tab="features">Features</a>
+        </nav>
       </div>
-        
-        {{!-- Skills Tab --}}
-      <div class="tab biography" data-group="primary" data-tab="skills">
-          <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
-          <div>
-          </div>
-      </div>
-
-      </div>
+    </div>
   </header>
 
-  {{!-- Sheet Tab Navigation --}}
-  <nav class="sheet-tabs tabs" data-group="primary">
-      <a class="item" data-tab="skills">Skills</a>
-      <a class="item" data-tab="items">Equipment</a>
-      <a class="item" data-tab="augments">Augments</a>
-      <a class="item" data-tab="features">Features</a>
-  </nav>
+  
 
   {{!-- Sheet Body --}}
   <section class="sheet-body">
@@ -115,10 +105,6 @@
                     <input class="skill-checkbox" name="data.skills.{{key}}.marked" type="checkbox" {{checked skill.marked}}>
 
                     <input class="skill-drawbacks" type="text" name="data.skills.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
-                 
-
-                  
-                
                 </div>
 
                 {{/if}}
@@ -132,23 +118,31 @@
 
     {{!-- Owned Items Tab --}}
     <div class="tab items" data-group="primary" data-tab="items">
+      <div class="resource flex-group-center">
+        <label for="data.carryingCapacity.current" class="resource-label">Carrying Capacity</label>
+        <div class="resource-content flexrow flex-center flex-between">
+          <input type="text" name="data.carryingCapacity.current" value="{{data.carryingCapacity.current}}" data-dtype="Number"/>
+          <span> / </span>
+          <input type="text" name="data.carryingCapacity.maximum" value="{{data.carryingCapacity.maximum}}" data-dtype="Number"/>
+        </div>
+      </div>
       <h2>Attacks</h2>
       <ol class="items-list">
         <li class="item flexrow item-header">
           <div class="item-image"></div>
           <div class="item-name"">Name</div>
           <div class="item-damage"">Damage</div>
+          <div class="item-slots"">Slots</div>
           <div class="item-range">Range</div>
           <div class="item-ammo">Ammo</div>
-          <div class="item-controls">
-            <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
-          </div>
+          <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
         </li>
       {{#each weapons as |weapon id|}}
         <li class="item flexrow items-list-item" data-item-id="{{weapon._id}}">
             <div class="item-image" ><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
             <h4 class="item-name collapsible"><a class="item-name">{{weapon.name}}</a></h4>
             <h4 class="item-damage rollable" data-roll="{{data.damage}}" data-label="{{damage}}"><a class="item-damage">{{data.damage}}</a></h4>
+            <h4 class="item-slots">{{data.slots}}</h4>
             <h4 class="item-range">{{data.range}}</h4>
             <h4 class="item-ammo">{{data.ammoCurrent}}/{{data.ammoMax}}</h4>
             <div class="item-controls">
@@ -168,6 +162,7 @@
                 <div class="item-image"></div>
                 <div class="item-name">Name</div>
                 <div class="item-quantity">Quantity</div>
+                <div class="item-quantity">Slots</div>
                 <div></div>
                 <div></div>
                 <div class="item-controls">
@@ -179,6 +174,7 @@
                   <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                   <h4 class="item-name collapsible"><a class="item-name">{{item.name}}</a></h4>
                   <h4 class="item-quantity">{{data.quantity}}</h4>
+                  <h4 class="item-slots">{{data.slots}}</h4>
                   <h4></h4>
                   <h4></h4>
                   <div class="item-controls">
@@ -204,9 +200,7 @@
               <li class="item flexrow item-header">
                 <div class="item-image"></div>
                 <div class="item-name">Name</div>
-                <div class="item-controls">
-                  <a class="item-control item-create" title="Create augment" data-type="augment"><i class="fas fa-plus"></i> Add augment</a>
-                </div>
+                <a class="item-control item-create" title="Create augment" data-type="augment"><i class="fas fa-plus"></i> Add augment</a>
               </li>
           {{#each augments as |augment id|}}
           <ol class="items-list"></ol>

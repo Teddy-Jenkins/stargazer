@@ -26,8 +26,8 @@ export class StargazerActor extends Actor {
    */
   prepareData() {
     super.prepareData();
-    const actorData = this.data;
-    const data = actorData.data;
+    const actorData = this.system;
+    const data = actorData.system;
     const flags = actorData.flags;
 
     if (actorData.type === "character") this._prepareCharacterData(actorData);
@@ -40,7 +40,7 @@ export class StargazerActor extends Actor {
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    const data = actorData.data;
+    const data = actorData.system;
     // Make modifications to data here.
 
   }
@@ -48,7 +48,7 @@ export class StargazerActor extends Actor {
   _prepareNpcData(actorData) {
   
     // Make modifications to data here. For example:
-    const data = actorData.data;
+    const data = actorData.system;
   }
 
   getRollData() {
@@ -65,7 +65,7 @@ export class StargazerActor extends Actor {
    * Prepare character roll data.
    */
   _getCharacterRollData(data) {
-    if (this.data.type !== 'character') return;
+    if (this.type !== 'character') return;
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
@@ -85,7 +85,7 @@ export class StargazerActor extends Actor {
    * Prepare NPC roll data.
    */
   _getNpcRollData(data) {
-    if (this.data.type !== 'npc') return;
+    if (this.type !== 'npc') return;
 
     // Process additional NPC data here.
   }

@@ -4,7 +4,7 @@
         <div class="header-fields">
             <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
             
-            <div class="grid grid-3col">
+            <div class="grid grid-4col">
                 <div class="resource flex-group-center">
                     <label for="data.ammoCurrent" class="resource-label">Ammo</label>
                     <div class="resource-content flexrow flex-center flex-between">
@@ -25,6 +25,13 @@
                     <label for="data.damage" class="resource-label">Damage</label>
                     <div class="resource-content flexrow flex-center flex-between">
                         <input type="text" name="data.damage" value="{{data.data.damage}}" data-dtype="String"/>
+                    </div>
+                </div>
+
+                <div class="resource flex-group-center">
+                    <label for="data.slots" class="resource-label">Slots</label>
+                    <div class="resource-content flexrow flex-center flex-between">
+                        <input type="text" name="data.slots" value="{{data.data.slots}}" data-dtype="String"/>
                     </div>
                 </div>
             </div>

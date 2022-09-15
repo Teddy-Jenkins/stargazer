@@ -248,6 +248,10 @@
       "attributes": {
         "level": {
           "value": 1
+        },
+        "carryingCapacity": {
+          "current": 0,
+          "maximum": 10
         }
       }
     },
@@ -298,7 +302,7 @@
     "item": {
       "templates": ["base"],
       "quantity": 1,
-      "weight": 0
+      "slots": 0
     },
 
     "weapon": {
@@ -307,7 +311,8 @@
       "ammoMax": 0,
       "ammoCurrent": 0,
       "range": "",
-      "damage": ""
+      "damage": "",
+      "slots": 0
     },
 
     "feature": {

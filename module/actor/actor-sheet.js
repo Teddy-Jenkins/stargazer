@@ -17,7 +17,7 @@ export class StargazerActorSheet extends ActorSheet {
 
   /** @override */
   get template() {
-    return `systems/stargazer/templates/actor/actor-${this.actor.data.type}-sheet.html`;
+    return `systems/stargazer/templates/actor/actor-${this.actor.type}-sheet.html`;
   }
   /* -------------------------------------------- */
 

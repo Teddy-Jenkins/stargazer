@@ -80,7 +80,6 @@ h1, h2, h3, h4 {
 .grid-8col {
   grid-column: span 8 / span 8;
   grid-template-columns: repeat(8, minmax(0, 1fr));
-  grid-template-rows: repeat(5, 1fr);
 }
 
 .grid-9col {
@@ -208,6 +207,7 @@ h1, h2, h3, h4 {
 
 nav.sheet-tabs {
   max-height: 32px;
+  grid-column: span 8 / span 8;
 }
 
 .boilerplate .tox .tox-edit-area {
@@ -240,8 +240,6 @@ nav.sheet-tabs {
   text-shadow: none;
   height: 100%;
 }
-
-
 
 .boilerplate .items-list {
   list-style: none;
@@ -307,7 +305,7 @@ nav.sheet-tabs {
 }
 
 .sheet-header{
-  max-height: 270px;
+  max-height: 330px;
 }
 
 .header-fields .top-section{
@@ -315,7 +313,12 @@ nav.sheet-tabs {
 }
 
 .top-section{
-  max-height: 275px;
+  
+}
+
+.top-section-grid{
+  grid-column: span 8 / span 8;
+  grid-template-columns: repeat(8, minmax(0, 1fr));
 }
 
 .npc-header{
@@ -415,6 +418,7 @@ nav.sheet-tabs {
 .resource {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
+  padding: 2px !important;
 }
 
 .resource-content {
