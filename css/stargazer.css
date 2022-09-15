@@ -306,6 +306,7 @@ nav.sheet-tabs {
 
 .sheet-header{
   max-height: 330px;
+  margin-bottom: 30px;
 }
 
 .header-fields .top-section{
@@ -461,6 +462,10 @@ nav.sheet-tabs {
   grid-auto-flow: column;
   grid-auto-columns: 1fr 1fr;
   max-width: 100%;
+}
+
+.skills-container {
+  margin-bottom: 30px;
 }
 
 .skill {
