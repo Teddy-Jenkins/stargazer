@@ -4,23 +4,6 @@
  */
 export class StargazerActor extends Actor {
 
-
-  /** @override */
-  static async create(data, options={}) {
-    data.token = data.token || {};
-    let defaults = {};
-    if (data.type === "character") {
-      defaults = {
-        actorLink: true,
-        disposition: 1,
-        vision: true,
-        dimSight: 0,
-        brightSight: 0,
-      };
-    }
-    mergeObject(data.token, defaults, {overwrite: false});
-    return super.create(data, options);
-  }
   /**
    * Augment the basic actor data with additional dynamic data.
    */
