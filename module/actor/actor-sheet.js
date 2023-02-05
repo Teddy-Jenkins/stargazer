@@ -65,7 +65,7 @@ export class StargazerActorSheet extends ActorSheet {
     const gear = [];
     const features = [];
     const weapons = [];
-    const augments = [];
+    const assets = [];
 
     // Iterate through items, allocating to containers
     // let totalWeight = 0;
@@ -83,9 +83,9 @@ export class StargazerActorSheet extends ActorSheet {
       else if (i.type === 'weapon') {
         weapons.push(i);
       }
-      // Append to augments.
-      else if (i.type === 'augment') {
-        augments.push(i);
+      // Append to assets.
+      else if (i.type === 'asset') {
+        assets.push(i);
       }
     }
 
@@ -93,7 +93,7 @@ export class StargazerActorSheet extends ActorSheet {
     context.gear = gear;
     context.features = features;
     context.weapons = weapons;
-    context.augments = augments;
+    context.assets = assets;
   }
 
   _prepareCharacterData(context) {

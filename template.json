@@ -21,6 +21,16 @@
           "max": 0
         },
 
+        "cr": {
+          "value": 0,
+          "max": 0
+        },
+
+        "sp": {
+          "value": 0,
+          "max": 0
+        },
+
         "ap": {
           "value": 3,
           "min": 0,
@@ -55,7 +65,23 @@
         },
 
         "skills": {
+          "Academics": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false
+          },
           "Athletics": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false
+          },
+          "Charisma": {
             "value": 0,
             "active": true,
             "new": true,
@@ -79,23 +105,7 @@
             "drawbacks": 0,
             "marked": false
           },
-          "Culture": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
-          },
           "Endurance": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
-          },
-          "Faith": {
             "value": 0,
             "active": true,
             "new": true,
@@ -111,7 +121,7 @@
             "drawbacks": 0,
             "marked": false
           },
-          "Information": {
+          "History": {
             "value": 0,
             "active": true,
             "new": true,
@@ -143,14 +153,6 @@
             "drawbacks": 0,
             "marked": false
           },
-          "Lore": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
-          },
           "Machinery": {
             "value": 0,
             "active": true,
@@ -175,7 +177,7 @@
             "drawbacks": 0,
             "marked": false
           },
-          "Piloting": {
+          "Occult": {
             "value": 0,
             "active": true,
             "new": true,
@@ -191,7 +193,7 @@
             "drawbacks": 0,
             "marked": false
           },
-          "Rhetoric": {
+          "Religion": {
             "value": 0,
             "active": true,
             "new": true,
@@ -214,31 +216,27 @@
             "edges": 0,
             "drawbacks": 0,
             "marked": false
+          },
+          "Survival": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false
           }
         },
 
-        "augments": {
-          "head": {
-            "availableSlots": 3,
-            "maximumSlots": 3
+        "assets": {
+          "type": {
+            "Force": "",
+            "Fund": "",
+            "Leverage": "",
+            "Utility": "",
+            "Information": "",
+            "Penalty": ""
           },
-          "body": {
-            "availableSlots": 3,
-            "maximumSlots": 3
-          },
-          "leftArm": {
-            "availableSlots": 3,
-            "maximumSlots": 3
-          },
-          "rightArm": {
-            "availableSlots": 3,
-            "maximumSlots": 3
-          },
-          "legs": {
-            "availableSlots": 3,
-            "maximumSlots": 3
-          },
-          "placement": ""
+          "rating": ""
         }
       }
     },
@@ -258,27 +256,27 @@
     "npc": {
       "templates": ["base"],
       "attributes": {
-        "Physique": {
+        "Attack": {
           "value": 0,
           "active": true
         },
-        "Dexterity": {
+        "Defense": {
           "value": 0,
           "active": true
         },
-        "Intelligence": {
+        "Tactics": {
           "value": 0,
           "active": true
         },
-        "Charisma": {
+        "Move": {
           "value": 0,
           "active": true
         },
-        "Psyche": {
+        "Social": {
           "value": 0,
           "active": true
         },
-        "Mysticism": {
+        "Know": {
           "value": 0,
           "active": true
         }
@@ -292,7 +290,7 @@
   
 
   "Item": {
-    "types": ["item", "weapon", "feature", "augment"],
+    "types": ["item", "weapon", "feature", "asset"],
     "templates": {
       "base": {
         "description": ""
@@ -319,10 +317,10 @@
       "templates": ["base"]
     },
 
-    "augment": {
+    "asset": {
       "templates": ["base"],
-      "slotsRequired": "",
-      "type": ""
+      "type": "",
+      "rating": ""
     }
   }
 }

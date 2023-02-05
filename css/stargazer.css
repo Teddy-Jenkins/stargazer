@@ -384,13 +384,13 @@ nav.sheet-tabs {
   padding: 0;
 }
 
-.bank-container{
+.pocket-container{
   grid-column: 3;
   grid-row: 1;
   height: min-content;
 }
 
-.pocket-container{
+.bank-container{
   grid-column: 4;
   grid-row: 1;
   height: min-content;
