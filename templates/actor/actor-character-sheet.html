@@ -100,7 +100,7 @@
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
           <div class="skills">
             {{#each data.skills as |skill key|}}
-            {{#if skill.new}}
+            {{#if skill.updated}}
                 <div class="skill" data-skill="{{key}}">
 
                     <h4 for="data.skills.{{key}}.value" class="skill-name rollable" data-roll="d10+@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value" data-label="{{key}}">{{key}}</h4>
