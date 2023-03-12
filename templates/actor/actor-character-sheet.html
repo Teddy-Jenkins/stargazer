@@ -103,7 +103,7 @@
             {{#if skill.updated}}
                 <div class="skill" data-skill="{{key}}">
 
-                    <h4 for="data.skills.{{key}}.value" class="skill-name rollable" data-roll="d10+@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value" data-label="{{key}}">{{key}}</h4>
+                    <h4 for="data.skills.{{key}}.value" class="skill-name rollable" data-roll="(@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value)d6cs>=4" data-label="{{key}}">{{key}}</h4>
                     <input class="skill-input" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
                   
                     <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
