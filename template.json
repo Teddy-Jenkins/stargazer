@@ -7,7 +7,11 @@
           "value": 0,
           "min": -100,
           "max": 0,
-          "deathThreshold": -10
+          "deathThreshold": -10,
+          "fleshValue": 3,
+          "fleshMax": 3,
+          "gritValue": 5,
+          "gritMax": 5
         },
         "ar": {
           "value": 0,

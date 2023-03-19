@@ -49,25 +49,30 @@
             </div>
             <div class="resources">
               <div class="resource flex-group-center">
-                  <label for="data.hp.value" class="resource-label">HP</label>
+                  <label for="data.hp.fleshValue" class="resource-label">Flesh</label>
                   <div class="resource-content flexrow flex-center flex-between">
-                    <input class="hp-input" type="text" name="data.hp.max" value="{{data.hp.max}}" data-dtype="Number"/>
-                    <input class="hp-input" type="text" name="data.hp.value" value="{{data.hp.value}}" data-dtype="Number"/>
-                    <input class="hp-input" type="text" name="data.hp.deathThreshold" value="{{data.hp.deathThreshold}}" data-dtype="Number"/>
+                    <input class="hp-input" type="text" name="data.hp.fleshValue" value="{{data.hp.fleshValue}}" data-dtype="Number"/>
+                    <input class="hp-input" type="text" name="data.hp.fleshMax" value="{{data.hp.fleshMax}}" data-dtype="Number"/>
                   </div>
+                  
+              </div>
+              <div class="resource flex-group-center">
+                <label for="data.hp.gritValue" class="resource-label">Grit</label>
+                <div class="resource-content flexrow flex-center flex-between">
+                  <input class="hp-input" type="text" name="data.hp.gritValue" value="{{data.hp.gritValue}}" data-dtype="Number"/>
+                  <input class="hp-input" type="text" name="data.hp.gritMax" value="{{data.hp.gritMax}}" data-dtype="Number"/>
+                </div>
               </div>
               <div class="resource flex-group-center">
                   <label for="data.ar.value" class="resource-label rollable" data-roll="(@ar.value)d6cs>=4" data-label="Armor">AR</label>
                   <div class="resource-content flexrow flex-center flex-between">
                     <input type="text" name="data.ar.value" value="{{data.ar.value}}" data-dtype="Number"/>
-                    <input type="text" name="data.ar.max" value="{{data.ar.max}}" data-dtype="Number"/>
                   </div>
               </div>
               <div class="resource flex-group-center">
                 <label for="data.sr.value" class="resource-label rollable" data-roll="(@sr.value)d6cs>=4" data-label="Shield">SR</label>
                 <div class="resource-content flexrow flex-center flex-between">
                   <input type="text" name="data.sr.value" value="{{data.sr.value}}" data-dtype="Number"/>
-                  <input type="text" name="data.sr.max" value="{{data.sr.max}}" data-dtype="Number"/>
                 </div>
               </div>
               <div class="resource flex-group-center">
