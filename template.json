@@ -69,15 +69,6 @@
         },
 
         "skills": {
-          "Academics": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
-          },
           "Athletics": {
             "value": 0,
             "active": true,
@@ -85,7 +76,18 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
+          },
+          "Authority": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true
           },
           "Charisma": {
             "value": 0,
@@ -94,7 +96,18 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
+          },
+          "Concept": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true
           },
           "Coordination": {
             "value": 0,
@@ -103,7 +116,8 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Composure": {
             "value": 0,
@@ -112,7 +126,18 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
+          },
+          "Drama": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true
           },
           "Endurance": {
             "value": 0,
@@ -121,25 +146,18 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
-          "First-Aid": {
+          "Empathy": {
             "value": 0,
             "active": true,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
-          },
-          "History": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Insight": {
             "value": 0,
@@ -148,16 +166,8 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
-          },
-          "Linguistics": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Logic": {
             "value": 0,
@@ -166,16 +176,8 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
-          },
-          "Machinery": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Navigation": {
             "value": 0,
@@ -184,25 +186,18 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
-          "Networking": {
+          "Rhetoric": {
             "value": 0,
             "active": true,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
-          },
-          "Occult": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Reflex": {
             "value": 0,
@@ -211,16 +206,8 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
-          },
-          "Religion": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Stealth": {
             "value": 0,
@@ -229,7 +216,8 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
           "Strength": {
             "value": 0,
@@ -238,16 +226,71 @@
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
           },
-          "Survival": {
+          "Suggestion": {
             "value": 0,
             "active": true,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
-            "marked": false
+            "marked": false,
+            "reworked": true
+          }
+        },
+
+        "subjects": {
+          "Sub1": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub2": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub3": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub4": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub5": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub6": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub7": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub8": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub9": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
+          },
+          "Sub10": {
+            "value": 0,
+            "edges": 0,
+            "drawbacks": 0
           }
         },
 

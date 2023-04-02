@@ -104,8 +104,9 @@
       <div class="tab biography" data-group="primary" data-tab="skills">
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
           <div class="skills">
+            <!-- <h2 style="text-align: center;">Skills</h2> -->
             {{#each data.skills as |skill key|}}
-            {{#if skill.updated}}
+            {{#if skill.reworked}}
                 <div class="skill" data-skill="{{key}}">
 
                     <h4 for="data.skills.{{key}}.value" class="skill-name rollable" data-roll="(@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value)d6cs>=4" data-label="{{key}}">{{key}}</h4>
@@ -121,6 +122,22 @@
                 {{/if}}
             {{/each}}
           </div>
+          <!-- <div class="skills">
+            <h2 style="text-align: center;">Subjects</h2>
+            {{#each data.subjects as |subject key|}}
+                <div class="skill" data-skill="{{key}}">
+
+                    <input type="text" class="skill-name" name="data.subjects.{{key}}.name" data-label="{{key}}"/><h4 for="data.subjects.{{key}}.value" class="rollable" data-roll="(@subjects.{{key}}.value + @subjects.{{key}}.edges.value - @subjects.{{key}}.drawbacks.value)d6cs>=4" data-label="{{key}}">Roll</h4>
+                    <input class="skill-input" type="text" name="data.subjects.{{key}}.value" value="{{subject.value}}" data-dtype="Number"/>
+                  
+                    <input class="skill-edges" type="text" name="data.subjects.{{key}}.edges.value" value="{{subject.edges.value}}" data-dtype="Number"/>
+                  
+                    <input class="skill-checkbox" name="data.subjects.{{key}}.marked" type="checkbox" {{checked skill.marked}}>
+
+                    <input class="skill-drawbacks" type="text" name="data.subjects.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
+                </div>
+            {{/each}}
+          </div> -->
       </div>
 
       <div class="tab weapons" data-group="primary" data-tab="weapons">

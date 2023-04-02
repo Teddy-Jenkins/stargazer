@@ -101,6 +101,10 @@ export class StargazerActorSheet extends ActorSheet {
     for (let [k, v] of Object.entries(context.data.skills)) {
       v.label = game.i18n.localize(CONFIG.STARGAZER.skills[k]) ?? k;
     }
+
+    for (let [k, v] of Object.entries(context.data.subjects)) {
+      v.label = game.i18n.localize(CONFIG.STARGAZER.subjects[k]) ?? k;
+    }
   }
   /* -------------------------------------------- */
 
