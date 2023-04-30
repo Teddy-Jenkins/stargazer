@@ -189,6 +189,16 @@
             "marked": false,
             "reworked": true
           },
+          "Perception": {
+            "value": 0,
+            "active": true,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true
+          },
           "Rhetoric": {
             "value": 0,
             "active": true,
@@ -245,52 +255,62 @@
           "Sub1": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub2": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub3": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub4": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub5": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub6": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub7": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub8": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub9": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           },
           "Sub10": {
             "value": 0,
             "edges": 0,
-            "drawbacks": 0
+            "drawbacks": 0,
+            "name": ""
           }
         },
 
