@@ -106,7 +106,7 @@
           <div class="skills">
             <!-- <h2 style="text-align: center;">Skills</h2> -->
             {{#each data.skills as |skill key|}}
-            {{#if skill.reworked}}
+            {{#if skill.rework}}
                 <div class="skill" data-skill="{{key}}">
 
                     <h4 for="data.skills.{{key}}.value" class="skill-name rollable" data-roll="(@skills.{{key}}.value + @skills.{{key}}.edges.value - @skills.{{key}}.drawbacks.value)d6cs>=4" data-label="{{key}}">{{key}}</h4>

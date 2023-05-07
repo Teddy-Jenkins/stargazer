@@ -71,183 +71,219 @@
         "skills": {
           "Athletics": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Authority": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
-          "Charisma": {
+          "Charm": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Concept": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Coordination": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
-          },
-          "Composure": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Drama": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
-          },
-          "Endurance": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Empathy": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
-          },
-          "Insight": {
-            "value": 0,
-            "active": true,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Logic": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
+          },
+          "Luck": {
+            "value": 0,
+            "active": false,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Navigation": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Perception": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Rhetoric": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Reflex": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
+          },
+          "Resilience": {
+            "value": 0,
+            "active": false,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true,
+            "changed": true,
+            "rework": true
+          },
+          "Shivers": {
+            "value": 0,
+            "active": false,
+            "new": true,
+            "updated": true,
+            "edges": 0,
+            "drawbacks": 0,
+            "marked": false,
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Stealth": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Strength": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           },
           "Suggestion": {
             "value": 0,
-            "active": true,
+            "active": false,
             "new": true,
             "updated": true,
             "edges": 0,
             "drawbacks": 0,
             "marked": false,
-            "reworked": true
+            "reworked": true,
+            "changed": true,
+            "rework": true
           }
         },
 
