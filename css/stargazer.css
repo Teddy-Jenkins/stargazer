@@ -457,11 +457,12 @@ nav.sheet-tabs {
 
 .skills{
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-auto-flow: row;
   grid-auto-rows: 1fr 1fr 1fr;
-  max-width: 100%;
+  max-width: 75%;
+  margin: auto;
 }
 
 .skills-container {
@@ -471,8 +472,9 @@ nav.sheet-tabs {
 .skill {
   padding-top: 10px;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
   grid-template-rows: 1fr 1fr 1fr;
+  grid-row-gap: 3px;
   text-align: center;
   place-items: center;
 }
@@ -481,15 +483,28 @@ nav.sheet-tabs {
   max-width: 70%;
   margin: auto;
   grid-row: 1;
-  grid-column: 1 / span 3;
+  grid-column: 1 / span 5;
 }
 
-.skill-input{
-  max-width: 40%;
+.skill-score{
   margin: auto !important;
   text-align: center !important;
   grid-row: 2;
+  grid-column: 3;
+}
+
+.skill-value{
+  margin: auto !important;
+  text-align: center !important;
+  grid-row: 3;
   grid-column: 2;
+}
+
+.skill-max{
+  margin: auto !important;
+  text-align: center !important;
+  grid-row: 3;
+  grid-column: 4;
 }
 
 .skill-edges{

@@ -10,8 +10,10 @@
           "deathThreshold": -10,
           "fleshValue": 3,
           "fleshMax": 3,
-          "gritValue": 5,
-          "gritMax": 5
+          "gritValue": 3,
+          "gritMax": 3,
+          "egoValue": 3,
+          "egoMax": 3
         },
         "ar": {
           "value": 0,
@@ -69,8 +71,10 @@
         },
 
         "skills": {
-          "Brutal": {
+          "Fight": {
             "value": 0,
+            "max": 0,
+            "score": 0,
             "active": false,
             "new": true,
             "updated": true,
@@ -80,10 +84,14 @@
             "reworked": true,
             "changed": true,
             "rework": true,
-            "attribute": true
+            "points": true,
+            "attribute": true,
+            "corrected": true
           },
-          "Educated": {
+          "Intrigue": {
             "value": 0,
+            "max": 0,
+            "score": 0,
             "active": false,
             "new": true,
             "updated": true,
@@ -93,10 +101,14 @@
             "reworked": true,
             "changed": true,
             "rework": true,
-            "attribute": true
+            "points": true,
+            "attribute": true,
+            "corrected": true
           },
-          "Fortunate": {
+          "Venture": {
             "value": 0,
+            "max": 0,
+            "score": 0,
             "active": false,
             "new": true,
             "updated": true,
@@ -106,98 +118,9 @@
             "reworked": true,
             "changed": true,
             "rework": true,
-            "attribute": true
-          },
-          "Human": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
-          },
-          "Sharp": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
-          },
-          "Subtle": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
-          },
-          "Swift": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
-          },
-          "Tenacious": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
-          },
-          "Traveled": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
-          },
-          "Weird": {
-            "value": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "attribute": true
+            "points": true,
+            "attribute": true,
+            "corrected": true
           }
         },
 
