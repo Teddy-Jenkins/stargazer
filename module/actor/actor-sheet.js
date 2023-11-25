@@ -11,7 +11,7 @@ export class StargazerActorSheet extends ActorSheet {
       template: "systems/stargazer/templates/actor/actor-sheet.html",
       width: 700,
       height: 800,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills" }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills", }]
     });
   }
 
@@ -100,6 +100,10 @@ export class StargazerActorSheet extends ActorSheet {
     // Handle ability scores.
     for (let [k, v] of Object.entries(context.data.skills)) {
       v.label = game.i18n.localize(CONFIG.STARGAZER.skills[k]) ?? k;
+    }
+
+    for (let [k, v] of Object.entries(context.data.rests)) {
+      v.label = game.i18n.localize(CONFIG.STARGAZER.rests[k]) ?? k;
     }
 
     for (let [k, v] of Object.entries(context.data.subjects)) {

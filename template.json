@@ -38,9 +38,9 @@
         },
 
         "ap": {
-          "value": 3,
+          "value": 10,
           "min": 0,
-          "max": 3
+          "max": 10
         },
         
         "evasion": {
@@ -68,6 +68,41 @@
           "bank": {
             "value": 0
           }
+        },
+
+        "rests": {
+          "action": {
+            "checked": false
+          },
+          "minute": {
+            "checked": false
+          },
+          "hour": {
+            "checked": false
+          },
+          "day": {
+            "checked": false
+          },
+          "week": {
+            "checked": false
+          },
+          "season": {
+            "checked": false
+          }
+        },
+
+        "notes": {
+          "extraNotes": {
+            "description": ""
+          },
+          "skillNotes": {
+            "description": ""
+          }
+        },
+
+        "carryCap": {
+          "current": 0,
+          "maximum": 10
         },
 
         "skills": {
@@ -206,11 +241,8 @@
       "attributes": {
         "level": {
           "value": 1
-        },
-        "carryingCapacity": {
-          "current": 0,
-          "maximum": 10
         }
+        
       }
     },
     "npc": {

@@ -58,6 +58,12 @@ export class StargazerActor extends Actor {
       }
     }
 
+    if (data.rests) {
+      for (let [k, v] of Object.entries(data.rests)) {
+        data[k] = foundry.utils.deepClone(v);
+      }
+    }
+
     if (data.subjects) {
       for (let [k, v] of Object.entries(data.subjects)) {
         data[k] = foundry.utils.deepClone(v);
