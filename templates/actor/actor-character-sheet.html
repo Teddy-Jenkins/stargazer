@@ -40,7 +40,7 @@
             </div>
             <div class="resources">
               <div class="resource flex-group-center">
-                  <label for="data.hp.fleshValue" class="resource-label">Flesh</label>
+                  <label for="data.hp.fleshValue" class="resource-label">Heavy Wounds</label>
                   <div class="resource-content flexrow flex-center flex-between">
                     <input class="hp-input" type="text" name="data.hp.fleshValue" value="{{data.hp.fleshValue}}" data-dtype="Number"/>
                     <input class="hp-input" type="text" name="data.hp.fleshMax" value="{{data.hp.fleshMax}}" data-dtype="Number"/>
@@ -48,26 +48,26 @@
                   
               </div>
               <div class="resource flex-group-center">
-                <label for="data.hp.gritValue" class="resource-label">Grit</label>
+                <label for="data.hp.gritValue" class="resource-label">Light Wounds</label>
                 <div class="resource-content flexrow flex-center flex-between">
                   <input class="hp-input" type="text" name="data.hp.gritValue" value="{{data.hp.gritValue}}" data-dtype="Number"/>
                   <input class="hp-input" type="text" name="data.hp.gritMax" value="{{data.hp.gritMax}}" data-dtype="Number"/>
                 </div>
               </div>
               <div class="resource flex-group-center">
-                  <label for="data.hp.egoValue" class="resource-label">Ego</label>
+                  <label for="data.hp.egoValue" class="resource-label">Stress</label>
                   <div class="resource-content flexrow flex-center flex-between">
                     <input class="hp-input" type="text" name="data.hp.egoValue" value="{{data.hp.egoValue}}" data-dtype="Number"/>
                   <input class="hp-input" type="text" name="data.hp.egoMax" value="{{data.hp.egoMax}}" data-dtype="Number"/>
                   </div>
               </div>
-              <div class="resource flex-group-center">
+              <!-- <div class="resource flex-group-center">
                 <label for="data.ap.value" class="resource-label">Effort</label>
                 <div class="resource-content flexrow flex-center flex-between">
                   <input type="text" name="data.ap.value" value="{{data.ap.value}}" data-dtype="Number"/>
                   <input type="text" name="data.ap.max" value="{{data.ap.max}}" data-dtype="Number"/>
                 </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -149,7 +149,7 @@
           </div>
 
           <div class="rskill-container">
-            <h3>Skills</h3>
+            <h3>Traits</h3>
             <div class="rskill-notes">
               {{editor content=data.notes.skillNotes.description target="data.notes.skillNotes.description" button=true owner=owner editable=editable}}
             </div>

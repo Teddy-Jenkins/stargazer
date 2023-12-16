@@ -8,11 +8,11 @@
           "min": -100,
           "max": 0,
           "deathThreshold": -10,
-          "fleshValue": 3,
+          "fleshValue": 0,
           "fleshMax": 3,
-          "gritValue": 3,
+          "gritValue": 0,
           "gritMax": 3,
-          "egoValue": 3,
+          "egoValue": 0,
           "egoMax": 3
         },
         "ar": {

@@ -562,7 +562,7 @@ nav.sheet-tabs {
 .rskill-notes{
   background-color: rgb(209, 209, 202);
   border-radius: 5px;
-  height: 100%;
+  max-height: 23vh;
   width: 100%;
   grid-column: 1;
   grid-row: 2 / 7;
@@ -579,7 +579,7 @@ nav.sheet-tabs {
 .extra-notes{
   background-color: rgb(209, 209, 202);
   border-radius: 5px;
-  height: 100%;
+  max-height: 23vh;
   width: 100%;
   grid-column: 1;
   grid-row: 2 / 7;
