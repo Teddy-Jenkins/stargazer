@@ -84,15 +84,19 @@
           <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
         <div class="skill-container">
           <div class="skills">
-            <!-- <h2 style="text-align: center;">Skills</h2> -->
+            <div class="skill" data-skill="Action">
+              <h4 for="data.data.action.score" class="skill-name rollable" data-roll="(@data.action.score)d6cs>=4" data-label="action">Action</h4>
+              <input class="skill-score" type="text" name="data.data.action.score" value="{{data.data.action.score}}" data-dtype="Number"/>
+              <input class="skill-value" type="text" name="data.data.action.value" value="{{data.data.action.value}}" data-dtype="Number"/>
+              <input class="skill-max" type="text" name="data.data.action.max" value="{{data.data.action.max}}" data-dtype="Number"/>
+            </div>
+                    <!-- <h2 style="text-align: center;">Skills</h2> -->
             {{#each data.skills as |skill key|}}
             {{#if skill.corrected}}
                 <div class="skill" data-skill="{{key}}">
 
-                    <h4 for="data.skills.{{key}}.score" class="skill-name rollable" data-roll="(@skills.{{key}}.score)d6cs>=4" data-label="{{key}}">{{key}}</h4>
+                    <h4 for="data.skills.{{key}}.score" class="skill-name rollable" data-roll="(@data.action.score)d6cs>=4" data-label="{{key}}">{{key}}</h4>
                     <input class="skill-score" type="text" name="data.skills.{{key}}.score" value="{{skill.score}}" data-dtype="Number"/>
-                    <input class="skill-value" type="text" name="data.skills.{{key}}.value" value="{{skill.value}}" data-dtype="Number"/>
-                    <input class="skill-max" type="text" name="data.skills.{{key}}.max" value="{{skill.max}}" data-dtype="Number"/>
                   
                     <!-- <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
                   
@@ -122,10 +126,6 @@
             {{/each}}
           </div> -->
           <div class="rest-container">
-            <div class="rests">
-              <h3>Action</h3>
-              <input class="skill-checkbox" name="data.rests.action.checked" type="checkbox" {{checked data.rests.action.checked}}>
-            </div>
             <div class="rests">
               <h3>Minute</h3>
               <input class="skill-checkbox" name="data.rests.minute.checked" type="checkbox" {{checked data.rests.minute.checked}}>

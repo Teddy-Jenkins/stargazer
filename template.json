@@ -9,9 +9,9 @@
           "max": 0,
           "deathThreshold": -10,
           "fleshValue": 0,
-          "fleshMax": 3,
+          "fleshMax": 1,
           "gritValue": 0,
-          "gritMax": 3,
+          "gritMax": 2,
           "egoValue": 0,
           "egoMax": 3
         },
@@ -103,6 +103,12 @@
         "carryCap": {
           "current": 0,
           "maximum": 10
+        },
+
+        "action": {
+          "value": 30,
+          "max": 30,
+          "score": 0
         },
 
         "skills": {
