@@ -87,7 +87,7 @@
             "checked": false
           },
           "season": {
-            "checked": false
+            "checked": true
           }
         },
 
@@ -102,7 +102,7 @@
 
         "carryCap": {
           "current": 0,
-          "maximum": 10
+          "maximum": 7
         },
 
         "action": {
@@ -162,6 +162,29 @@
             "points": true,
             "attribute": true,
             "corrected": true
+          }
+        },
+
+        "merits": {
+          "steel": {
+            "max": 0,
+            "score": 0
+          },
+          "heart": {
+            "max": 0,
+            "score": 0
+          },
+          "finesse": {
+            "max": 0,
+            "score": 0
+          },
+          "wisdom": {
+            "max": 0,
+            "score": 0
+          },
+          "readiness": {
+            "max": 0,
+            "score": 0
           }
         },
 

@@ -142,10 +142,6 @@
               <h3>Week</h3>
               <input class="skill-checkbox" name="data.rests.week.checked" type="checkbox" {{checked data.rests.week.checked}}>
             </div>
-            <div class="rests">
-              <h3>Season</h3>
-              <input class="skill-checkbox" name="data.rests.season.checked" type="checkbox" {{checked data.rests.season.checked}}>
-            </div>
           </div>
 
           <div class="rskill-container">
@@ -155,15 +151,47 @@
             </div>
           </div>
 
-          <div class="extra-notes-container">
-            <h3>Notes</h3>
-            <div class="extra-notes">
-              {{editor content=data.notes.extraNotes.description target="data.notes.extraNotes.description" button=true owner=owner editable=editable}}
+          <div class="merits-container">
+            <h3>Merits</h3>
+            <div class="merits">
+              <div class="merit-name"><h4 for="data.merits.readiness.score" >Readiness</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.readiness.score" value="{{data.merits.readiness.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.readiness.max" value="{{data.merits.readiness.max}}" data-dtype="Number"/></div>
+            </div>
+
+            <div class="merits">
+              <div class="merit-name"><h4 for="data.merits.steel.score">Steel</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.steel.score" value="{{data.merits.steel.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.steel.max" value="{{data.merits.steel.max}}" data-dtype="Number"/></div>
+            </div>
+
+            <div class="merits">
+              <div class="merit-name"><h4 for="data.merits.finesse.score">Finesse</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.finesse.score" value="{{data.merits.finesse.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.finesse.max" value="{{data.merits.finesse.max}}" data-dtype="Number"/></div>
+            </div>
+
+            <div class="merits">
+              <div class="merit-name"><h4 for="data.merits.heart.score">Heart</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.heart.score" value="{{data.merits.heart.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.heart.max" value="{{data.merits.heart.max}}" data-dtype="Number"/></div>
+            </div>
+
+            <div class="merits">
+              <div class="merit-name"><h4 for="data.merits.wisdom.score">Wisdom</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.wisdom.score" value="{{data.merits.wisdom.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.wisdom.max" value="{{data.merits.wisdom.max}}" data-dtype="Number"/></div>
             </div>
           </div>
 
+          
+
           <div class="equipment">
-            <h2>Equipment</h2>
+            <div class="inventory-header">
+              <h2 class="inventory-name">Inventory</h2>
+              <input class="inventory-current" type="text" name="data.carryCap.current" value="{{data.carryCap.current}}" data-dtype="Number"/>
+                <input class="inventory-max" type="text" name="data.carryCap.maximum" value="{{data.carryCap.maximum}}" data-dtype="Number"/>
+            </div>
             <ol class="items-list">
               <li class="item flexrow item-header">
                 <div class="item-name">Name</div>
@@ -190,12 +218,18 @@
             {{/each}}
           </ol>
           </div>
+
           
           <!-- <div class="weapons">
 
           </div> -->
-
-          <div class="talents">
+            <div class="extra-notes-container">
+              <h3>Notes</h3>
+              <div class="extra-notes">
+              {{editor content=data.notes.extraNotes.description target="data.notes.extraNotes.description" button=true owner=owner editable=editable}}
+            </div>
+          </div>
+          <!-- <div class="talents">
             <div class="features" data-group="primary" data-tab="features">
               <h2>Talents</h2>
               <ol class="items-list">
@@ -223,7 +257,7 @@
       </div>
 
       <div class="tab weapons" data-group="primary" data-tab="weapons">
-        
+         -->
     </div>
 
     {{!-- Owned Items Tab --}}
