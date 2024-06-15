@@ -32,9 +32,9 @@ export default class StargazerActorBase extends StargazerDataModel {
 
     schema.wounds = new fields.SchemaField({
       lwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      lwMax: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+      lwMax: new fields.NumberField({ ...requiredInteger, initial: 2 }),
       hwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      hwMax: new fields.NumberField({ ...requiredInteger, initial: 2 })
+      hwMax: new fields.NumberField({ ...requiredInteger, initial: 1 })
   });
 
   schema.funds = new fields.NumberField({ ...requiredInteger, initial: 0 });
