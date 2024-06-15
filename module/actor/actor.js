@@ -4,38 +4,49 @@
  */
 export class StargazerActor extends Actor {
 
+  // async _preCreate(data) {
+  //   if (data.type === "character") {
+  //     this.updateSource({ "prototypeToken.actorLink": true });
+  //   }
+  //   super._preCreate(data);
+  // }
   /**
    * Augment the basic actor data with additional dynamic data.
    */
   prepareData() {
     super.prepareData();
-    const actorData = this.system;
-    const data = actorData.system;
-    const flags = actorData.flags;
-
-    if (actorData.type === "character") this._prepareCharacterData(actorData);
-
-    if (actorData.type === "npc") this._prepareNpcData(actorData);
+    
   }
 
+prepareDerivedData() {
+  const actorData = this;
+  const systemData = actorData.system;
+  const flags = actorData.flags || {};
+
+  
+  this._prepareCharacterData(actorData)
+  this._prepareNpcData(actorData);
+}
 
   /**
    * Prepare Character type specific data
    */
   _prepareCharacterData(actorData) {
-    const data = actorData.system;
+    if (actorData.type !== "character") return;
+
+    const systemData = actorData.system;
     // Make modifications to data here.
 
   }
 
   _prepareNpcData(actorData) {
-  
+    if (actorData.type !== "npc") return;
     // Make modifications to data here. For example:
-    const data = actorData.system;
+    const systemData = actorData.system;
   }
 
   getRollData() {
-    const data = super.getRollData();
+    const data = { ...this.system};
 
     // Prepare character roll data.
     this._getCharacterRollData(data);
@@ -52,20 +63,8 @@ export class StargazerActor extends Actor {
 
     // Copy the ability scores to the top level, so that rolls can use
     // formulas like `@str.mod + 4`.
-    if (data.skills) {
-      for (let [k, v] of Object.entries(data.skills)) {
-        data[k] = foundry.utils.deepClone(v);
-      }
-    }
-
-    if (data.rests) {
-      for (let [k, v] of Object.entries(data.rests)) {
-        data[k] = foundry.utils.deepClone(v);
-      }
-    }
-
-    if (data.subjects) {
-      for (let [k, v] of Object.entries(data.subjects)) {
+    if (data.attributes) {
+      for (let [k, v] of Object.entries(data.attributes)) {
         data[k] = foundry.utils.deepClone(v);
       }
     }
@@ -83,6 +82,21 @@ export class StargazerActor extends Actor {
     if (this.type !== 'npc') return;
 
     // Process additional NPC data here.
+  }
+
+  toPlainObject() {
+    const result = {...this};
+
+    // Simplify system data.
+    result.system = this.system.toPlainObject();
+
+    // Add items.
+    result.items = this.items?.size > 0 ? this.items.contents : [];
+
+    // Add effects.
+    result.effects = this.effects?.size > 0 ? this.effects.contents : [];
+
+    return result;
   }
 
 

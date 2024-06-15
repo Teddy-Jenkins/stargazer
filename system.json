@@ -1,10 +1,10 @@
 {
-  "name": "stargazer",
+  "id": "stargazer",
   "title": "Stargazer",
   "description": "The Stargazer system for FoundryVTT!",
-  "version": "1.5.4",
+  "version": "1.5.7",
   "minimumCoreVersion": "0.7.5",
-  "compatibleCoreVersion": "10.291",
+  "compatibleCoreVersion": "12.327",
   "templateVersion": 2,
   "author": "Charlie L",
   "esmodules": ["module/stargazer.js"],

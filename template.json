@@ -3,77 +3,16 @@
     "types": ["character", "npc"],
     "templates": {
       "base": {
-        "hp": {
-          "value": 0,
-          "min": -100,
-          "max": 0,
-          "deathThreshold": -10,
-          "fleshValue": 0,
-          "fleshMax": 1,
-          "gritValue": 0,
-          "gritMax": 2,
-          "egoValue": 0,
-          "egoMax": 3
-        },
-        "ar": {
-          "value": 0,
-          "min": 0,
-          "max": 0
+        "wounds": {
+          "lwValue": 0,
+          "lwMax": 1,
+          "hwValue": 0,
+          "hwMax": 2
         },
 
-        "sr": {
-          "value": 0,
-          "min": 0,
-          "max": 0
-        },
-
-        "cr": {
-          "value": 0,
-          "max": 0
-        },
-
-        "sp": {
-          "value": 0,
-          "max": 0
-        },
-
-        "ap": {
-          "value": 10,
-          "min": 0,
-          "max": 10
-        },
-        
-        "evasion": {
-          "value": 0
-        },
-
-        "level": {
-          "value": 1,
-          "xp": {
-            "currentXp": 0,
-            "maximumXp": 10
-          },
-          "iniquity": {
-            "value": 0
-          },
-          "characterNotes": {
-            "description": ""
-          }
-        },
-
-        "credits": {
-          "pocket": {
-            "value": 0
-          },
-          "bank": {
-            "value": 0
-          }
-        },
+        "funds": 0,
 
         "rests": {
-          "action": {
-            "checked": false
-          },
           "minute": {
             "checked": false
           },
@@ -85,19 +24,13 @@
           },
           "week": {
             "checked": false
-          },
-          "season": {
-            "checked": true
           }
         },
 
         "notes": {
-          "extraNotes": {
-            "description": ""
-          },
-          "skillNotes": {
-            "description": ""
-          }
+          "extraNotes": "",
+          "skillNotes": "",
+          "characterNotes": ""
         },
 
         "carryCap": {
@@ -111,56 +44,17 @@
           "score": 0
         },
 
-        "skills": {
+        "attributes": {
           "Fight": {
-            "value": 0,
-            "max": 0,
             "score": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "points": true,
-            "attribute": true,
             "corrected": true
           },
           "Intrigue": {
-            "value": 0,
-            "max": 0,
             "score": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "points": true,
-            "attribute": true,
             "corrected": true
           },
           "Venture": {
-            "value": 0,
-            "max": 0,
             "score": 0,
-            "active": false,
-            "new": true,
-            "updated": true,
-            "edges": 0,
-            "drawbacks": 0,
-            "marked": false,
-            "reworked": true,
-            "changed": true,
-            "rework": true,
-            "points": true,
-            "attribute": true,
             "corrected": true
           }
         },
@@ -266,42 +160,10 @@
     },
     "character": {
       "templates": ["base"],
-      "biography": "",
-      "attributes": {
-        "level": {
-          "value": 1
-        }
-        
-      }
+      "biography": ""
     },
     "npc": {
       "templates": ["base"],
-      "attributes": {
-        "Attack": {
-          "value": 0,
-          "active": true
-        },
-        "Defense": {
-          "value": 0,
-          "active": true
-        },
-        "Tactics": {
-          "value": 0,
-          "active": true
-        },
-        "Move": {
-          "value": 0,
-          "active": true
-        },
-        "Social": {
-          "value": 0,
-          "active": true
-        },
-        "Know": {
-          "value": 0,
-          "active": true
-        }
-      },
       "tl": {
         "value": 1
       }

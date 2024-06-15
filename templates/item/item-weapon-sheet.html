@@ -8,30 +8,30 @@
                 <div class="resource flex-group-center">
                     <label for="data.ammoCurrent" class="resource-label">Ammo</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.ammoCurrent" value="{{data.data.ammoCurrent}}" data-dtype="Number"/>
+                        <input type="text" name="system.ammoCurrent" value="{{system.ammoCurrent}}" data-dtype="Number"/>
                         <span> / </span>
-                        <input type="text" name="data.ammoMax" value="{{data.data.ammoMax}}" data-dtype="Number"/>
+                        <input type="text" name="system.ammoMax" value="{{system.ammoMax}}" data-dtype="Number"/>
                     </div>
                 </div>
 
                 <div class="resource flex-group-center">
                     <label for="data.ammoCurrent" class="resource-label">Range</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.range" value="{{data.data.range}}" data-dtype="String"/>
+                        <input type="text" name="system.range" value="{{system.range}}" data-dtype="String"/>
                     </div>
                 </div>
 
                 <div class="resource flex-group-center">
                     <label for="data.damage" class="resource-label">Damage</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.damage" value="{{data.data.damage}}" data-dtype="String"/>
+                        <input type="text" name="system.damage" value="{{system.damage}}" data-dtype="String"/>
                     </div>
                 </div>
 
                 <div class="resource flex-group-center">
                     <label for="data.slots" class="resource-label">Slots</label>
                     <div class="resource-content flexrow flex-center flex-between">
-                        <input type="text" name="data.slots" value="{{data.data.slots}}" data-dtype="String"/>
+                        <input type="text" name="system.slots" value="{{system.slots}}" data-dtype="String"/>
                     </div>
                 </div>
             </div>
@@ -48,7 +48,7 @@
 
         {{!-- Description Tab --}}
         <div class="tab" data-group="primary" data-tab="description">
-            {{editor content=data.data.description target="data.description" button=true owner=owner editable=editable}}
+            {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
         </div>
         
     </section>

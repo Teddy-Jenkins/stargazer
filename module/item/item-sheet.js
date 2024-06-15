@@ -22,16 +22,33 @@ export class StargazerItemSheet extends ItemSheet {
 
     // Alternatively, you could use the following return statement to do a
     // unique item sheet by type, like `weapon-sheet.html`.
-    return `${path}/item-${this.item.data.type}-sheet.html`;
+    return `${path}/item-${this.item.type}-sheet.html`;
   }
 
   /* -------------------------------------------- */
 
   /** @override */
-  getData() {
-    const data = super.getData();
-    return data;
+  async getData() {
+    const context = super.getData();
+
+    // Use a safe clone of the item data for further operations.
+    const itemData = this.document.toObject(false);
+
+    context.enrichedDescription = await TextEditor.enrichHTML(
+      this.item.system.description
+    );
+
+    context.system = itemData.system;
+    context.flags = itemData.flags;
+
+    // Adding a pointer to CONFIG.BOILERPLATE
+    context.config = CONFIG.STARGAZER;
+
+
+    return context;
   }
+
+  
 
   /* -------------------------------------------- */
 

@@ -6,36 +6,39 @@ export class StargazerActorSheet extends ActorSheet {
 
   /** @override */
   static get defaultOptions() {
-    return mergeObject(super.defaultOptions, {
-      classes: ["stargazer", "sheet", "actor"],
-      template: "systems/stargazer/templates/actor/actor-sheet.html",
+    return foundry.utils.mergeObject(super.defaultOptions, {
+      classes: ["stargazer", "sheet", "actor", "character"],
       width: 700,
       height: 800,
-      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "skills", }]
+      tabs: [{ navSelector: ".sheet-tabs", contentSelector: ".sheet-body", initial: "features", }]
     });
   }
 
   /** @override */
   get template() {
-    return `systems/stargazer/templates/actor/actor-${this.actor.type}-sheet.html`;
+    return `systems/stargazer/templates/actor/actor-${this.actor.type}-sheet.hbs`;
   }
   /* -------------------------------------------- */
 
+  
+  
   /** @override */
-  getData() {
+  async getData() {
+    // Use a safe clone of the actor data for further operations.
     const context = super.getData();
 
     // Use a safe clone of the actor data for further operations.
-    const actorData = context.actor.data;
+    const actorData = this.document.toPlainObject(false);
 
     // Add the actor's data to context.data for easier access, as well as flags.
-    context.data = actorData.data;
+    context.system = actorData.system;
     context.flags = actorData.flags;
-    context.dtypes = ["String", "Number", "Boolean"];
+    context.config = CONFIG.STARGAZER;
 
     // Prepare character data and items.
     if (actorData.type == 'character') {
       this._prepareItems(context);
+      this._prepareCharacterData(context);
     }
 
     // Prepare NPC data and items.
@@ -43,15 +46,30 @@ export class StargazerActorSheet extends ActorSheet {
       this._prepareItems(context);
     }
 
+    // Enrich biography info for display
+    // Enrichment turns text like `[[/r 1d20]]` into buttons
+    context.enrichedskillNotes = await TextEditor.enrichHTML(
+      this.actor.system.notes.skillNotes
+    );
+    context.enrichedcharacterNotes = await TextEditor.enrichHTML(
+      this.actor.system.notes.characterNotes
+    );
+    context.enrichedextraNotes = await TextEditor.enrichHTML(
+      this.actor.system.notes.extraNotes
+    );
+
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
 
-    // Prepare active effects
+    context.system.enrichedHTML = await TextEditor.enrichHTML(
+      context.system.description
+    );
+    
     
     
     return context;
   }
-
+  
   /**
    * Organize and classify Items for Character sheets.
    *
@@ -98,61 +116,59 @@ export class StargazerActorSheet extends ActorSheet {
 
   _prepareCharacterData(context) {
     // Handle ability scores.
-    for (let [k, v] of Object.entries(context.data.skills)) {
-      v.label = game.i18n.localize(CONFIG.STARGAZER.skills[k]) ?? k;
-    }
-
-    for (let [k, v] of Object.entries(context.data.rests)) {
-      v.label = game.i18n.localize(CONFIG.STARGAZER.rests[k]) ?? k;
-    }
-
-    for (let [k, v] of Object.entries(context.data.subjects)) {
-      v.label = game.i18n.localize(CONFIG.STARGAZER.subjects[k]) ?? k;
-    }
+    
   }
   /* -------------------------------------------- */
 
   /** @override */
   activateListeners(html) {
-  super.activateListeners(html);
+    super.activateListeners(html);
 
-  // Everything below here is only needed if the sheet is editable
-  
-
-  
-
-  // Update Inventory Item
-  html.find('.item-edit').click(ev => {
-    const li = $(ev.currentTarget).parents(".item");
-    const item = this.actor.items.get(li.data("itemId"));
-    item.sheet.render(true);
-  });
-
-  if (!this.options.editable) return;
-
-  // Add Inventory Item
-  html.find('.item-create').click(this._onItemCreate.bind(this));
-
-  // Delete Inventory Item
-  html.find(".item-delete").click(this._onDeleteItem.bind(this));
-
-  let edges = html.find('input.skill-edges');
-  let drawbacks = html.find('input.skill-drawbacks');
-
-  html.find('.rollable').click(this._onRoll.bind(this));
-
-  
-
-  if (this.actor.isOwner) {
-    let handler = ev => this._onDragStart(ev);
-    html.find('li.item').each((i, li) => {
-      if (li.classList.contains("inventory-header")) return;
-      li.setAttribute("draggable", true);
-      li.addEventListener("dragstart", handler, false);
+    // Render the item sheet for viewing/editing prior to the editable check.
+    html.on('click', '.item-edit', (ev) => {
+      const li = $(ev.currentTarget).parents('.item');
+      const item = this.actor.items.get(li.data('itemId'));
+      item.sheet.render(true);
     });
-  }
 
-}
+    // -------------------------------------------------------------
+    // Everything below here is only needed if the sheet is editable
+    if (!this.isEditable) return;
+
+    // Add Inventory Item
+    html.on('click', '.item-create', this._onItemCreate.bind(this));
+
+    // Delete Inventory Item
+    html.on('click', '.item-delete', (ev) => {
+      const li = $(ev.currentTarget).parents('.item');
+      const item = this.actor.items.get(li.data('itemId'));
+      item.delete();
+      li.slideUp(200, () => this.render(false));
+    });
+
+    // Active Effect management
+    html.on('click', '.effect-control', (ev) => {
+      const row = ev.currentTarget.closest('li');
+      const document =
+        row.dataset.parentId === this.actor.id
+          ? this.actor
+          : this.actor.items.get(row.dataset.parentId);
+      onManageActiveEffect(ev, document);
+    });
+
+    // Rollable abilities.
+    html.on('click', '.rollable', this._onRoll.bind(this));
+
+    // Drag events for macros.
+    if (this.actor.isOwner) {
+      let handler = (ev) => this._onDragStart(ev);
+      html.find('li.item').each((i, li) => {
+        if (li.classList.contains('inventory-header')) return;
+        li.setAttribute('draggable', true);
+        li.addEventListener('dragstart', handler, false);
+      });
+    }
+  }
 
   /**
    * Handle creating a new Owned Item for the actor using initial data defined in the HTML dataset
@@ -172,13 +188,13 @@ export class StargazerActorSheet extends ActorSheet {
     const itemData = {
       name: name,
       type: type,
-      data: data
+      system: data,
     };
     // Remove the type from the dataset since it's in the itemData.type prop.
-    delete itemData.data["type"];
+    delete itemData.system['type'];
 
     // Finally, create the item!
-    return await Item.create(itemData, {parent: this.actor});
+    return await Item.create(itemData, { parent: this.actor });
   }
 
   /**
@@ -196,56 +212,71 @@ export class StargazerActorSheet extends ActorSheet {
     await item.delete();
   }
 
-_roll(event, edges, drawbacks) {
-
-  const myContent = `
-
-<div class="my-class">
-<input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
-<input class="skill-drawbacks" type="text" name="data.skills.{{key}}.drawbacks.value" value="{{skill.drawbacks.value}}" data-dtype="Number"/>
-</div>
-`;
-
-
-
-new Dialog({
-  title: "My Dialog Title",
-  content: myContent,
-  buttons: {
-    Roll: {
-      label: "Roll",
-      callback: () => {this._onRoll(event)},
-      icon: `<i class="fas fa-check"></i>`
-    }
-  }
-}).render(true);
-}
+  // new Dialog({
+  //   title: "My Dialog Title",
+  //   content: myContent,
+  //   buttons: {
+  //     Roll: {
+  //       label: "Roll",
+  //       callback: () => {this._onRoll(event)},
+  //       icon: `<i class="fas fa-check"></i>`
+  //     }
+  //   }
+  // }).render(true);
+  // }
+    
+  //   async _onRoll(event, edges, drawbacks) {
+  //     event.preventDefault();
+  //     const element = event.currentTarget;
+  //     const dataset = element.dataset;
   
-  async _onRoll(event, edges, drawbacks) {
-    event.preventDefault();
-    const element = event.currentTarget;
-    const dataset = element.dataset;
+  //     // Handle item rolls.
+  //     if (dataset.rollType) {
+  //       if (dataset.rollType == 'item') {
+  //         const itemId = element.closest('.item').dataset.itemId;
+  //         const item = this.actor.items.get(itemId);
+  //         if (item) return item.roll();
+  //       }
+  //     }
+  
+  //     if (dataset.roll) {
+  //       let label = dataset.label ? `Roll: ${dataset.label}` : '';
+  //       let roll = new Roll(dataset.roll, this.actor.getRollData());
+  //       roll.toMessage({
+  //         speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+  //         flavor: label,
+  //         rollMode: game.settings.get('core', 'rollMode'),
+  //       });
+  //       return roll;
+        
+  //     }
+  //   }
 
-    // Handle item rolls.
-    if (dataset.rollType) {
-      if (dataset.rollType == 'item') {
-        const itemId = element.closest('.item').dataset.itemId;
-        const item = this.actor.items.get(itemId);
-        if (item) return item.roll();
-      }
-    }
+_onRoll(event) {
+  event.preventDefault();
+  const element = event.currentTarget;
+  const dataset = element.dataset;
 
-    if (dataset.roll) {
-      let label = dataset.label ? `Roll: ${dataset.label}` : '';
-      let roll = new Roll(dataset.roll, this.actor.getRollData());
-      roll.toMessage({
-        speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-        flavor: label,
-        rollMode: game.settings.get('core', 'rollMode'),
-      });
-      return roll;
-      
+  // Handle item rolls.
+  if (dataset.rollType) {
+    if (dataset.rollType == 'item') {
+      const itemId = element.closest('.item').dataset.itemId;
+      const item = this.actor.items.get(itemId);
+      if (item) return item.roll();
     }
   }
+
+  // Handle rolls that supply the formula directly.
+  if (dataset.roll) {
+    let label = dataset.label ? `${dataset.score} ${dataset.label}` : '';
+    let roll = new Roll(dataset.roll, this.actor.getRollData());
+    roll.toMessage({
+      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+      flavor: label,
+      rollMode: game.settings.get('core', 'rollMode'),
+    });
+    return roll;
+  }
+}
 
 }

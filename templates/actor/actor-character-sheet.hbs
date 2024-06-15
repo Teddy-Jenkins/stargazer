@@ -14,61 +14,35 @@
               <div class="notes-container">
                 <h2 >Notes</h2>
               </div>
-              <div class="xp-container">
-                <h2 >XP</h2>
-                <div class="flex-group-center xp">
-                  <div class="resource-content flexrow flex-center flex-between">
-                    <h2><input type="text" name="data.level.xp.currentXp" value="{{data.level.xp.currentXp}}" data-dtype="Number"/></h2>
+              <div class="heavy-wounds-container">
+                  <h3 for="system.wounds.hwValue" class="resource-label">Heavy Wounds</h3>
+                    <div class="resource heavy-wounds">
+                      <h3><input class="hp-input" type="text" name="system.wounds.hwValue" value="{{system.wounds.hwValue}}" data-dtype="Number"/></h3>
+                      <span> / </span>
+                      <h3><input class="hp-input" type="text" name="system.wounds.hwMax" value="{{system.wounds.hwMax}}" data-dtype="Number"/></h3>
+                    </div>
+              </div>
+              <div class="light-wounds-container">
+                <h3 for="system.wounds.lwValue" class="resource-label">Light Wounds</h3>
+                  <div class="resource light-wounds">
+                    <h3><input class="hp-input" type="text" name="system.wounds.lwValue" value="{{system.wounds.lwValue}}" data-dtype="Number"/></h3>
+                    <span> / </span>
+                    <h3><input class="hp-input" type="text" name="system.wounds.lwMax" value="{{system.wounds.lwMax}}" data-dtype="Number"/></h3>
                   </div>
-                </div>
               </div>
               <div class="iniquity-container">
-                <h2 for="data.cp.value" class="rollable" data-roll="(@cp.value)d6cs>=4" data-label="Composure Points">Funds</h2>
-                <h2 class="iniquity"><input name="data.cp.value" type="text" value="{{data.cp.value}}" data-dtype="Number"/></h2>
-              </div>
-              <div class="carrying-capacity-container ">
-                <h2 for="data.carryingCap.current">Carrying Capacity</h2>
-                <div class="resource-content flexrow flex-center flex-between">
-                  <h2><input type="text" name="data.carryingCap.current" value="{{data.carryingCap.current}}" data-dtype="Number"/></h2>
-                  <span> / </span>
-                  <h2><input type="text" name="data.carryingCap.maximum" value="{{data.carryingCap.maximum}}" data-dtype="Number"/></h2>
-                </div>
+                <h3 for="system.funds" class="rollable" data-roll="(@funds)d6cs>=4" data-score="{{system.funds}}" data-label="Funds">Funds</h3>
+                <h3 class="iniquity"><input name="system.funds" type="text" value="{{system.funds}}" data-dtype="Number"/></h2>
               </div>
             </div>
             <div class="character-notes">
-              {{editor content=data.characterNotes.description target="data.characterNotes.description" button=true owner=owner editable=editable}}
+              {{editor 
+              enrichedcharacterNotes
+              engine='prosemirror'
+              target="system.notes.characterNotes" button=true owner=owner editable=editable
+              }}
             </div>
-            <div class="resources">
-              <div class="resource flex-group-center">
-                  <label for="data.hp.fleshValue" class="resource-label">Heavy Wounds</label>
-                  <div class="resource-content flexrow flex-center flex-between">
-                    <input class="hp-input" type="text" name="data.hp.fleshValue" value="{{data.hp.fleshValue}}" data-dtype="Number"/>
-                    <input class="hp-input" type="text" name="data.hp.fleshMax" value="{{data.hp.fleshMax}}" data-dtype="Number"/>
-                  </div>
-                  
-              </div>
-              <div class="resource flex-group-center">
-                <label for="data.hp.gritValue" class="resource-label">Light Wounds</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                  <input class="hp-input" type="text" name="data.hp.gritValue" value="{{data.hp.gritValue}}" data-dtype="Number"/>
-                  <input class="hp-input" type="text" name="data.hp.gritMax" value="{{data.hp.gritMax}}" data-dtype="Number"/>
-                </div>
-              </div>
-              <div class="resource flex-group-center">
-                  <label for="data.hp.egoValue" class="resource-label">Stress</label>
-                  <div class="resource-content flexrow flex-center flex-between">
-                    <input class="hp-input" type="text" name="data.hp.egoValue" value="{{data.hp.egoValue}}" data-dtype="Number"/>
-                  <input class="hp-input" type="text" name="data.hp.egoMax" value="{{data.hp.egoMax}}" data-dtype="Number"/>
-                  </div>
-              </div>
-              <!-- <div class="resource flex-group-center">
-                <label for="data.ap.value" class="resource-label">Effort</label>
-                <div class="resource-content flexrow flex-center flex-between">
-                  <input type="text" name="data.ap.value" value="{{data.ap.value}}" data-dtype="Number"/>
-                  <input type="text" name="data.ap.max" value="{{data.ap.max}}" data-dtype="Number"/>
-                </div>
-            </div> -->
-          </div>
+            
         </div>
       </div>
     </div>
@@ -81,22 +55,26 @@
 
       {{!-- Skills Tab --}}
       <div class="biography" data-group="primary" data-tab="skills">
-          <!-- {{editor content=data.biography target="data.biography" button=true owner=owner editable=editable}} -->
+          <!-- {{editor 
+              enrichedDescription
+              engine='prosemirror'
+              target="system.biography" button=true owner=owner editable=editable
+              }}-->
         <div class="skill-container">
           <div class="skills">
             <div class="skill" data-skill="Action">
-              <h4 for="data.data.action.score" class="skill-name rollable" data-roll="(@data.action.score)d6cs>=4" data-label="action">Action</h4>
-              <input class="skill-score" type="text" name="data.data.action.score" value="{{data.data.action.score}}" data-dtype="Number"/>
-              <input class="skill-value" type="text" name="data.data.action.value" value="{{data.data.action.value}}" data-dtype="Number"/>
-              <input class="skill-max" type="text" name="data.data.action.max" value="{{data.data.action.max}}" data-dtype="Number"/>
+              <h4 for="system.action.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Action</h4>
+              <input class="skill-score" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
+              <input class="skill-value" type="text" name="system.action.value" value="{{system.action.value}}" data-dtype="Number"/>
+              <input class="skill-max" type="text" name="system.action.max" value="{{system.action.max}}" data-dtype="Number"/>
             </div>
                     <!-- <h2 style="text-align: center;">Skills</h2> -->
-            {{#each data.skills as |skill key|}}
-            {{#if skill.corrected}}
+            {{#each system.attributes as |attribute key|}}
+            {{#if attribute.corrected}}
                 <div class="skill" data-skill="{{key}}">
 
-                    <h4 for="data.skills.{{key}}.score" class="skill-name rollable" data-roll="(@data.action.score)d6cs>=4" data-label="{{key}}">{{key}}</h4>
-                    <input class="skill-score" type="text" name="data.skills.{{key}}.score" value="{{skill.score}}" data-dtype="Number"/>
+                    <h4 for="system.attributes.{{key}}.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=4" data-label="{{key}}">{{key}}</h4>
+                    <input class="skill-score" type="text" name="system.attributes.{{key}}.score" value="{{attribute.score}}" data-dtype="Number"/>
                   
                     <!-- <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
                   
@@ -128,59 +106,63 @@
           <div class="rest-container">
             <div class="rests">
               <h3>Minute</h3>
-              <input class="skill-checkbox" name="data.rests.minute.checked" type="checkbox" {{checked data.rests.minute.checked}}>
+              <input class="skill-checkbox" name="system.rests.minute.checked" type="checkbox" {{checked system.rests.minute.checked}}>
             </div>
             <div class="rests">
               <h3>Hour</h3>
-              <input class="skill-checkbox" name="data.rests.hour.checked" type="checkbox" {{checked data.rests.hour.checked}}>
+              <input class="skill-checkbox" name="system.rests.hour.checked" type="checkbox" {{checked system.rests.hour.checked}}>
             </div>
             <div class="rests">
               <h3>Day</h3>
-              <input class="skill-checkbox" name="data.rests.day.checked" type="checkbox" {{checked data.rests.day.checked}}>
+              <input class="skill-checkbox" name="system.rests.day.checked" type="checkbox" {{checked system.rests.day.checked}}>
             </div>
             <div class="rests">
               <h3>Week</h3>
-              <input class="skill-checkbox" name="data.rests.week.checked" type="checkbox" {{checked data.rests.week.checked}}>
+              <input class="skill-checkbox" name="system.rests.week.checked" type="checkbox" {{checked system.rests.week.checked}}>
             </div>
           </div>
 
           <div class="rskill-container">
             <h3>Traits</h3>
             <div class="rskill-notes">
-              {{editor content=data.notes.skillNotes.description target="data.notes.skillNotes.description" button=true owner=owner editable=editable}}
+              {{editor 
+              enrichedskillNotes
+              engine='prosemirror'
+              target="system.notes.skillNotes" button=true owner=owner editable=editable
+              }}
             </div>
           </div>
 
           <div class="merits-container">
             <h3>Merits</h3>
             <div class="merits">
-              <div class="merit-name"><h4 for="data.merits.readiness.score" >Readiness</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.readiness.score" value="{{data.merits.readiness.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.readiness.max" value="{{data.merits.readiness.max}}" data-dtype="Number"/></div>
+              <div class="merit-name"><h4 for="system.merits.readiness.score" >Readiness</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.readiness.score" value="{{system.merits.readiness.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.readiness.max" value="{{system.merits.readiness.max}}" data-dtype="Number"/></div>
             </div>
 
             <div class="merits">
-              <div class="merit-name"><h4 for="data.merits.steel.score">Steel</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.steel.score" value="{{data.merits.steel.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.steel.max" value="{{data.merits.steel.max}}" data-dtype="Number"/></div>
+              <div class="merit-name"><h4 for="system.merits.steel.score">Steel</h4></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.steel.score" value="{{system.merits.steel.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.steel.max" value="{{system.merits.steel.max}}" data-dtype="Number"/></div>
             </div>
 
             <div class="merits">
               <div class="merit-name"><h4 for="data.merits.finesse.score">Finesse</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.finesse.score" value="{{data.merits.finesse.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.finesse.max" value="{{data.merits.finesse.max}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.finesse.score" value="{{system.merits.finesse.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.finesse.max" value="{{system.merits.finesse.max}}" data-dtype="Number"/></div>
             </div>
 
             <div class="merits">
               <div class="merit-name"><h4 for="data.merits.heart.score">Heart</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.heart.score" value="{{data.merits.heart.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.heart.max" value="{{data.merits.heart.max}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.heart.score" value="{{system.merits.heart.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.heart.max" value="{{system.merits.heart.max}}" data-dtype="Number"/></div>
             </div>
 
             <div class="merits">
               <div class="merit-name"><h4 for="data.merits.wisdom.score">Wisdom</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.wisdom.score" value="{{data.merits.wisdom.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="data.merits.wisdom.max" value="{{data.merits.wisdom.max}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.wisdom.score" value="{{system.merits.wisdom.score}}" data-dtype="Number"/></div>
+              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.wisdom.max" value="{{system.merits.wisdom.max}}" data-dtype="Number"/></div>
             </div>
           </div>
 
@@ -189,8 +171,8 @@
           <div class="equipment">
             <div class="inventory-header">
               <h2 class="inventory-name">Inventory</h2>
-              <input class="inventory-current" type="text" name="data.carryCap.current" value="{{data.carryCap.current}}" data-dtype="Number"/>
-                <input class="inventory-max" type="text" name="data.carryCap.maximum" value="{{data.carryCap.maximum}}" data-dtype="Number"/>
+              <input class="inventory-current" type="text" name="system.carryCap.current" value="{{system.carryCap.current}}" data-dtype="Number"/>
+                <input class="inventory-max" type="text" name="system.carryCap.maximum" value="{{system.carryCap.maximum}}" data-dtype="Number"/>
             </div>
             <ol class="items-list">
               <li class="item flexrow item-header">
@@ -198,22 +180,22 @@
                 <div class="item-quantity">Quality</div>
                 <div class="item-quantity">Slots</div>
                 <div class="item-controls">
-                  <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i></a>
+                  <a class="item-control item-create" title="{{localize "DOCUMENT.Create" type='Item'}}" data-type="item"><i class="fas fa-plus"></i>{{localize "DOCUMENT.New" type='Item'}}</a>
                 </div>
               </li>
             {{#each gear as |item id|}}
               <li class="item flexrow items-list-item" data-item-id="{{item._id}}">
                   <h4 class="item-name collapsible"><a class="item-name">{{item.name}}</a></h4>
-                  <h4 class="item-quantity">{{data.quantity}}</h4>
-                  <h4 class="item-slots">{{data.slots}}</h4>
+                  <h4 class="item-quantity">{{system.quality}}</h4>
+                  <h4 class="item-slots">{{system.slots}}</h4>
                   <div class="item-controls">
-                      <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                      <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+                      <a class="item-control item-edit" title="{{localize "DOCUMENT.Update" type='Item'}}"><i class="fas fa-edit"></i></a>
+                      <a class="item-control item-delete" title="{{localize "DOCUMENT.Delete" type='Item'}}"><i class="fas fa-trash"></i></a>
                   </div>
                   
               </li>
               <div class="item-description">
-                {{{data.description}}}
+                {{{system.description}}}
               </div>
             {{/each}}
           </ol>
@@ -226,7 +208,11 @@
             <div class="extra-notes-container">
               <h3>Notes</h3>
               <div class="extra-notes">
-              {{editor content=data.notes.extraNotes.description target="data.notes.extraNotes.description" button=true owner=owner editable=editable}}
+              {{editor 
+              enrichedextraNotes
+              engine='prosemirror'
+              target="system.notes.extraNotes" button=true owner=owner editable=editable
+              }}
             </div>
           </div>
           <!-- <div class="talents">
@@ -263,11 +249,11 @@
     {{!-- Owned Items Tab --}}
     <div class="tab items" data-group="primary" data-tab="items">
       <div class="resource flex-group-center">
-        <label for="data.carryingCapacity.current" class="resource-label">Carrying Capacity</label>
+        <label for="system.carryingCapacity.current" class="resource-label">Carrying Capacity</label>
         <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="data.carryingCapacity.current" value="{{data.carryingCapacity.current}}" data-dtype="Number"/>
+          <input type="text" name="system.carryingCapacity.current" value="{{system.carryingCapacity.current}}" data-dtype="Number"/>
           <span> / </span>
-          <input type="text" name="data.carryingCapacity.maximum" value="{{data.carryingCapacity.maximum}}" data-dtype="Number"/>
+          <input type="text" name="system.carryingCapacity.maximum" value="{{system.carryingCapacity.maximum}}" data-dtype="Number"/>
         </div>
       </div>
       <h2>Attacks</h2>
@@ -285,17 +271,17 @@
         <li class="item flexrow items-list-item" data-item-id="{{weapon._id}}">
             <div class="item-image" ><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
             <h4 class="item-name collapsible"><a class="item-name">{{weapon.name}}</a></h4>
-            <h4 class="item-damage rollable" data-roll="{{data.damage}}" data-label="{{damage}}"><a class="item-damage">{{data.damage}}</a></h4>
-            <h4 class="item-slots">{{data.slots}}</h4>
-            <h4 class="item-range">{{data.range}}</h4>
-            <h4 class="item-ammo">{{data.ammoCurrent}}/{{data.ammoMax}}</h4>
+            <h4 class="item-damage rollable" data-roll="{{system.damage}}" data-label="{{damage}}"><a class="item-damage">{{data.damage}}</a></h4>
+            <h4 class="item-slots">{{system.slots}}</h4>
+            <h4 class="item-range">{{system.range}}</h4>
+            <h4 class="item-ammo">{{system.ammoCurrent}}/{{system.ammoMax}}</h4>
             <div class="item-controls">
                 <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                 <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
             </div>
         </li>
         <div class="item-description">
-          {{{data.description}}}
+          {{{system.description}}}
         </div>
       {{/each}}
       </ol>
@@ -317,8 +303,8 @@
               <li class="item flexrow items-list-item" data-item-id="{{item._id}}">
                   <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
                   <h4 class="item-name collapsible"><a class="item-name">{{item.name}}</a></h4>
-                  <h4 class="item-quantity">{{data.quantity}}</h4>
-                  <h4 class="item-slots">{{data.slots}}</h4>
+                  <h4 class="item-quantity">{{system.quantity}}</h4>
+                  <h4 class="item-slots">{{system.slots}}</h4>
                   <h4></h4>
                   <h4></h4>
                   <div class="item-controls">
@@ -328,7 +314,7 @@
                   
               </li>
               <div class="item-description">
-                {{{data.description}}}
+                {{{system.description}}}
               </div>
           {{/each}}
           </ol>
@@ -350,14 +336,14 @@
           <ol class="items-list"></ol>
             <li class="item flexrow items-list-item" data-item-id="{{asset._id}}">
                 <div class="item-image" ><img src="{{asset.img}}" title="{{asset.name}}" width="24" height="24"/></div>
-                <h4 class="item-name collapsible"><a class="item-name">{{asset.name}}</a> [{{data.rating}}]</h4>
+                <h4 class="item-name collapsible"><a class="item-name">{{asset.name}}</a> [{{system.rating}}]</h4>
                 <div class="item-controls">
                     <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
                     <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
                 </div>
             </li>
             <div class="item-description">
-              {{{data.description}}}
+              {{{system.description}}}
             </div>
           {{/each}}
           </ol>
@@ -384,7 +370,7 @@
                   </div>
               </li>
               <div class="item-description">
-                {{{data.description}}}
+                {{{system.description}}}
               </div>
           {{/each}}
           </ol>
