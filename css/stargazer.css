@@ -315,10 +315,6 @@ nav.sheet-tabs {
   height: 100% !important;
 }
 
-.top-section{
-  
-}
-
 .top-section-grid{
   grid-column: span 8 / span 8;
   grid-template-columns: repeat(8, minmax(0, 1fr));
