@@ -4,8 +4,8 @@
     "templates": {
       "base": {
         "wounds": {
-          "lwValue": 0,
-          "lwMax": 1,
+          "mwValue": 0,
+          "mwMax": 2,
           "hwValue": 0,
           "hwMax": 2
         },
@@ -79,69 +79,10 @@
           "readiness": {
             "max": 0,
             "score": 0
-          }
-        },
-
-        "subjects": {
-          "Sub1": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
           },
-          "Sub2": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub3": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub4": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub5": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub6": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub7": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub8": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub9": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
-          },
-          "Sub10": {
-            "value": 0,
-            "edges": 0,
-            "drawbacks": 0,
-            "name": ""
+          "psyche": {
+            "max": 0,
+            "score": 0
           }
         },
 
@@ -166,6 +107,14 @@
       "templates": ["base"],
       "tl": {
         "value": 1
+      },
+      "hits": {
+        "value": "",
+        "max": ""
+      },
+      "morale": {
+        "value": "",
+        "max": ""
       }
     }
   },
@@ -182,18 +131,17 @@
 
     "item": {
       "templates": ["base"],
-      "quantity": 1,
-      "slots": 0
+      "quality": "",
+      "slots": ""
     },
 
     "weapon": {
       "templates": ["base"],
-      "quantity": 1,
+      "quality": 1,
       "ammoMax": 0,
       "ammoCurrent": 0,
       "range": "",
-      "damage": "",
-      "slots": 0
+      "slots": ""
     },
 
     "feature": {

@@ -26,6 +26,7 @@ export class StargazerActorSheet extends ActorSheet {
   async getData() {
     // Use a safe clone of the actor data for further operations.
     const context = super.getData();
+    const prototypeToken = {};
 
     // Use a safe clone of the actor data for further operations.
     const actorData = this.document.toPlainObject(false);

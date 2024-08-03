@@ -31,10 +31,10 @@ export default class StargazerActorBase extends StargazerDataModel {
     });
 
     schema.wounds = new fields.SchemaField({
-      lwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      lwMax: new fields.NumberField({ ...requiredInteger, initial: 2 }),
+      mwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      mwMax: new fields.NumberField({ ...requiredInteger, initial: 2 }),
       hwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      hwMax: new fields.NumberField({ ...requiredInteger, initial: 1 })
+      hwMax: new fields.NumberField({ ...requiredInteger, initial: 2 })
   });
 
   schema.funds = new fields.NumberField({ ...requiredInteger, initial: 0 });
@@ -79,7 +79,11 @@ export default class StargazerActorBase extends StargazerDataModel {
       readiness: new fields.SchemaField({
           max: new fields.NumberField({ ...requiredInteger, initial: 0 }),
           score: new fields.NumberField({ ...requiredInteger, initial: 0 })
-      })
+      }),
+      psyche: new fields.SchemaField({
+          max: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+          score: new fields.NumberField({ ...requiredInteger, initial: 0 })
+    })
   });
     
     schema.biography = new fields.StringField({ required: true, blank: true }); // equivalent to passing ({initial: ""}) for StringFields
