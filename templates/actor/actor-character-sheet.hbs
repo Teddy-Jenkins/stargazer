@@ -30,9 +30,17 @@
                     <h3><input class="hp-input" type="text" name="system.wounds.mwMax" value="{{system.wounds.mwMax}}" data-dtype="Number"/></h3>
                   </div>
               </div>
-              <div class="iniquity-container">
+              <div class="funds-container">
                 <h3 for="system.funds" class="rollable" data-roll="(@funds)d6cs>=3" data-score="{{system.funds}}" data-label="Funds">Funds</h3>
-                <h3 class="iniquity"><input name="system.funds" type="text" value="{{system.funds}}" data-dtype="Number"/></h2>
+                <div class="">
+                  <h3><input class="hp-input" name="system.funds" type="text" value="{{system.funds}}" data-dtype="Number"/></h3>
+                </div>
+              </div>
+              <div class="cash-container">
+                <h3 for="system.cash" class="rollable" data-roll="(@cash)d6cs>=3" data-score="{{system.cash}}" data-label="Cash">Cash</h3>
+                <div class="">
+                  <h3><input class="hp-input" type="text" name="system.cash" value="{{system.cash}}" data-dtype="Number"/></h3>
+                </div>
               </div>
             </div>
             <div class="character-notes">
@@ -104,21 +112,21 @@
             {{/each}}
           </div> -->
           <div class="rest-container">
+            <h2>Rests</h2>
             <div class="rests">
-              <h3>Minute</h3>
               <input class="skill-checkbox" name="system.rests.minute.checked" type="checkbox" {{checked system.rests.minute.checked}}>
             </div>
             <div class="rests">
-              <h3>Hour</h3>
               <input class="skill-checkbox" name="system.rests.hour.checked" type="checkbox" {{checked system.rests.hour.checked}}>
             </div>
             <div class="rests">
-              <h3>Day</h3>
               <input class="skill-checkbox" name="system.rests.day.checked" type="checkbox" {{checked system.rests.day.checked}}>
             </div>
             <div class="rests">
-              <h3>Week</h3>
               <input class="skill-checkbox" name="system.rests.week.checked" type="checkbox" {{checked system.rests.week.checked}}>
+            </div>
+            <div class="rests">
+              <input class="skill-checkbox" name="system.rests.season.checked" type="checkbox" {{checked system.rests.season.checked}}>
             </div>
           </div>
 

@@ -11,6 +11,7 @@
         },
 
         "funds": 0,
+        "cash": 0,
 
         "rests": {
           "minute": {
@@ -23,6 +24,9 @@
             "checked": false
           },
           "week": {
+            "checked": false
+          },
+          "season": {
             "checked": false
           }
         },

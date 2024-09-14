@@ -13,7 +13,6 @@ export default class StargazerCharacter extends StargazerActorBase {
         score: new fields.NumberField({ required: true, initial: 0 })
     });
 
-
     return schema;
   }
 

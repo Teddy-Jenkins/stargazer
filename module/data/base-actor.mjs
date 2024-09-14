@@ -38,6 +38,7 @@ export default class StargazerActorBase extends StargazerDataModel {
   });
 
   schema.funds = new fields.NumberField({ ...requiredInteger, initial: 0 });
+  schema.cash = new fields.NumberField({ ...requiredInteger, initial: 0 });
 
   schema.rests = new fields.SchemaField({
       minute: new fields.SchemaField({
@@ -51,7 +52,10 @@ export default class StargazerActorBase extends StargazerDataModel {
       }),
       week: new fields.SchemaField({
           checked: new fields.BooleanField({ ...requiredBoolean, initial: false })
-      })
+      }),
+      season: new fields.SchemaField({
+        checked: new fields.BooleanField({ ...requiredBoolean, initial: false })
+    })
   });
 
   schema.carryCap = new fields.SchemaField({
