@@ -486,7 +486,6 @@ nav.sheet-tabs {
 }
 
 .skill {
-  padding-top: 10px;
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
   grid-row-gap: 3px;
@@ -584,7 +583,7 @@ nav.sheet-tabs {
 
 .merits-container{
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-row: 1 / 2;
   grid-column: 8 / span 3;

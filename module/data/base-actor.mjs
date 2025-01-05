@@ -10,16 +10,24 @@ export default class StargazerActorBase extends StargazerDataModel {
     const schema = {};
 
     schema.attributes = new fields.SchemaField({
-      Fight: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      Steel: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
-      Intrigue: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      Wise: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
-      Venture: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
+      Politic: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        corrected: new fields.BooleanField({ required: true, initial: true })
+      }),
+      Resource: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        corrected: new fields.BooleanField({ required: true, initial: true })
+      }),
+      Weird: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       })
     });
@@ -27,14 +35,15 @@ export default class StargazerActorBase extends StargazerDataModel {
     schema.notes = new fields.SchemaField({
       extraNotes: new fields.StringField({ required: true, blank: true }),
       skillNotes: new fields.StringField({ required: true, blank: true }),
-      characterNotes: new fields.StringField({ required: true, blank: true })
+      characterNotes: new fields.StringField({ required: true, blank: true }),
+      woundNotes: new fields.StringField({ required: true, blank: true })
     });
 
     schema.wounds = new fields.SchemaField({
       mwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      mwMax: new fields.NumberField({ ...requiredInteger, initial: 2 }),
-      hwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      hwMax: new fields.NumberField({ ...requiredInteger, initial: 2 })
+      mwMax: new fields.NumberField({ ...requiredInteger, initial: 5 }),
+      hwValue: new fields.NumberField({ ...requiredInteger, initial: 5 }),
+      hwMax: new fields.NumberField({ ...requiredInteger, initial: 5 })
   });
 
   schema.funds = new fields.NumberField({ ...requiredInteger, initial: 0 });

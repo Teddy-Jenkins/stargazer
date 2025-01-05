@@ -15,7 +15,7 @@
                 <h2 >Notes</h2>
               </div>
               <div class="heavy-wounds-container">
-                  <h3 for="system.wounds.hwValue" class="resource-label">Health</h3>
+                  <h3 for="system.wounds.hwValue" class="resource-label">Resolve</h3>
                     <div class="resource heavy-wounds">
                       <h3><input class="hp-input" type="text" name="system.wounds.hwValue" value="{{system.wounds.hwValue}}" data-dtype="Number"/></h3>
                       <span> / </span>
@@ -23,7 +23,7 @@
                     </div>
               </div>
               <div class="light-wounds-container">
-                <h3 for="system.wounds.mwValue" class="resource-label">Morale</h3>
+                <h3 for="system.wounds.mwValue" class="resource-label">Wounds</h3>
                   <div class="resource light-wounds">
                     <h3><input class="hp-input" type="text" name="system.wounds.mwValue" value="{{system.wounds.mwValue}}" data-dtype="Number"/></h3>
                     <span> / </span>
@@ -142,37 +142,14 @@
           </div>
 
           <div class="merits-container">
-            <h3>Merits</h3>
+            <h3>Wounds</h3>
 
-            <div class="merits">
-              <div class="merit-name"><h4 for="data.merits.finesse.score">Finesse</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.finesse.score" value="{{system.merits.finesse.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.finesse.max" value="{{system.merits.finesse.max}}" data-dtype="Number"/></div>
-            </div>
-            <div class="merits">
-              <div class="merit-name"><h4 for="data.merits.heart.score">Heart</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.heart.score" value="{{system.merits.heart.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.heart.max" value="{{system.merits.heart.max}}" data-dtype="Number"/></div>
-            </div>
-            <div class="merits">
-              <div class="merit-name"><h4 for="data.merits.psyche.score" >Psyche</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.psyche.score" value="{{system.merits.psyche.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.psyche.max" value="{{system.merits.psyche.max}}" data-dtype="Number"/></div>
-            </div>
-            <div class="merits">
-              <div class="merit-name"><h4 for="system.merits.readiness.score" >Readiness</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.readiness.score" value="{{system.merits.readiness.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.readiness.max" value="{{system.merits.readiness.max}}" data-dtype="Number"/></div>
-            </div>
-            <div class="merits">
-              <div class="merit-name"><h4 for="system.merits.steel.score">Steel</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.steel.score" value="{{system.merits.steel.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.steel.max" value="{{system.merits.steel.max}}" data-dtype="Number"/></div>
-            </div>
-            <div class="merits">
-              <div class="merit-name"><h4 for="data.merits.wisdom.score">Wisdom</h4></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.wisdom.score" value="{{system.merits.wisdom.score}}" data-dtype="Number"/></div>
-              <div class="merit-score-container"><input class="skill-score" type="text" name="system.merits.wisdom.max" value="{{system.merits.wisdom.max}}" data-dtype="Number"/></div>
+            <div class="rskill-notes">
+              {{editor 
+              enrichedwoundNotes
+              engine='prosemirror'
+              target="system.notes.woundNotes" button=true owner=owner editable=editable
+              }}
             </div>
           </div>
 
@@ -187,7 +164,7 @@
             <ol class="items-list">
               <li class="item flexrow item-header">
                 <div class="item-name">Name</div>
-                <div class="item-quantity">Quality</div>
+                <div class="item-quantity">Drain</div>
                 <div class="item-quantity">Slots</div>
                 <div class="item-controls">
                   <a class="item-control item-create" title="{{localize "DOCUMENT.Create" type='Item'}}" data-type="item"><i class="fas fa-plus"></i>{{localize "DOCUMENT.New" type='Item'}}</a>

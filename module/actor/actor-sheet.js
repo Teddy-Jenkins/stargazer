@@ -58,6 +58,9 @@ export class StargazerActorSheet extends ActorSheet {
     context.enrichedextraNotes = await TextEditor.enrichHTML(
       this.actor.system.notes.extraNotes
     );
+    context.enrichedwoundNotes = await TextEditor.enrichHTML(
+      this.actor.system.notes.woundNotes
+    );
 
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();

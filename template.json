@@ -3,6 +3,11 @@
     "types": ["character", "npc"],
     "templates": {
       "base": {
+        "resolve": {
+          "value": 0,
+          "max": 5
+        },
+
         "wounds": {
           "mwValue": 0,
           "mwMax": 2,
@@ -34,7 +39,8 @@
         "notes": {
           "extraNotes": "",
           "skillNotes": "",
-          "characterNotes": ""
+          "characterNotes": "",
+          "woundNotes": ""
         },
 
         "carryCap": {
@@ -49,15 +55,23 @@
         },
 
         "attributes": {
-          "Fight": {
+          "Steel": {
             "score": 0,
             "corrected": true
           },
-          "Intrigue": {
+          "Wise": {
             "score": 0,
             "corrected": true
           },
-          "Venture": {
+          "Politic": {
+            "score": 0,
+            "corrected": true
+          },
+          "Resource": {
+            "score": 0,
+            "corrected": true
+          },
+          "Weird": {
             "score": 0,
             "corrected": true
           }
