@@ -8,8 +8,8 @@ export default class StargazerCharacter extends StargazerActorBase {
     const schema = super.defineSchema();
 
     schema.action = new fields.SchemaField({
-        value: new fields.NumberField({ ...requiredInteger, initial: 30 }),
-        max: new fields.NumberField({ required: true, initial: 30 }),
+        value: new fields.NumberField({ ...requiredInteger, initial: 20 }),
+        max: new fields.NumberField({ required: true, initial: 20 }),
         score: new fields.NumberField({ required: true, initial: 0 })
     });
 

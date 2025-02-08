@@ -371,20 +371,21 @@ nav.sheet-tabs {
 
 .char-stats-container{
   display: grid;
-  grid-column-gap: 5px;
+  grid-column-gap: 10px;
   grid-column: 1 / 6;
   grid-row: 1;
-  grid-template-columns: repeat(8, 1fr);
+  grid-template-columns: repeat(12, 1fr);
 }
 
 .notes-container{
-  grid-column: 1 / 3;
+  grid-column: auto / 2;
   grid-row: 1;
   height: min-content;
+  align-self: end;
 }
 
 .xp-container{
-  grid-column: 2 / 4;
+  grid-column: auto / 3;
   grid-row: 1;
   height: min-content;
 }
@@ -429,7 +430,6 @@ nav.sheet-tabs {
   grid-template-columns: 3fr 1fr 3fr;
   justify-items: center;
   align-items: center;
-  padding: 2px !important;
 }
 
 .resource-content {
@@ -437,17 +437,19 @@ nav.sheet-tabs {
 }
 
 .heavy-wounds-container{
-  grid-column: 3 / 5;
+  grid-column: 3 / 4;
   margin: auto;
-  max-width: 80%;
   text-align: center;
 }
 
 .light-wounds-container{
-  grid-column: 5 / 7;
+  grid-column: auto / 5;
   margin: auto;
-  max-width: 80%;
   text-align: center;
+}
+
+.wealth-container {
+  grid-column: 9;
 }
 
 .hp-input{

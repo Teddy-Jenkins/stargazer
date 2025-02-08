@@ -14,7 +14,8 @@
           "hwValue": 0,
           "hwMax": 2
         },
-
+        
+        "wealth": 0,
         "funds": 0,
         "cash": 0,
 

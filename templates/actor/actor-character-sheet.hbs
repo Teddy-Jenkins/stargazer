@@ -64,14 +64,20 @@
                     <h3><input class="hp-input" type="text" name="system.wounds.mwMax" value="{{system.wounds.mwMax}}" data-dtype="Number"/></h3>
                   </div>
               </div>
+              <div class="wealth-container">
+                <h3 for="system.wealth" class="rollable" data-roll="(@wealth)d6cs>=3" data-score="{{system.wealth}}" data-label="Wealth">Wealth</h3>
+                <div class="">
+                  <h3><input class="hp-input" name="system.wealth" type="text" value="{{system.wealth}}" data-dtype="Number"/></h3>
+                </div>
+              </div>
               <div class="funds-container">
-                <h3 for="system.funds" class="rollable" data-roll="(@funds)d6cs>=3" data-score="{{system.funds}}" data-label="Funds">Funds</h3>
+                <h3 for="system.funds" data-score="{{system.funds}}" data-label="Funds">Funds</h3>
                 <div class="">
                   <h3><input class="hp-input" name="system.funds" type="text" value="{{system.funds}}" data-dtype="Number"/></h3>
                 </div>
               </div>
               <div class="cash-container">
-                <h3 for="system.cash" class="rollable" data-roll="(@cash)d6cs>=3" data-score="{{system.cash}}" data-label="Cash">Cash</h3>
+                <h3 for="system.cash" data-score="{{system.cash}}" data-label="Cash">Cash</h3>
                 <div class="">
                   <h3><input class="hp-input" type="text" name="system.cash" value="{{system.cash}}" data-dtype="Number"/></h3>
                 </div>
