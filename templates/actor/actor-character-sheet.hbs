@@ -65,7 +65,7 @@
                   </div>
               </div>
               <div class="wealth-container">
-                <h3 for="system.wealth" class="rollable" data-roll="(@wealth)d6cs>=3" data-score="{{system.wealth}}" data-label="Wealth">Wealth</h3>
+                <h3 for="system.wealth" class="rollable" data-roll="(@wealth)d6cs>=4" data-score="{{system.wealth}}" data-label="Wealth">Wealth</h3>
                 <div class="">
                   <h3><input class="hp-input" name="system.wealth" type="text" value="{{system.wealth}}" data-dtype="Number"/></h3>
                 </div>
@@ -109,7 +109,7 @@
         <div class="skill-container">
           <div class="skills">
             <div class="skill" data-skill="Action">
-              <h4 for="system.action.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=3" data-score="{{system.action.score}}" data-label="Action">Action</h4>
+              <h4 for="system.action.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Action</h4>
               <input class="skill-score" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
               <input class="skill-value" type="text" name="system.action.value" value="{{system.action.value}}" data-dtype="Number"/>
               <input class="skill-max" type="text" name="system.action.max" value="{{system.action.max}}" data-dtype="Number"/>
@@ -119,7 +119,7 @@
             {{#if attribute.corrected}}
                 <div class="skill" data-skill="{{key}}">
 
-                    <h4 for="system.attributes.{{key}}.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=3" data-label="{{key}}">{{key}}</h4>
+                    <h4 for="system.attributes.{{key}}.score" class="skill-name" data-label="{{key}}">{{key}}</h4>
                     <input class="skill-score" type="text" name="system.attributes.{{key}}.score" value="{{attribute.score}}" data-dtype="Number"/>
                   
                     <!-- <input class="skill-edges" type="text" name="data.skills.{{key}}.edges.value" value="{{skill.edges.value}}" data-dtype="Number"/>
