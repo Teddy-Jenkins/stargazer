@@ -56,6 +56,14 @@
                       <h3><input class="hp-input" type="text" name="system.wounds.hwMax" value="{{system.wounds.hwMax}}" data-dtype="Number"/></h3>
                     </div>
               </div>
+              <div class="heart-container">
+                  <h3 for="system.heart.value" class="resource-label">Heart</h3>
+                    <div class="resource heavy-wounds">
+                      <h3><input class="hp-input" type="text" name="system.heart.value" value="{{system.heart.value}}" data-dtype="Number"/></h3>
+                      <span> / </span>
+                      <h3><input class="hp-input" type="text" name="system.heart.max" value="{{system.heart.max}}" data-dtype="Number"/></h3>
+                    </div>
+              </div>
               <div class="light-wounds-container">
                 <h3 for="system.wounds.mwValue" class="resource-label">Wounds</h3>
                   <div class="resource light-wounds">
@@ -109,10 +117,10 @@
         <div class="skill-container">
           <div class="skills">
             <div class="skill" data-skill="Action">
-              <h4 for="system.action.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Action</h4>
+              <h4 for="system.action.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
               <input class="skill-score" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
-              <input class="skill-value" type="text" name="system.action.value" value="{{system.action.value}}" data-dtype="Number"/>
-              <input class="skill-max" type="text" name="system.action.max" value="{{system.action.max}}" data-dtype="Number"/>
+              <input class="skill-value" type="text" name="system.action.value" style="border-color: red; border-style: dashed;" value="{{system.action.value}}" data-dtype="Number"/>
+              <input class="skill-max" type="text" name="system.action.max" style="border-color: red; border-style: dashed;" value="{{system.action.max}}" data-dtype="Number"/>
             </div>
                     <!-- <h2 style="text-align: center;">Skills</h2> -->
             {{#each system.attributes as |attribute key|}}

@@ -443,7 +443,7 @@ nav.sheet-tabs {
 }
 
 .light-wounds-container{
-  grid-column: auto / 5;
+  grid-column: auto / 6;
   margin: auto;
   text-align: center;
 }

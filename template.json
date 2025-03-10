@@ -8,6 +8,11 @@
           "max": 5
         },
 
+        "heart": {
+          "value": 0,
+          "max": 5
+        },
+
         "wounds": {
           "mwValue": 0,
           "mwMax": 2,

@@ -46,6 +46,11 @@ export default class StargazerActorBase extends StargazerDataModel {
       hwMax: new fields.NumberField({ ...requiredInteger, initial: 5 })
   });
 
+  schema.heart = new fields.SchemaField({
+    value: new fields.NumberField({ ...requiredInteger, initial: 5 }),
+    max: new fields.NumberField({ ...requiredInteger, initial: 5 })
+});
+
   schema.wealth = new fields.NumberField({ ...requiredInteger, initial: 0 });
   schema.funds = new fields.NumberField({ ...requiredInteger, initial: 0 });
   schema.cash = new fields.NumberField({ ...requiredInteger, initial: 0 });
