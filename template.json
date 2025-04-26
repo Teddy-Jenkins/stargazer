@@ -61,23 +61,31 @@
         },
 
         "attributes": {
-          "Steel": {
+          "Handle": {
             "score": 0,
             "corrected": true
           },
-          "Wise": {
+          "Instinct": {
             "score": 0,
             "corrected": true
           },
-          "Politic": {
+          "Intellect": {
             "score": 0,
             "corrected": true
           },
-          "Resource": {
+          "Muscle": {
             "score": 0,
             "corrected": true
           },
-          "Weird": {
+          "Psyche": {
+            "score": 0,
+            "corrected": true
+          },
+          "Sense": {
+            "score": 0,
+            "corrected": true
+          },
+          "Violence": {
             "score": 0,
             "corrected": true
           }

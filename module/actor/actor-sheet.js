@@ -69,15 +69,19 @@ export class StargazerActorSheet extends ActorSheet {
     // Add roll data for TinyMCE editors.
     context.rollData = context.actor.getRollData();
 
-    context.actionPoint = Array.from(document.getElementsByClassName("action-number"));
-
     context.system.enrichedHTML = await TextEditor.enrichHTML(
       context.system.description
     );
     
     // Retrieve saved active action point index
-    const activeIndex = this.actor.getFlag("stargazer", "activeActionPoint") || 0;
-    context.activeActionPoint = activeIndex;
+    const activeActionIndex = this.actor.getFlag("stargazer", "activeActionPoint") || 0;
+    context.activeActionPoint = activeActionIndex;
+
+    const activeResolveIndex = this.actor.getFlag("stargazer", "activeResolvePoint") || 0;
+    context.activeResolvePoint = activeResolveIndex;
+
+    const activeHeartIndex = this.actor.getFlag("stargazer", "activeHeartPoint") || 0;
+    context.activeHeartPoint = activeHeartIndex;
     
     return context;
   }
@@ -182,18 +186,42 @@ export class StargazerActorSheet extends ActorSheet {
     }
     
       // Retrieve saved index
-    const activeIndex = this.actor.getFlag("stargazer", "activeActionPoint") || 0;
+    const activeActionIndex = this.actor.getFlag("stargazer", "activeActionPoint") || 0;
+    const activeResolveIndex = this.actor.getFlag("stargazer", "activeResolvePoint") || 0;
+    const activeHeartIndex = this.actor.getFlag("stargazer", "activeHeartPoint") || 0;
 
     // Find all action-number elements
-    const actionPoints = html.find(".action-number");
+      const actionPoints = html.find(".action-number");
 
-    if (actionPoints.length > 0 && activeIndex < actionPoints.length) {
-      actionPoints.removeClass("active"); // Remove all active classes
-      actionPoints.eq(activeIndex).addClass("active"); // Add active to saved index
-    }
+      if (actionPoints.length > 0 && activeActionIndex < actionPoints.length) {
+        actionPoints.removeClass("active"); // Remove all active classes
+        actionPoints.eq(activeActionIndex).addClass("active"); // Add active to saved index
+      }
 
-    // Attach click event
-    html.on("click", ".action-number", (event) => this._onAction(event));
+      // Attach click event
+      html.on("click", ".action-number", (event) => this._onAction(event));
+
+    // Find all resolve-number elements
+      const resolvePoints = html.find(".resolve-number");
+
+      if (resolvePoints.length > 0 && activeResolveIndex < resolvePoints.length) {
+        resolvePoints.removeClass("active"); // Remove all active classes
+        resolvePoints.eq(activeResolveIndex).addClass("active"); // Add active to saved index
+      }
+
+      // Attach click event
+      html.on("click", ".resolve-number", (event) => this._onResolve(event));
+
+    // Find all heart-number elements
+      const heartPoints = html.find(".heart-number");
+
+      if (heartPoints.length > 0 && activeHeartIndex < heartPoints.length) {
+        heartPoints.removeClass("active"); // Remove all active classes
+        heartPoints.eq(activeHeartIndex).addClass("active"); // Add active to saved index
+      }
+
+      // Attach click event
+      html.on("click", ".heart-number", (event) => this._onHeart(event));
     
   }
 
@@ -324,6 +352,44 @@ async _onAction(event) {
 
   // Save to actor's flags
   await this.actor.setFlag("stargazer", "activeActionPoint", index);
+}
+async _onResolve(event) {
+  event.preventDefault();
+  
+  const point = event.currentTarget;
+  const allPoints = Array.from(point.parentNode.children);
+
+  // Remove "active" class from all action points
+  allPoints.forEach((p) => p.classList.remove("active"));
+
+  // Add "active" class to the clicked one
+  point.classList.add("active");
+
+  // Get the index of the selected action point
+  const index = allPoints.indexOf(point);
+  console.log("Saving active action point index:", index);
+
+  // Save to actor's flags
+  await this.actor.setFlag("stargazer", "activeResolvePoint", index);
+}
+async _onHeart(event) {
+  event.preventDefault();
+  
+  const point = event.currentTarget;
+  const allPoints = Array.from(point.parentNode.children);
+
+  // Remove "active" class from all action points
+  allPoints.forEach((p) => p.classList.remove("active"));
+
+  // Add "active" class to the clicked one
+  point.classList.add("active");
+
+  // Get the index of the selected action point
+  const index = allPoints.indexOf(point);
+  console.log("Saving active action point index:", index);
+
+  // Save to actor's flags
+  await this.actor.setFlag("stargazer", "activeHeartPoint", index);
 }
 // var actionPoint = Array.from(document.getElementsByClassName("action-number"));
 

@@ -10,23 +10,31 @@ export default class StargazerActorBase extends StargazerDataModel {
     const schema = {};
 
     schema.attributes = new fields.SchemaField({
-      Steel: new fields.SchemaField({
+      Muscle: new fields.SchemaField({
         score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
-      Wise: new fields.SchemaField({
+      Handle: new fields.SchemaField({
         score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
-      Politic: new fields.SchemaField({
+      Violence: new fields.SchemaField({
         score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
-      Resource: new fields.SchemaField({
+      Psyche: new fields.SchemaField({
         score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
-      Weird: new fields.SchemaField({
+      Intellect: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        corrected: new fields.BooleanField({ required: true, initial: true })
+      }),
+      Sense: new fields.SchemaField({
+        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        corrected: new fields.BooleanField({ required: true, initial: true })
+      }),
+      Instinct: new fields.SchemaField({
         score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       })

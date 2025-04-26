@@ -1,38 +1,4 @@
-<form class="{{cssClass}} {{actor.type}} sheet-contents row" autocomplete="off">
-
-  <section class="grid-twelfth action-list">
-      <div class="action-number">30</div>
-      <div class="action-number">29</div>
-      <div class="action-number">28</div>
-      <div class="action-number">27</div>
-      <div class="action-number">26</div>
-      <div class="action-number">25</div>
-      <div class="action-number">24</div>
-      <div class="action-number">23</div>
-      <div class="action-number">22</div>
-      <div class="action-number">21</div>
-      <div class="action-number">20</div>
-      <div class="action-number">19</div>
-      <div class="action-number">18</div>
-      <div class="action-number">17</div>
-      <div class="action-number">16</div>
-      <div class="action-number">15</div>
-      <div class="action-number">14</div>
-      <div class="action-number">13</div>
-      <div class="action-number">12</div>
-      <div class="action-number">11</div>
-      <div class="action-number">10</div>
-      <div class="action-number">9</div>
-      <div class="action-number">8</div>
-      <div class="action-number">7</div>
-      <div class="action-number">6</div>
-      <div class="action-number">5</div>
-      <div class="action-number">4</div>
-      <div class="action-number">3</div>
-      <div class="action-number">2</div>
-      <div class="action-number">1</div>
-      <div class="action-number">0</div>
-  </section>
+<form class="{{cssClass}} {{actor.type}} sheet-contents" autocomplete="off">
 
   {{!-- Sheet Header --}}
   <section class="sheet-header grid-eleven-twelfths">
@@ -42,36 +8,13 @@
         <div class="portrait-section">
           <img class="profile" id="actor-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
           <h2 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h2>
+          <div class="dice-roller" data-skill="Action">
+            <h4 for="system.action.score" class="rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
+            <input class="" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
+          </div>
         </div>
           <div class="char-info">
             <div class="char-stats-container">
-              <div class="notes-container">
-                <h2 >Notes</h2>
-              </div>
-              <div class="heavy-wounds-container">
-                  <h3 for="system.wounds.hwValue" class="resource-label">Resolve</h3>
-                    <div class="resource heavy-wounds">
-                      <h3><input class="hp-input" type="text" name="system.wounds.hwValue" value="{{system.wounds.hwValue}}" data-dtype="Number"/></h3>
-                      <span> / </span>
-                      <h3><input class="hp-input" type="text" name="system.wounds.hwMax" value="{{system.wounds.hwMax}}" data-dtype="Number"/></h3>
-                    </div>
-              </div>
-              <div class="heart-container">
-                  <h3 for="system.heart.value" class="resource-label">Heart</h3>
-                    <div class="resource heavy-wounds">
-                      <h3><input class="hp-input" type="text" name="system.heart.value" value="{{system.heart.value}}" data-dtype="Number"/></h3>
-                      <span> / </span>
-                      <h3><input class="hp-input" type="text" name="system.heart.max" value="{{system.heart.max}}" data-dtype="Number"/></h3>
-                    </div>
-              </div>
-              <div class="light-wounds-container">
-                <h3 for="system.wounds.mwValue" class="resource-label">Wounds</h3>
-                  <div class="resource light-wounds">
-                    <h3><input class="hp-input" type="text" name="system.wounds.mwValue" value="{{system.wounds.mwValue}}" data-dtype="Number"/></h3>
-                    <span> / </span>
-                    <h3><input class="hp-input" type="text" name="system.wounds.mwMax" value="{{system.wounds.mwMax}}" data-dtype="Number"/></h3>
-                  </div>
-              </div>
               <div class="wealth-container">
                 <h3 for="system.wealth" class="rollable" data-roll="(@wealth)d6cs>=4" data-score="{{system.wealth}}" data-label="Wealth">Wealth</h3>
                 <div class="">
@@ -91,24 +34,73 @@
                 </div>
               </div>
             </div>
-            <div class="character-notes">
-              {{editor 
-              enrichedcharacterNotes
-              engine='prosemirror'
-              target="system.notes.characterNotes" button=true owner=owner editable=editable
-              }}
+            <div class="character-resources">
+              <div>
+                <h2>Momentum</h2>
+                <section class="resource-list">
+                  <div class="action-number">10</div>
+                  <div class="action-number">9</div>
+                  <div class="action-number">8</div>
+                  <div class="action-number">7</div>
+                  <div class="action-number">6</div>
+                  <div class="action-number">5</div>
+                  <div class="action-number">4</div>
+                  <div class="action-number">3</div>
+                  <div class="action-number">2</div>
+                  <div class="action-number">1</div>
+                  <div class="action-number">0</div>
+                </section>
+              </div>
+              <div>
+                <h2>Resolve</h2>
+                <section class="resource-list">
+                  <div class="resolve-number">10</div>
+                  <div class="resolve-number">9</div>
+                  <div class="resolve-number">8</div>
+                  <div class="resolve-number">7</div>
+                  <div class="resolve-number">6</div>
+                  <div class="resolve-number">5</div>
+                  <div class="resolve-number">4</div>
+                  <div class="resolve-number">3</div>
+                  <div class="resolve-number">2</div>
+                  <div class="resolve-number">1</div>
+                  <div class="resolve-number">0</div>
+                </section>
+            </div>
+            <div>
+              <h2>Heart</h2>
+                <section class="resource-list">
+                  <div class="heart-number">10</div>
+                  <div class="heart-number">9</div>
+                  <div class="heart-number">8</div>
+                  <div class="heart-number">7</div>
+                  <div class="heart-number">6</div>
+                  <div class="heart-number">5</div>
+                  <div class="heart-number">4</div>
+                  <div class="heart-number">3</div>
+                  <div class="heart-number">2</div>
+                  <div class="heart-number">1</div>
+                  <div class="heart-number">0</div>
+                </section>
+            </div>
             </div>
             
         </div>
       </div>
     </div>
 
-  
+  {{!-- Sheet Tab Navigation --}}
+    <nav class="sheet-tabs tabs" data-group="primary">
+        <a class="item" data-tab="stats">Stats</a>
+        <a class="item" data-tab="threads">Threads</a>
+        <a class="item" data-tab="items">Inventory</a>
+    </nav>
 
   {{!-- Sheet Body --}}
-
+  <section class="sheet-body">
       {{!-- Skills Tab --}}
-      <div class="biography" data-group="primary" data-tab="skills">
+      <div class="tab stats" data-group="primary" data-tab="stats">
+        <div class="stats-wrapper">
           <!-- {{editor 
               enrichedDescription
               engine='prosemirror'
@@ -116,12 +108,9 @@
               }}-->
         <div class="skill-container">
           <div class="skills">
-            <div class="skill" data-skill="Action">
-              <h4 for="system.action.score" class="skill-name rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
-              <input class="skill-score" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
-              <input class="skill-value" type="text" name="system.action.value" style="border-color: red; border-style: dashed;" value="{{system.action.value}}" data-dtype="Number"/>
-              <input class="skill-max" type="text" name="system.action.max" style="border-color: red; border-style: dashed;" value="{{system.action.max}}" data-dtype="Number"/>
-            </div>
+            
+
+            <h3>Attributes</h3>
                     <!-- <h2 style="text-align: center;">Skills</h2> -->
             {{#each system.attributes as |attribute key|}}
             {{#if attribute.corrected}}
@@ -157,27 +146,9 @@
                 </div>
             {{/each}}
           </div> -->
-          <div class="rest-container">
-            <h2>Rests</h2>
-            <div class="rests">
-              <input class="skill-checkbox" name="system.rests.minute.checked" type="checkbox" {{checked system.rests.minute.checked}}>
-            </div>
-            <div class="rests">
-              <input class="skill-checkbox" name="system.rests.hour.checked" type="checkbox" {{checked system.rests.hour.checked}}>
-            </div>
-            <div class="rests">
-              <input class="skill-checkbox" name="system.rests.day.checked" type="checkbox" {{checked system.rests.day.checked}}>
-            </div>
-            <div class="rests">
-              <input class="skill-checkbox" name="system.rests.week.checked" type="checkbox" {{checked system.rests.week.checked}}>
-            </div>
-            <div class="rests">
-              <input class="skill-checkbox" name="system.rests.season.checked" type="checkbox" {{checked system.rests.season.checked}}>
-            </div>
-          </div>
 
           <div class="rskill-container">
-            <h3>Traits</h3>
+            <h3>Actions</h3>
             <div class="rskill-notes">
               {{editor 
               enrichedskillNotes
@@ -187,9 +158,15 @@
             </div>
           </div>
 
-          <div class="merits-container">
+          <div class="wounds-container">
             <h3>Wounds</h3>
-
+            <div class="wounds">
+                  <div class="resource light-wounds">
+                    <h3><input class="hp-input" type="text" name="system.wounds.mwValue" value="{{system.wounds.mwValue}}" data-dtype="Number"/></h3>
+                    <span> / </span>
+                    <h3><input class="hp-input" type="text" name="system.wounds.mwMax" value="{{system.wounds.mwMax}}" data-dtype="Number"/></h3>
+                  </div>
+            </div>
             <div class="rskill-notes">
               {{editor 
               enrichedwoundNotes
@@ -198,9 +175,24 @@
               }}
             </div>
           </div>
+        </div>
 
-          
+    </div>      
+    <div class="tab threads" data-group="primary" data-tab="threads">
+          <div class="extra-notes-container">
+              <h3>Notes</h3>
+              <div class="extra-notes">
+              {{editor 
+              enrichedextraNotes
+              engine='prosemirror'
+              target="system.notes.extraNotes" button=true owner=owner editable=editable
+              }}
+            </div>
+          </div>
 
+    </div>
+
+    <div class="tab items" data-group="primary" data-tab="items">
           <div class="equipment">
             <div class="inventory-header">
               <h2 class="inventory-name">Inventory</h2>
@@ -238,16 +230,7 @@
           <!-- <div class="weapons">
 
           </div> -->
-            <div class="extra-notes-container">
-              <h3>Notes</h3>
-              <div class="extra-notes">
-              {{editor 
-              enrichedextraNotes
-              engine='prosemirror'
-              target="system.notes.extraNotes" button=true owner=owner editable=editable
-              }}
-            </div>
-          </div>
+            
           <!-- <div class="talents">
             <div class="features" data-group="primary" data-tab="features">
               <h2>Talents</h2>
@@ -278,80 +261,6 @@
       <div class="tab weapons" data-group="primary" data-tab="weapons">
          -->
     </div>
-
-    {{!-- Owned Items Tab --}}
-    <div class="tab items" data-group="primary" data-tab="items">
-      <div class="resource flex-group-center">
-        <label for="system.carryingCapacity.current" class="resource-label">Carrying Capacity</label>
-        <div class="resource-content flexrow flex-center flex-between">
-          <input type="text" name="system.carryingCapacity.current" value="{{system.carryingCapacity.current}}" data-dtype="Number"/>
-          <span> / </span>
-          <input type="text" name="system.carryingCapacity.maximum" value="{{system.carryingCapacity.maximum}}" data-dtype="Number"/>
-        </div>
-      </div>
-      <h2>Attacks</h2>
-      <ol class="items-list">
-        <li class="item flexrow item-header">
-          <div class="item-image"></div>
-          <div class="item-name">Name</div>
-          <div class="item-damage">Damage</div>
-          <div class="item-slots">Slots</div>
-          <div class="item-range">Range</div>
-          <div class="item-ammo">Ammo</div>
-          <a class="item-control item-create" title="Create item" data-type="weapon"><i class="fas fa-plus"></i> Add Weapon</a>
-        </li>
-      {{#each weapons as |weapon id|}}
-        <li class="item flexrow items-list-item" data-item-id="{{weapon._id}}">
-            <div class="item-image" ><img src="{{weapon.img}}" title="{{weapon.name}}" width="24" height="24"/></div>
-            <h4 class="item-name collapsible"><a class="item-name">{{weapon.name}}</a></h4>
-            <h4 class="item-damage rollable" data-roll="{{system.damage}}" data-label="{{damage}}"><a class="item-damage">{{data.damage}}</a></h4>
-            <h4 class="item-slots">{{system.slots}}</h4>
-            <h4 class="item-range">{{system.range}}</h4>
-            <h4 class="item-ammo">{{system.ammoCurrent}}/{{system.ammoMax}}</h4>
-            <div class="item-controls">
-                <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-            </div>
-        </li>
-        <div class="item-description">
-          {{{system.description}}}
-        </div>
-      {{/each}}
-      </ol>
-
-          <h2>Equipment</h2>
-          <ol class="items-list">
-              <li class="item flexrow item-header">
-                <div class="item-image"></div>
-                <div class="item-name">Name</div>
-                <div class="item-quantity">Quantity</div>
-                <div class="item-quantity">Slots</div>
-                <div></div>
-                <div></div>
-                <div class="item-controls">
-                  <a class="item-control item-create" title="Create item" data-type="item"><i class="fas fa-plus"></i> Add item</a>
-                </div>
-              </li>
-          {{#each gear as |item id|}}
-              <li class="item flexrow items-list-item" data-item-id="{{item._id}}">
-                  <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
-                  <h4 class="item-name collapsible"><a class="item-name">{{item.name}}</a></h4>
-                  <h4 class="item-quantity">{{system.quantity}}</h4>
-                  <h4 class="item-slots">{{system.slots}}</h4>
-                  <h4></h4>
-                  <h4></h4>
-                  <div class="item-controls">
-                      <a class="item-control item-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
-                      <a class="item-control item-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
-                  </div>
-                  
-              </li>
-              <div class="item-description">
-                {{{system.description}}}
-              </div>
-          {{/each}}
-          </ol>
-      </div>
 
       {{!-- Assets Tab --}}
     

@@ -289,8 +289,11 @@ nav.sheet-tabs {
   max-width: 100%;
 }
 
-.action-list {
+.resource-list {
   max-height: 700px;
+  display: grid;
+  grid-template-columns: repeat(11, minmax(0, 1fr));
+  direction: rtl;
 }
 
 .action-number {
@@ -307,10 +310,56 @@ nav.sheet-tabs {
 }
 
 .action-number.active, .action-number.active ~ * {
-  background-color: rgb(0, 255, 213);
+  background-color: #ff482b;
 }
 
 .action-number.active:hover, .action-number.active ~ *:hover {
+  filter: brightness(0.95);
+}
+
+ /* Resolve */
+
+.resolve-number {
+  text-align: center;
+  font-size: .7rem;
+  font-weight: bold;
+  border: .5px rgb(180, 180, 180) solid;
+  padding: .277rem;
+  cursor: pointer;
+}
+
+.resolve-number:hover {
+  filter: brightness(0.7);
+}
+
+.resolve-number.active, .resolve-number.active ~ * {
+  background-color: #4898f5;
+}
+
+.resolve-number.active:hover, .resolve-number.active ~ *:hover {
+  filter: brightness(0.95);
+}
+
+/* Heart */
+
+.heart-number {
+  text-align: center;
+  font-size: .7rem;
+  font-weight: bold;
+  border: .5px rgb(180, 180, 180) solid;
+  padding: .277rem;
+  cursor: pointer;
+}
+
+.heart-number:hover {
+  filter: brightness(0.7);
+}
+
+.heart-number.active, .heart-number.active ~ * {
+  background-color: #efda06;
+}
+
+.heart-number.active:hover, .heart-number.active ~ *:hover {
   filter: brightness(0.95);
 }
 
@@ -355,7 +404,7 @@ nav.sheet-tabs {
 
 .charname{
   grid-column: 1 / 4;
-  grid-row: 4;
+  grid-row: 3;
   margin: 0 0 0 0;
   text-align: center;
   font-size: 1.5vw;
@@ -375,6 +424,24 @@ nav.sheet-tabs {
   grid-column: 1 / 6;
   grid-row: 1;
   grid-template-columns: repeat(12, 1fr);
+}
+
+.dice-roller {
+  display: flex;
+  grid-column: 2;
+  grid-gap: 5px;
+}
+
+.dice-roller > h4 {
+  max-width: 70%;
+  margin: auto;
+  font-size: 1rem;
+}
+
+.dice-roller > input {
+  text-align: center !important;
+  font-size: 1rem;
+  max-width: 30px;
 }
 
 .notes-container{
@@ -411,13 +478,15 @@ nav.sheet-tabs {
   height: min-content;
 }
 
-.character-notes{
-  background-color: rgb(209, 209, 202);
+.character-resources{
+  background-color: rgba(41, 12, 63, 0.075);
   border-radius: 5px;
+  padding: 5px;
   height: 21vh;
   width: 100%;
   grid-column: 1 / 6;
   grid-row: 2 / 5;
+  display: grid;
 }
 
 .resources {
@@ -442,12 +511,6 @@ nav.sheet-tabs {
   text-align: center;
 }
 
-.light-wounds-container{
-  grid-column: auto / 6;
-  margin: auto;
-  text-align: center;
-}
-
 .wealth-container {
   grid-column: 9;
 }
@@ -465,7 +528,7 @@ nav.sheet-tabs {
 }
 
 .augments-body{
-  display: grid !important;
+  display: grid;
   grid-template-columns: 2fr .9fr;
   align-content: flex-start;
   gap: 10px;
@@ -478,7 +541,7 @@ nav.sheet-tabs {
   margin-top: 15px;
 }
 
-.biography {
+.stats-wrapper {
   display: grid;
   grid-column: span 10 / span 10;
   grid-template-columns: repeat(10, minmax(0, 1fr));
@@ -494,15 +557,14 @@ nav.sheet-tabs {
 .skills{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr;
-  grid-column-gap: 20px;
+  grid-gap: 20px;
   grid-auto-flow: row;
   margin: auto;
 }
 
 .skill {
-  display: grid;
-  grid-template-rows: 1fr 1fr 1fr;
-  grid-row-gap: 3px;
+  display: flex;
+  padding-top: 3px;
   text-align: center;
   place-items: center;
 }
@@ -512,21 +574,17 @@ nav.sheet-tabs {
   margin: auto;
   grid-row: 1;
   grid-column: 1 / span 5;
+  font-size: .9rem;
 }
 
 .skill-score{
-  margin: auto !important;
   text-align: center !important;
   grid-row: 2;
-  grid-column: 3;
-  max-width: 75%;
+  max-width: 30px;
 }
 
-.skill-value{
-  margin: auto !important;
-  text-align: center !important;
-  grid-row: 3;
-  grid-column: 2;
+.skill-score > input{
+  font-size: .9rem;
 }
 
 .skill-max{
@@ -595,12 +653,19 @@ nav.sheet-tabs {
   grid-row: 2 / 7;
 }
 
-.merits-container{
+.wounds-container{
   display: grid;
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-row: 1 / 2;
   grid-column: 8 / span 3;
+}
+
+.wounds {
+  max-height: 33vh;
+  width: 100%;
+  grid-column: 1;
+  grid-row: 2 / 7;
 }
 
 .merit-score-container{
