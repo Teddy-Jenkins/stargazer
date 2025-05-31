@@ -11,31 +11,31 @@ export default class StargazerActorBase extends StargazerDataModel {
 
     schema.attributes = new fields.SchemaField({
       Muscle: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
       Handle: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
       Violence: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
       Psyche: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
       Intellect: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
       Sense: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       }),
       Instinct: new fields.SchemaField({
-        score: new fields.NumberField({ ...requiredInteger, initial: 1 }),
+        score: new fields.NumberField({ ...requiredInteger, initial: 0 }),
         corrected: new fields.BooleanField({ required: true, initial: true })
       })
     });
