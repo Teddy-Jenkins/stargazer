@@ -8,10 +8,26 @@
         <div class="portrait-section">
           <img class="profile" id="actor-profile" src="{{actor.img}}" title="{{actor.name}}" data-edit="img"/>
           <h2 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h2>
-          <div class="dice-roller" data-skill="Action">
-            <h4 for="system.action.score" class="rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
-            <input class="" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
+
+          <div class="dice-roller-box">
+              <div class="dice-roller-mod dice-roller-adv">
+                <label>
+                  <input type="checkbox" name="flags.stargazer.advantage" {{#if flags.stargazer.advantage}}checked{{/if}}><br>
+                  ADV
+                </label>
+              </div>
+              <div class="dice-roller" data-skill="Action">
+                <h4 for="system.action.score" class="rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
+                <input class="" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
+              </div>
+              <div class="dice-roller-mod dice-roller-dis">
+                <label>
+                  <input type="checkbox" name="flags.stargazer.disadvantage" {{#if flags.stargazer.disadvantage}}checked{{/if}}><br>
+                  DIS
+                </label>
+              </div>
           </div>
+          
         </div>
           <div class="char-info">
             <div class="char-stats-container">
@@ -159,13 +175,13 @@
           </div>
 
           <div class="wounds-container">
-            <h3>Wounds</h3>
             <div class="wounds">
-                  <div class="resource light-wounds">
-                    <h3><input class="hp-input" type="text" name="system.wounds.mwValue" value="{{system.wounds.mwValue}}" data-dtype="Number"/></h3>
-                    <span> / </span>
-                    <h3><input class="hp-input" type="text" name="system.wounds.mwMax" value="{{system.wounds.mwMax}}" data-dtype="Number"/></h3>
-                  </div>
+              <h3>Wounds</h3>
+                    <div class="resource light-wounds">
+                      <h3><input class="hp-input" type="text" name="system.wounds.mwValue" value="{{system.wounds.mwValue}}" data-dtype="Number"/></h3>
+                      <span> / </span>
+                      <h3><input class="hp-input" type="text" name="system.wounds.mwMax" value="{{system.wounds.mwMax}}" data-dtype="Number"/></h3>
+                    </div>
             </div>
             <div class="rskill-notes">
               {{editor 

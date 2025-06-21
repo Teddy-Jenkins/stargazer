@@ -307,31 +307,56 @@ export class StargazerActorSheet extends ActorSheet {
   //     }
   //   }
 
-_onRoll(event) {
+async _onRoll(event) {
   event.preventDefault();
   const element = event.currentTarget;
   const dataset = element.dataset;
 
-  // Handle item rolls.
-  if (dataset.rollType) {
-    if (dataset.rollType == 'item') {
-      const itemId = element.closest('.item').dataset.itemId;
-      const item = this.actor.items.get(itemId);
-      if (item) return item.roll();
-    }
+  if (!dataset.roll) return;
+
+  // Pull the roll template (e.g. "(@action.score)d6cs>=4")
+  const rollTemplate = dataset.roll;
+  const match = rollTemplate.match(/\(@([\w.]+)\)/);
+  if (!match) {
+    ui.notifications.warn("Invalid roll formula.");
+    return;
   }
 
-  // Handle rolls that supply the formula directly.
-  if (dataset.roll) {
-    let label = dataset.label ? `${dataset.score} ${dataset.label}` : '';
-    let roll = new Roll(dataset.roll, this.actor.getRollData());
-    roll.toMessage({
-      speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-      flavor: label,
-      rollMode: game.settings.get('core', 'rollMode'),
-    });
-    return roll;
+  const path = match[1];           // e.g. "action.score"
+  const rollData = this.actor.getRollData();
+  const diceCount = getProperty(rollData, path);
+  if (!Number.isNumeric(diceCount)) {
+    ui.notifications.warn("Invalid number of dice.");
+    return;
   }
+
+  // Flags in the "stargazer" namespace
+  const hasAdvantage    = this.actor.getFlag("stargazer", "advantage");
+  const hasDisadvantage = this.actor.getFlag("stargazer", "disadvantage");
+
+  // Determine the success threshold
+  let threshold = 4;
+  if (hasAdvantage && !hasDisadvantage)    threshold = 3;
+  else if (hasDisadvantage && !hasAdvantage) threshold = 5;
+
+  // Build the final formula: e.g. "5d6cs>=3"
+  const finalFormula = `${diceCount}d6cs>=${threshold}`;
+
+  // Optional: annotate the chat with which mode was used
+  let flavor = dataset.label ? `${dataset.score} ${dataset.label}` : "";
+  if (hasAdvantage && !hasDisadvantage)      flavor += " (Advantage: 3+)";
+  else if (hasDisadvantage && !hasAdvantage) flavor += " (Disadvantage: 5+)";
+
+  // Roll and send to chat
+  const roll = new Roll(finalFormula, rollData);
+  await roll.evaluate({ async: true });
+  roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor: this.actor }),
+    flavor: flavor,
+    rollMode: game.settings.get("core", "rollMode"),
+  });
+
+  return roll;
 }
 
 async _onAction(event) {
