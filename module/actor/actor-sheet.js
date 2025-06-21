@@ -343,7 +343,7 @@ async _onRoll(event) {
   const finalFormula = `${diceCount}d6cs>=${threshold}`;
 
   // Optional: annotate the chat with which mode was used
-  let flavor = dataset.label ? `${dataset.score} ${dataset.label}` : "";
+  let flavor = dataset.label ? `${dataset.score} Dice` : "";
   if (hasAdvantage && !hasDisadvantage)      flavor += " (Advantage: 3+)";
   else if (hasDisadvantage && !hasAdvantage) flavor += " (Disadvantage: 5+)";
 
