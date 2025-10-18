@@ -1,0 +1,60 @@
+{{!-- templates/actor/parts/wound-tracker.hbs --}}
+<div class="wound-tracker-section">
+    <h4 class="wounds-header">
+        <span>Wounds</span>
+        <div class="wound-main-controls">
+            <a class="wound-control add-wound" title="Add Wound">
+                <i class="fas fa-plus"></i>
+            </a>
+            <a class="wound-control remove-wound" title="Remove Last Wound">
+                <i class="fas fa-minus"></i>
+            </a>
+        </div>
+    </h4>
+
+    <div class="wounds-list">
+        {{#if actor.system.wounds}}
+            {{#each actor.system.wounds as |wound woundIndex|}}
+                <div class="wound-item" data-wound-index="{{woundIndex}}">
+                    <div class="wound-header">
+                        <div class="wound-controls">
+                            <a class="wound-btn decrease" data-wound-index="{{woundIndex}}" title="Decrease Severity">
+                                <i class="fas fa-minus"></i>
+                            </a>
+                            <a class="wound-btn increase" data-wound-index="{{woundIndex}}" title="Increase Severity">
+                                <i class="fas fa-plus"></i>
+                            </a>
+                        </div>
+                        <input 
+                            type="text" 
+                            class="wound-name" 
+                            name="system.wounds.{{woundIndex}}.name" 
+                            value="{{wound.name}}" 
+                            placeholder="Wound name..."
+                        >
+                        <a class="wound-btn delete" data-wound-index="{{woundIndex}}" title="Remove Wound">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </div>
+                    <div class="wound-progress" data-wound-index="{{woundIndex}}">
+                        {{#each (range 1 17) as |segment|}}
+                            <div class="wound-segment {{#if (eq segment 16)}}skull{{/if}} {{#if (or (eq segment 4) (eq segment 7) (eq segment 10) (eq segment 13))}}dashed-left{{/if}} {{#if (lte segment ../wound.value)}}filled{{/if}}" 
+                                 data-segment="{{segment}}" 
+                                 data-wound-index="{{../woundIndex}}">
+                                {{#if (eq segment 16)}}
+                                    <i class="fas fa-skull"></i>
+                                {{else}}
+                                    {{segment}}
+                                {{/if}}
+                            </div>
+                        {{/each}}
+                    </div>
+                </div>
+            {{/each}}
+        {{else}}
+            <div class="no-wounds">
+                <p>No Wounds</p>
+            </div>
+        {{/if}}
+    </div>
+</div>

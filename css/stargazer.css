@@ -292,7 +292,7 @@ nav.sheet-tabs {
 .resource-list {
   max-height: 700px;
   display: grid;
-  grid-template-columns: repeat(11, minmax(0, 1fr));
+  grid-template-columns: repeat(14, minmax(0, 1fr));
   direction: rtl;
 }
 
@@ -539,13 +539,12 @@ nav.sheet-tabs {
   min-width: 23px !important;
 }
 
-.item-description {
-  max-height: 0;
+/* .item-description {
   overflow: hidden;
   transition: max-height 0.2s ease-out;
   max-width: 95%;
   margin: auto;
-}
+} */
 
 .augments-body{
   display: grid;
@@ -563,10 +562,10 @@ nav.sheet-tabs {
 
 .stats-wrapper {
   display: grid;
-  grid-column: span 10 / span 10;
-  grid-template-columns: repeat(10, minmax(0, 1fr));
+  grid-template-columns: repeat(12, minmax(0, 1fr));
   grid-template-rows: repeat(2, minmax(0, 1fr));
   grid-gap: 5px;
+  max-height: 33vh;
 }
 
 .skill-container {
@@ -595,12 +594,13 @@ nav.sheet-tabs {
   grid-row: 1;
   grid-column: 1 / span 5;
   font-size: .9rem;
+  font-weight: 500;
 }
 
 .skill-score{
   text-align: center !important;
   grid-row: 2;
-  max-width: 30px;
+  max-width: 15px;
 }
 
 .skill-score > input{
@@ -657,17 +657,25 @@ nav.sheet-tabs {
 }
 
 .rskill-container{
-  grid-column: 5 / span 3;
+  grid-column: 3 / span 3;
   grid-row: 1 / 2;
+  padding: .5rem;
+}
+
+.actions {
   display: grid;
   grid-template-columns: 1fr;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-gap: 20px;
+}
+
+.actions > h1 {
+  text-align: center;
 }
 
 .rskill-notes{
   background-color: rgb(209, 209, 202);
   border-radius: 5px;
-  max-height: 33vh;
+  height: 350px;
   width: 100%;
   grid-column: 1;
   grid-row: 2 / 7;
@@ -678,19 +686,159 @@ nav.sheet-tabs {
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-row: 1 / 2;
-  grid-column: 8 / span 3;
+  grid-column: 6 / 12;
+  padding: .5rem;
+}
+
+.hurt-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-width: 30%;
 }
 
 .wounds {
   width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  margin-top: 1rem;
+  padding-top: .5rem;
+  border-top: solid 1px gray;
 }
 
-.merit-score-container{
-  display: grid;
-  justify-items: center;
+/* Header row */
+.wounds-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
 }
+
+/* Wound rows */
+.wound {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+/* Name input */
+.wound input[type="text"] {
+  width: 170px;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.9rem;
+  border-radius: 6px;
+  border: 1px solid #555;
+  background: #2c2c2c;
+  color: #eee;
+}
+
+.wound-tracker {
+  display: grid;
+  grid-template-columns: repeat(16, 1fr);
+  height: 16px;   /* slim progress bar look */
+  gap: 1px;
+  text-align: center;
+}
+
+.wound-tracker .segment {
+  border: 1px solid #333;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+/* Colors by groups of 3 (progressing green → yellow → orange → red) */
+.wound-tracker .segment:nth-child(1),
+.wound-tracker .segment:nth-child(2),
+.wound-tracker .segment:nth-child(3) {
+  background: #00c050; /* green */
+}
+.wound-tracker .segment:nth-child(4),
+.wound-tracker .segment:nth-child(5),
+.wound-tracker .segment:nth-child(6) {
+  background: #a4d100; /* yellow-green */
+}
+.wound-tracker .segment:nth-child(7),
+.wound-tracker .segment:nth-child(8),
+.wound-tracker .segment:nth-child(9) {
+  background: #daae00; /* yellow */
+}
+.wound-tracker .segment:nth-child(10),
+.wound-tracker .segment:nth-child(11),
+.wound-tracker .segment:nth-child(12) {
+  background: #cf6100; /* orange */
+}
+.wound-tracker .segment:nth-child(13),
+.wound-tracker .segment:nth-child(14),
+.wound-tracker .segment:nth-child(15) {
+  background: #c51905; /* red */
+}
+
+/* Skull (final box) */
+.wound-tracker .segment:nth-child(16) {
+  background: #000;
+  color: #fff;
+  font-size: 0.9em;
+  text-align: center;
+}
+
+/* Override when not filled */
+.wound-tracker .segment:not(.filled) {
+  background: #222 !important;
+  color: #555;
+}
+
+/* Filled segment — uses a smooth gradient so the filled area reads like a bar */
+.wound-tracker .segment.filled {
+  color: #fff;
+  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.45);
+}
+
+/* remove left border on first child so edges look clean */
+.wound-tracker .segment:first-child { border-left: none; }
+
+/* every 3rd segment paints a dashed vertical overlay to visually replace thin border */
+.wound-tracker .segment:nth-child(3n):not(:last-child)::after {
+  content: "";
+  position: absolute;
+  right: -1px;        /* nudge so it sits between segments */
+  top: 8%;
+  bottom: 8%;
+  width: 4px;         /* thickness of the group boundary */
+  pointer-events: none;
+  border-radius: 1px;
+  transform: translateX(0); /* keep crisp */
+}
+
+/* Avoid showing the separator on the very end segment (looks better) */
+.wound-tracker .segment:last-child::after { display: none; }
+
+/* Hover/focus affordances */
+.wound-tracker .segment:hover,
+.wound-tracker .segment:focus {
+  filter: brightness(1.07);
+  outline: none;
+}
+
+/* Keyboard focus ring for accessibility */
+.wound-tracker .segment:focus {
+  box-shadow: 0 0 0 3px rgba(150,150,150,0.12);
+}
+
+/* Remove underline of number/text on selection */
+.wound-tracker .segment::selection { background: transparent; }
+
+/* Remove dashed visual bleed for high-contrast dark backgrounds */
+.wound-tracker .segment:nth-child(3n):not(:last-child).filled::after {
+  /* Slightly lighter divider on filled portions to keep contrast */
+  border-right-color: rgba(255,255,255,0.5);
+}
+
+/* small remove button */
+.remove-wound {
+  border: none;
+  cursor: pointer;
+  color: #f55;
+  padding: 0 0.1rem;
+}
+
 
 .merits{
   display: grid;
@@ -748,6 +896,36 @@ nav.sheet-tabs {
   padding: 0;
 }
 
+.collapsible-name {
+    background: none;
+    border: none;
+    padding: 0;
+    font: inherit;
+    color: inherit;
+    cursor: pointer;         /* pointer to indicate clickable */
+    text-decoration: underline;
+  }
+
+.collapsible-name:focus { outline: 2px solid highlight; }
+
+.inventory-list, .container-contents { list-style: none; padding-left: 0; margin: 0; }
+
+.item-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-out;
+}
+
+.container-contents {
+  min-height: 28px; /* so empty containers accept drops */
+  padding: 4px;
+}
+
+.highlight-drop {
+  outline: 2px dashed rgba(90,160,255,0.9);
+  background-color: rgba(90,160,255,0.04);
+}
+
 .talents{
   grid-column: 7 / span 4;
   grid-row: 4 / span 7;
@@ -767,4 +945,355 @@ nav.sheet-tabs {
 .ammo {
   max-width: 50%;
   margin: auto;
+}
+
+/* ===== INVENTORY SYSTEM STYLES ===== */
+
+/* Inventory container */
+.inventory-box {
+  background: rgba(0, 0, 0, 0.05);
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+}
+
+.inventory-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  padding: 0.5rem;
+  border-bottom: 2px solid #999;
+  margin-bottom: 0.5rem;
+}
+
+.inventory-title-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.inventory-header h3 {
+  margin: 0;
+  font-size: 1.2rem;
+}
+
+.item-controls {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 0.25rem;
+  align-items: center;
+  max-width: 10%;
+}
+
+.item-control-placeholder {
+  width: 1.5rem;
+  display: inline-block;
+}
+
+.item-control {
+  cursor: pointer;
+  color: #444;
+  padding: 0.25rem;
+  transition: color 0.2s;
+}
+
+.item-control:hover {
+  color: #000;
+}
+
+.inventory-create {
+  font-size: 1.1rem;
+}
+
+/* Item list */
+.item-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Individual inventory entry */
+.inventory-entry {
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  margin: 0.25rem 0;
+  padding: 0.5rem;
+  cursor: grab;
+  transition: all 0.2s;
+}
+
+.inventory-entry:hover {
+  background: #e8e8e8;
+  border-color: #999;
+}
+
+.inventory-entry.dragging {
+  opacity: 0.5;
+  cursor: grabbing;
+}
+
+.inventory-entry.drop-target {
+  background: rgba(90, 160, 255, 0.1);
+  border: 2px dashed rgba(90, 160, 255, 0.8);
+}
+
+/* Item summary row */
+.item-summary {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.item-summary .item-image {
+  flex-shrink: 0;
+}
+
+.item-summary .item-image img {
+  border: 1px solid #999;
+  border-radius: 3px;
+}
+
+.item-image {
+  max-width: 10%;
+}
+
+.item-summary .item-name {
+  flex: 1;
+  margin: 0;
+  font-size: 1rem;
+  cursor: pointer;
+  user-select: none;
+}
+
+.item-name {
+  max-width: 40%;
+}
+
+.item-summary .item-name:hover {
+  color: #0056b3;
+}
+
+.item-slots, .container-status {
+  font-size: 0.85rem;
+  color: #666;
+  font-weight: normal;
+  margin-left: 0.5rem;
+}
+
+/* Item content (collapsible) */
+.item-content {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out, opacity 0.2s ease-in-out;
+  padding: 0;
+  opacity: 0;
+}
+
+.item-content.expanded {
+  max-height: 2000px;
+  padding-top: 0.5rem;
+  opacity: 1;
+  overflow: visible;
+}
+
+.item-description {
+  background: rgba(255, 255, 255, 0.5);
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  padding: 0.5rem;
+  margin: 0.5rem 0;
+  font-size: 0.9rem;
+}
+
+.item-actions {
+  margin-top: 0.5rem;
+}
+
+.item-actions .item-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  padding: 0.25rem 0.5rem;
+  background: #e0e0e0;
+  border: 1px solid #999;
+  border-radius: 3px;
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.item-actions .item-control:hover {
+  background: #d0d0d0;
+}
+
+/* Container-specific styles */
+.inventory-entry.container {
+  background: #e8f4f8;
+  border-left: 4px solid #4a90a4;
+}
+
+.inventory-entry.container:hover {
+  background: #d5eaf2;
+}
+
+.container-contents {
+  background: rgba(255, 255, 255, 0.3);
+  border: 1px dashed #999;
+  border-radius: 3px;
+  padding: 0.5rem;
+  margin-top: 0.5rem;
+  min-height: 40px;
+}
+
+.container-header {
+  margin-bottom: 0.5rem;
+}
+
+.container-header p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.nested-items {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.nested-items .inventory-entry {
+  background: #fff;
+  margin: 0.25rem 0;
+  font-size: 0.95rem;
+}
+
+.empty-container {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 0.5rem;
+  list-style: none;
+}
+
+/* Drag and drop visual feedback */
+.highlight-drop {
+  outline: 2px dashed rgba(90, 160, 255, 0.9);
+  background-color: rgba(90, 160, 255, 0.1);
+}
+
+/* Carry capacity display */
+.carry-cap {
+  max-width: 40%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  justify-content: flex-end;
+  padding-left: 1.5rem;
+  margin-left: 0.5rem;
+  border-left: 1px solid #999;
+  font-weight: bold;
+}
+
+.carry-cap input {
+  width: 60px;
+  text-align: center;
+  padding: 0.25rem;
+}
+
+.carry-cap input[readonly] {
+  background: #e8e8e8;
+  border-color: #999;
+}
+
+/* Container add item button */
+.container-add-item {
+  color: #28a745;
+}
+
+.container-add-item:hover {
+  color: #1e7e34;
+}
+
+/* Remove from container button */
+.container-remove-item {
+  color: #dc3545;
+}
+
+.container-remove-item:hover {
+  color: #c82333;
+}
+
+/* Delete button */
+.inventory-delete {
+  color: #dc3545;
+}
+
+.inventory-delete:hover {
+  color: #c82333;
+}
+
+/* Edit button */
+.inventory-edit {
+  color: #007bff;
+}
+
+.inventory-edit:hover {
+  color: #0056b3;
+}
+
+/* Touch device support */
+@media (hover: none) and (pointer: coarse) {
+  .inventory-entry {
+    cursor: grab;
+    touch-action: none;
+  }
+
+  .inventory-entry:active {
+    cursor: grabbing;
+  }
+}
+
+/* Container sheet contents list */
+.container-items-list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0;
+}
+
+.container-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  margin: 0.25rem 0;
+  background: #f5f5f5;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.container-item:hover {
+  background: #e8e8e8;
+}
+
+.container-item .item-image {
+  flex-shrink: 0;
+}
+
+.container-item .item-name {
+  flex: 1;
+  margin: 0;
+  max-width: 40%;
+}
+
+.container-item .item-controls {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.empty-container-message {
+  text-align: center;
+  color: #999;
+  font-style: italic;
+  padding: 2rem;
 }

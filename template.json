@@ -13,34 +13,16 @@
           "max": 5
         },
 
-        "wounds": {
-          "mwValue": 0,
-          "mwMax": 2,
-          "hwValue": 0,
-          "hwMax": 2
+        "hurt": {
+          "value": 0,
+          "max": 5
         },
+
+        "wounds": [],
         
         "wealth": 0,
         "funds": 0,
         "cash": 0,
-
-        "rests": {
-          "minute": {
-            "checked": false
-          },
-          "hour": {
-            "checked": false
-          },
-          "day": {
-            "checked": false
-          },
-          "week": {
-            "checked": false
-          },
-          "season": {
-            "checked": false
-          }
-        },
 
         "notes": {
           "extraNotes": "",
@@ -48,10 +30,12 @@
           "characterNotes": "",
           "woundNotes": ""
         },
+        
+        "inventory": [],
 
         "carryCap": {
           "current": 0,
-          "maximum": 7
+          "maximum": 5
         },
 
         "action": {
@@ -154,32 +138,29 @@
   
 
   "Item": {
-    "types": ["item", "weapon", "feature", "asset"],
+    "types": ["item", "container", "feature", "asset"],
     "templates": {
       "base": {
         "description": ""
       }
     },
-
+    
     "item": {
       "templates": ["base"],
+      "slots": 1,
       "quality": "",
-      "slots": ""
+      "parentContainerId": null
     },
 
-    "weapon": {
+    "container": {
       "templates": ["base"],
-      "quality": 1,
-      "ammoMax": 0,
-      "ammoCurrent": 0,
-      "range": "",
-      "slots": ""
+      "capacity": 3,
+      "packed": false,
+      "parentContainerId": null
     },
-
     "feature": {
       "templates": ["base"]
     },
-
     "asset": {
       "templates": ["base"],
       "type": "",

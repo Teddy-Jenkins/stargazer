@@ -7,6 +7,7 @@ export default class StargazerItemBase extends StargazerDataModel {
     const schema = {};
 
     schema.description = new fields.StringField({ required: true, blank: true });
+    schema.parentContainerId = new fields.StringField({ required: false, nullable: true, initial: null });
 
     return schema;
   }

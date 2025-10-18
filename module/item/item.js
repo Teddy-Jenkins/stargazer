@@ -2,6 +2,7 @@
  * Extend the basic Item with some very simple modifications.
  * @extends {Item}
  */
+
 export class StargazerItem extends Item {
   /**
    * Augment the basic Item data model with additional dynamic data.
@@ -13,6 +14,16 @@ export class StargazerItem extends Item {
     const itemData = this;
     const actorData = this.actor ? this.actor : {};
     const data = itemData.system;
+    const system = this.system;
+
+    // Ensure parentContainerId exists for items and containers (read-only check)
+    // Note: The actual migration happens in actor-sheet.js _migrateItemData()
+    if (this.type === "item" || this.type === "container") {
+      if (!("parentContainerId" in this.system)) {
+        // Just set it on the runtime object, don't persist yet
+        this.system.parentContainerId = null;
+      }
+    }
   }
 
   /**

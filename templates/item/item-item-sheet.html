@@ -2,15 +2,15 @@
     <header class="sheet-header">
         <img class="profile-img" src="{{item.img}}" data-edit="img" title="{{item.name}}"/>
         <div class="header-fields">
-            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Name"/></h1>
+            <h1 class="charname"><input name="name" type="text" value="{{item.name}}" placeholder="Item Name"/></h1>
             <div class="grid grid-2col">
               <div class="resource">
-                <label class="resource-label">Quality</label>
-                  <input type="text" name="system.quality" value="{{system.quality}}" data-dtype="Number"/>
+                <label class="resource-label">Slots</label>
+                  <input type="number" name="system.slots" value="{{system.slots}}" min="1" data-dtype="Number"/>
               </div>
               <div class="resource">
-                <label class="resource-label">Slots</label>
-                  <input type="text" name="system.slots" value="{{system.slots}}" data-dtype="Number"/>
+                <label class="resource-label">Quality</label>
+                  <input type="text" name="system.quality" value="{{system.quality}}" placeholder="Optional"/>
               </div>
             </div>
         </div>
@@ -18,16 +18,16 @@
 
     {{!-- Sheet Tab Navigation --}}
     <nav class="sheet-tabs tabs" data-group="primary">
-        <a class="item" data-tab="description">Description</a>
+        <a class="item active" data-tab="description">Description</a>
     </nav>
 
     {{!-- Sheet Body --}}
     <section class="sheet-body">
 
         {{!-- Description Tab --}}
-        <div class="tab" data-group="primary" data-tab="description">
-            {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable}}
+        <div class="tab active" data-group="primary" data-tab="description">
+            {{editor enrichedDescription target="system.description" button=true owner=owner editable=editable engine="prosemirror"}}
         </div>
-        
+
     </section>
 </form>

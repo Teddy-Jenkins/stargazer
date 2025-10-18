@@ -1,0 +1,59 @@
+{{!-- item-entry.hbs --}}
+<li class="item inventory-entry {{item.type}}"
+    data-item-id="{{item._id}}"
+    data-item-type="{{item.type}}"
+    {{#if item.isContainer}}data-container-id="{{item._id}}"{{/if}}
+    draggable="true">
+
+  <div class="item-summary flexrow">
+    <div class="item-image"><img src="{{item.img}}" title="{{item.name}}" width="24" height="24"/></div>
+
+    <h4 class="item-name collapsible-name">
+      {{item.name}}
+      {{#if item.isItem}}<span class="item-slots">({{item.system.slots}} slots)</span>{{/if}}
+      {{#if item.isContainer}}
+        <span class="container-status">[{{item.effectiveCapacity}} slots]</span>
+      {{/if}}
+    </h4>
+
+    <div class="item-controls">
+      {{#if item.isContainer}}
+        <a class="item-control container-add-item" data-container-id="{{item._id}}" title="Add Item"><i class="fas fa-plus"></i></a>
+      {{else}}
+        <span class="item-control-placeholder"></span>
+      {{/if}}
+      <a class="item-control inventory-edit" title="Edit Item"><i class="fas fa-edit"></i></a>
+      <a class="item-control inventory-delete" title="Delete Item"><i class="fas fa-trash"></i></a>
+    </div>
+  </div>
+
+  <div class="item-content">
+    {{#if item.isItem}}
+      {{#if item.system.description}}
+        <div class="item-description">
+          {{{item.system.description}}}
+        </div>
+      {{/if}}
+      {{#if item.system.parentContainerId}}
+        <div class="item-actions">
+          <a class="item-control container-remove-item" title="Remove from Container"><i class="fas fa-level-up-alt"></i> Remove from Container</a>
+        </div>
+      {{/if}}
+    {{else if item.isContainer}}
+      <div class="container-contents" data-container-id="{{item._id}}">
+        <div class="container-header">
+          <p><strong>Contents ({{item.usedSlots}}/{{item.effectiveCapacity}} slots):</strong></p>
+        </div>
+        <ol class="item-list nested-items">
+          {{#if item.contents.length}}
+            {{#each item.contents}}
+              {{> item-entry item=this}}
+            {{/each}}
+          {{else}}
+            <li class="empty-container">Empty - Drag items here</li>
+          {{/if}}
+        </ol>
+      </div>
+    {{/if}}
+  </div>
+</li>

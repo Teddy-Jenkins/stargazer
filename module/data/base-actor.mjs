@@ -47,13 +47,6 @@ export default class StargazerActorBase extends StargazerDataModel {
       woundNotes: new fields.StringField({ required: true, blank: true })
     });
 
-    schema.wounds = new fields.SchemaField({
-      mwValue: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      mwMax: new fields.NumberField({ ...requiredInteger, initial: 5 }),
-      hwValue: new fields.NumberField({ ...requiredInteger, initial: 5 }),
-      hwMax: new fields.NumberField({ ...requiredInteger, initial: 5 })
-  });
-
   schema.heart = new fields.SchemaField({
     value: new fields.NumberField({ ...requiredInteger, initial: 5 }),
     max: new fields.NumberField({ ...requiredInteger, initial: 5 })
@@ -83,7 +76,12 @@ export default class StargazerActorBase extends StargazerDataModel {
 
   schema.carryCap = new fields.SchemaField({
       current: new fields.NumberField({ ...requiredInteger, initial: 0 }),
-      maximum: new fields.NumberField({ ...requiredInteger, initial: 7 })
+      maximum: new fields.NumberField({ ...requiredInteger, initial: 5 })
+  });
+
+  schema.hurt = new fields.SchemaField({
+      max: new fields.NumberField({ ...requiredInteger, initial: 5 }),
+      value: new fields.NumberField({ ...requiredInteger, initial: 0 })
   });
 
   schema.merits = new fields.SchemaField({
