@@ -1,6 +1,7 @@
 @import url("https://fonts.googleapis.com/css2?family=Martel:wght@400;800&family=Roboto:wght@300;400;500&display=swap");
 /* Global styles */
-.window-app, .window-content {
+.window-app.stargazer,
+.window-app.stargazer .window-content {
   font-family: "Roboto", sans-serif;
   padding: 0 !important;
 }
@@ -39,7 +40,7 @@ a, p, input, h1, h2, h3, h4, label, .window-app {
 
 /* Character sheet base changes END */
 
-h1, h2, h3, h4 {
+.stargazer h1, .stargazer h2, .stargazer h3, .stargazer h4 {
   border-bottom: none;
   margin: auto;
 }
@@ -186,11 +187,7 @@ h1, h2, h3, h4 {
   flex: 0;
 }
 
-.boilerplate .sheet-body,
-.boilerplate .sheet-body .tab,
-.boilerplate .sheet-body .tab .editor {
-  height: 100% !important;
-}
+
 
 nav.sheet-tabs {
   max-height: 32px;
@@ -212,11 +209,11 @@ nav.sheet-tabs {
   border-bottom: 1px solid #AAA;
 }
 
-.tab, .editor {
+.stargazer .tab, .stargazer .editor {
   height: 100% !important;
 }
 
-.item{
+.stargazer .item {
   padding-top: 2px;
 }
 
@@ -657,7 +654,7 @@ nav.sheet-tabs {
 }
 
 .rskill-container{
-  grid-column: 3 / span 3;
+  grid-column: 1 / span 5;
   grid-row: 1 / 2;
   padding: .5rem;
 }
@@ -686,7 +683,7 @@ nav.sheet-tabs {
   grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
   grid-column-gap: 20px;
   grid-row: 1 / 2;
-  grid-column: 6 / 12;
+  grid-column: 6 / 13;
   padding: .5rem;
 }
 
@@ -931,7 +928,7 @@ nav.sheet-tabs {
   grid-row: 4 / span 7;
 }
 
-.flexcol{
+.stargazer .flexcol{
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;

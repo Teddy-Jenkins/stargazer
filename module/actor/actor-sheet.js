@@ -18,6 +18,15 @@ export class StargazerActorSheet extends ActorSheet {
   get template() {
     return `systems/stargazer/templates/actor/actor-${this.actor.type}-sheet.hbs`;
   }
+  
+  // async _renderOuter() {
+  //   const html = await super._renderOuter();
+  //   const theme = document.body.dataset.theme ?? "dark";
+  //   html[0].dataset.theme = theme;
+  //   html[0].classList.remove("theme-light", "theme-dark"); // ← new
+  //   html[0].classList.add(`theme-${theme}`);               // ← new
+  //   return html;
+  // }
   /* -------------------------------------------- */
 /**
  * Manually fetches and registers a template partial.
@@ -216,6 +225,7 @@ async _prepareItems(context) {
 
   /** @override */
 async activateListeners(html) {
+  
   super.activateListeners(html);
   // Await the initialization call before adding listeners
   await this._ensureWoundsInitialized().catch(e => console.error("Wounds init failed", e));

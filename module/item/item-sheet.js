@@ -16,6 +16,7 @@ export class StargazerItemSheet extends ItemSheet {
 
   /** @override */
   get template() {
+    
     const path = "systems/stargazer/templates/item";
     // Return a single sheet for all item types.
     // return `${path}/item-sheet.html`;
@@ -24,6 +25,15 @@ export class StargazerItemSheet extends ItemSheet {
     // unique item sheet by type, like `weapon-sheet.html`.
     return `${path}/item-${this.item.type}-sheet.html`;
   }
+
+  // async _renderOuter() {
+  //   const html = await super._renderOuter();
+  //   const theme = document.body.dataset.theme ?? "dark";
+  //   html[0].dataset.theme = theme;
+  //   html[0].classList.remove("theme-light", "theme-dark"); // ← new
+  //   html[0].classList.add(`theme-${theme}`);               // ← new
+  //   return html;
+  // }
 
   /* -------------------------------------------- */
 
@@ -79,6 +89,7 @@ export class StargazerItemSheet extends ItemSheet {
 
   /** @override */
   activateListeners(html) {
+    
     super.activateListeners(html);
 
     // Everything below here is only needed if the sheet is editable
