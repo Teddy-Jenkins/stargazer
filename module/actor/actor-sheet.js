@@ -824,7 +824,7 @@ async _onRoll(event) {
 
   const path = match[1];           // e.g. "action.score"
   const rollData = this.actor.getRollData();
-  const diceCount = getProperty(rollData, path);
+  const diceCount = foundry.utils.getProperty(rollData, path);
   if (!Number.isNumeric(diceCount)) {
     ui.notifications.warn("Invalid number of dice.");
     return;
