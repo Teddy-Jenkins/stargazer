@@ -20,13 +20,13 @@ export class StargazerActorSheet extends ActorSheet {
   }
   
   // async _renderOuter() {
-  //   const html = await super._renderOuter();
-  //   const theme = document.body.dataset.theme ?? "dark";
-  //   html[0].dataset.theme = theme;
-  //   html[0].classList.remove("theme-light", "theme-dark"); // ← new
-  //   html[0].classList.add(`theme-${theme}`);               // ← new
-  //   return html;
-  // }
+//   const html = await super._renderOuter();
+//   const theme = document.body.dataset.theme ?? "dark";
+//   html[0].dataset.theme = theme;
+//   html[0].classList.remove("theme-light", "theme-dark");
+//   html[0].classList.add(`theme-${theme}`);
+//   return html;
+// }
   /* -------------------------------------------- */
 /**
  * Manually fetches and registers a template partial.
@@ -124,22 +124,26 @@ async _registerItemEntryPartial() {
 
 // --- prepare wounds for the template: build segments so template is helper-free ---
 context.system = context.system || {};
-const rawWounds = Array.isArray(this.actor.getFlag("stargazer","wounds"))
-  ? this.actor.getFlag("stargazer","wounds")
+const rawWounds = Array.isArray(this.actor.getFlag("stargazer", "wounds"))
+  ? this.actor.getFlag("stargazer", "wounds")
   : (Array.isArray(context.system.wounds) ? context.system.wounds : []);
 
 context.system.wounds = rawWounds.map(w => {
   const name = (w && typeof w.name === "string") ? w.name : "";
   const value = Number.isFinite(Number(w?.value)) ? Number(w.value) : 0;
-  const segments = [];
-  for (let i = 1; i <= 16; i++) {
-    segments.push({
+  const thresholds = Array.isArray(w?.thresholds) ? w.thresholds : ["", "", "", "", ""];
+  const boxes = [];
+  for (let i = 1; i <= 6; i++) {
+    boxes.push({
       n: i,
       filled: i <= value,
-      skull: i === 16
+      skull: i === 6,
+      threshold: i < 6 ? (thresholds[i - 1] ?? "") : null,
+      thresholdIndex: i - 1,
+      hasThreshold: i < 6
     });
   }
-  return { name, value, segments };
+  return { name, value, thresholds, boxes };
 });
 
     
@@ -697,10 +701,10 @@ html.on("click", ".add-wound", async (ev) => {
 
   // Read the latest wounds from flags
   const current = Array.isArray(this.actor.getFlag("stargazer", "wounds"))
-    ? foundry.utils.duplicate(this.actor.getFlag("stargazer", "wounds"))
+    ? foundry.utils.deepClone(this.actor.getFlag("stargazer", "wounds"))
     : [];
 
-  current.push({ name: "", value: 0 });
+  current.push({ name: "", value: 0, thresholds: ["", "", "", "", ""] });
 
   // Save into an actor flag (persistent per-actor)
   await this.actor.setFlag("stargazer", "wounds", current);
@@ -716,7 +720,7 @@ html.on("click", ".remove-wound", async (ev) => {
   console.log("Stargazer | remove-wound idx", index, "actor", this.actor?.name);
 
   const current = Array.isArray(this.actor.getFlag("stargazer", "wounds"))
-    ? foundry.utils.duplicate(this.actor.getFlag("stargazer", "wounds"))
+    ? foundry.utils.deepClone(this.actor.getFlag("stargazer", "wounds"))
     : [];
 
   if (Number.isInteger(index) && current[index]) {
@@ -726,41 +730,48 @@ html.on("click", ".remove-wound", async (ev) => {
   } else ui.notifications.warn("Could not remove wound (index not found).");
 });
 
-html.on("click", ".wound .wound-tracker .segment", async (ev) => {
+html.on("click", ".wound .wound-tracker .box", async (ev) => {
   ev.preventDefault();
-  const seg = $(ev.currentTarget);
-  const woundEl = seg.closest(".wound");
+  const box = $(ev.currentTarget);
+  const woundEl = box.closest(".wound");
   const index = Number(woundEl.data("index"));
-  const value = Number(seg.data("value"));
-  console.log("Stargazer | segment click idx", index, "val", value, "actor", this.actor?.name);
+  const value = Number(box.data("value"));
 
   const current = Array.isArray(this.actor.getFlag("stargazer", "wounds"))
-    ? foundry.utils.duplicate(this.actor.getFlag("stargazer", "wounds"))
+    ? foundry.utils.deepClone(this.actor.getFlag("stargazer", "wounds"))
     : [];
 
-  if (!current[index]) current[index] = { name: "", value: 0 };
-  current[index].value = Number.isFinite(value) ? value : 0;
+  if (!current[index]) current[index] = { name: "", value: 0, thresholds: ["", "", "", "", ""] };
+  current[index].value = (current[index].value === value) ? value - 1 : value;
 
   await this.actor.setFlag("stargazer", "wounds", current);
   this.render();
 });
 
-html.on("change", 'input[name^="system.wounds."]', async (ev) => {
+html.on("change", ".wound-threshold", async (ev) => {
   const input = ev.currentTarget;
-  const parts = input.name.split(".");
-  const index = Number(parts[2]);
-  const prop = parts[3]; // "name"
-  console.log("Stargazer | wound name change idx", index, "prop", prop, "value", input.value);
+  const woundEl = $(input).closest(".wound");
+  const index = Number(woundEl.data("index"));
+  const threshIdx = Number(input.dataset.thresholdIndex);
 
   const current = Array.isArray(this.actor.getFlag("stargazer", "wounds"))
-    ? foundry.utils.duplicate(this.actor.getFlag("stargazer", "wounds"))
+    ? foundry.utils.deepClone(this.actor.getFlag("stargazer", "wounds"))
     : [];
 
-  if (!current[index]) current[index] = { name: "", value: 0 };
-  current[index][prop] = input.value;
+  if (!current[index]) current[index] = { name: "", value: 0, thresholds: ["", "", "", "", ""] };
+  if (!Array.isArray(current[index].thresholds)) current[index].thresholds = ["", "", "", "", ""];
+
+  // If a value was entered, clear all other threshold fields for this wound
+  if (input.value.trim() !== "") {
+    current[index].thresholds = ["", "", "", "", ""];
+    current[index].thresholds[threshIdx] = input.value;
+    // Clear the other inputs in the DOM immediately
+    woundEl.find(".wound-threshold").not(input).val("");
+  } else {
+    current[index].thresholds[threshIdx] = "";
+  }
 
   await this.actor.setFlag("stargazer", "wounds", current);
-  // no immediate re-render required; the input changed visually already
 });
 
 // Restore expanded state for collapsible items (from memory)
@@ -787,7 +798,7 @@ async _ensureWoundsInitialized() {
   // If old system.wounds exists and is an array, migrate it
   const systemWounds = foundry.utils.getProperty(this.actor.system, "wounds");
   if (Array.isArray(systemWounds)) {
-    await this.actor.setFlag("stargazer", "wounds", foundry.utils.duplicate(systemWounds));
+    await this.actor.setFlag("stargazer", "wounds", foundry.utils.deepClone(systemWounds));
     console.log(`Stargazer | migrated system.wounds -> flags for actor ${this.actor.name}`);
     return;
   }

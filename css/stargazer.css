@@ -685,6 +685,7 @@ nav.sheet-tabs {
   grid-row: 1 / 2;
   grid-column: 6 / 13;
   padding: .5rem;
+  min-width: 0;
 }
 
 .hurt-container {
@@ -695,6 +696,7 @@ nav.sheet-tabs {
 
 .wounds {
   width: 100%;
+  min-width: 0;
   margin-top: 1rem;
   padding-top: .5rem;
   border-top: solid 1px gray;
@@ -709,133 +711,106 @@ nav.sheet-tabs {
 }
 
 /* Wound rows */
+.wounds-list {
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+}
+
 .wound {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-bottom: 0.5rem;
+  gap: 4px;
+  width: 100%;
+  min-width: 0;
+  overflow: hidden;
+  margin-bottom: 15px;
 }
 
-/* Name input */
-.wound input[type="text"] {
-  width: 170px;
-  padding: 0.25rem 0.5rem;
-  font-size: 0.9rem;
-  border-radius: 6px;
-  border: 1px solid #555;
-  background: #2c2c2c;
-  color: #eee;
+.wound input[type="text"][name*="wounds"] {
+  flex: 0 0 120px;
+  min-width: 0;
 }
 
 .wound-tracker {
-  display: grid;
-  grid-template-columns: repeat(16, 1fr);
-  height: 16px;   /* slim progress bar look */
-  gap: 1px;
-  text-align: center;
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
-.wound-tracker .segment {
-  border: 1px solid #333;
+.wound-tracker .box {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  border: 2px solid #555;
+  border-radius: 4px;
+  background: #222;
   cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-/* Colors by groups of 3 (progressing green → yellow → orange → red) */
-.wound-tracker .segment:nth-child(1),
-.wound-tracker .segment:nth-child(2),
-.wound-tracker .segment:nth-child(3) {
-  background: #00c050; /* green */
-}
-.wound-tracker .segment:nth-child(4),
-.wound-tracker .segment:nth-child(5),
-.wound-tracker .segment:nth-child(6) {
-  background: #a4d100; /* yellow-green */
-}
-.wound-tracker .segment:nth-child(7),
-.wound-tracker .segment:nth-child(8),
-.wound-tracker .segment:nth-child(9) {
-  background: #daae00; /* yellow */
-}
-.wound-tracker .segment:nth-child(10),
-.wound-tracker .segment:nth-child(11),
-.wound-tracker .segment:nth-child(12) {
-  background: #cf6100; /* orange */
-}
-.wound-tracker .segment:nth-child(13),
-.wound-tracker .segment:nth-child(14),
-.wound-tracker .segment:nth-child(15) {
-  background: #c51905; /* red */
-}
-
-/* Skull (final box) */
-.wound-tracker .segment:nth-child(16) {
-  background: #000;
-  color: #fff;
-  font-size: 0.9em;
-  text-align: center;
-}
-
-/* Override when not filled */
-.wound-tracker .segment:not(.filled) {
-  background: #222 !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease, border-color 0.15s ease;
+  font-size: 0.75em;
   color: #555;
 }
 
-/* Filled segment — uses a smooth gradient so the filled area reads like a bar */
-.wound-tracker .segment.filled {
+.wound-tracker .box.filled {
+  background: #c51905;
+  border-color: #e03020;
   color: #fff;
-  box-shadow: inset 0 -2px 6px rgba(0,0,0,0.45);
+  box-shadow: inset 0 -2px 4px rgba(0,0,0,0.4);
 }
 
-/* remove left border on first child so edges look clean */
-.wound-tracker .segment:first-child { border-left: none; }
-
-/* every 3rd segment paints a dashed vertical overlay to visually replace thin border */
-.wound-tracker .segment:nth-child(3n):not(:last-child)::after {
-  content: "";
-  position: absolute;
-  right: -1px;        /* nudge so it sits between segments */
-  top: 8%;
-  bottom: 8%;
-  width: 4px;         /* thickness of the group boundary */
-  pointer-events: none;
-  border-radius: 1px;
-  transform: translateX(0); /* keep crisp */
+.wound-tracker .box.skull {
+  background: #111;
+  border-color: #888;
+  color: #fff;
+  font-size: 0.75em;
 }
 
-/* Avoid showing the separator on the very end segment (looks better) */
-.wound-tracker .segment:last-child::after { display: none; }
+.wound-tracker .box.skull.filled {
+  background: #000;
+  border-color: #f00;
+  color: #f00;
+}
 
-/* Hover/focus affordances */
-.wound-tracker .segment:hover,
-.wound-tracker .segment:focus {
-  filter: brightness(1.07);
+.wound-tracker .box:hover {
+  filter: brightness(1.2);
+}
+
+.wound-tracker .box:focus {
+  outline: 2px solid rgba(200,200,200,0.4);
+}
+
+.wound-tracker .wound-threshold {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+  text-align: center;
+  font-size: 0.75em;
+  padding: 0 1px;
+  margin: 0 3px;
+  border: none;
+  border-bottom: 1px solid #888;
+  border-radius: 0;
+  background: transparent;
+}
+
+.wound-tracker .wound-threshold:focus {
+  border-bottom-color: #fff;
   outline: none;
 }
 
-/* Keyboard focus ring for accessibility */
-.wound-tracker .segment:focus {
-  box-shadow: 0 0 0 3px rgba(150,150,150,0.12);
-}
-
-/* Remove underline of number/text on selection */
-.wound-tracker .segment::selection { background: transparent; }
-
-/* Remove dashed visual bleed for high-contrast dark backgrounds */
-.wound-tracker .segment:nth-child(3n):not(:last-child).filled::after {
-  /* Slightly lighter divider on filled portions to keep contrast */
-  border-right-color: rgba(255,255,255,0.5);
-}
-
-/* small remove button */
 .remove-wound {
+  flex-shrink: 0;
   border: none;
   cursor: pointer;
   color: #f55;
   padding: 0 0.1rem;
 }
-
 
 .merits{
   display: grid;

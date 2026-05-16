@@ -196,16 +196,26 @@
                   />
 
                   <div class="wound-tracker" role="group" aria-label="Wound tracker">
-                    {{#each this.segments}}
+                    {{#each this.boxes}}
                       <div
-                        class="segment {{#if filled}}filled{{/if}} {{#if skull}}skull{{/if}}"
+                        class="box {{#if filled}}filled{{/if}} {{#if skull}}skull{{/if}}"
                         data-value="{{n}}"
-                        title="{{#if skull}}Fatal (skull){{else}}Segment {{n}}{{/if}}"
+                        title="{{#if skull}}Fatal{{else}}Box {{n}}{{/if}}"
                         role="button"
                         tabindex="0"
                       >
-                        {{#if skull}}<i class="fa-solid fa-skull" aria-hidden="true"></i>{{else}}{{n}}{{/if}}
+                        {{#if skull}}<i class="fa-solid fa-skull" aria-hidden="true"></i>{{/if}}
                       </div>
+                      {{#if hasThreshold}}
+                        <input
+                          class="wound-threshold"
+                          type="text"
+                          data-threshold-index="{{thresholdIndex}}"
+                          value="{{threshold}}"
+                          placeholder=""
+                          aria-label="Damage threshold after box {{n}}"
+                        />
+                      {{/if}}
                     {{/each}}
                   </div>
 
