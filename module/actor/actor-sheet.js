@@ -121,6 +121,15 @@ async _registerItemEntryPartial() {
     const activeHeartIndex = this.actor.getFlag("stargazer", "activeHeartPoint") || 0;
     context.activeHeartPoint = activeHeartIndex;
 
+    // Free dice value persisted across re-renders
+    context.freeDiceValue = this.actor.getFlag("stargazer", "freeDice") || "";
+
+    // Bar customisation
+    context.resolveName  = this.actor.getFlag("stargazer", "resolveName")  || "";
+    context.resolveColor = this.actor.getFlag("stargazer", "resolveColor") || "#ff482b";
+    context.heartName    = this.actor.getFlag("stargazer", "heartName")    || "";
+    context.heartColor   = this.actor.getFlag("stargazer", "heartColor")   || "#efda06";
+
 
 // --- prepare wounds for the template: build segments so template is helper-free ---
 context.system = context.system || {};
@@ -645,13 +654,67 @@ const sheet = this;
   // html.find(".item-content, .nested-items").on("dragover", (ev) => ev.preventDefault());
 
   // Rollable abilities.
-  html.on('click', '.rollable', this._onRoll.bind(this));
+  html.on('click', '.rollable, .dice-roll-btn', this._onRoll.bind(this));
 
-  
+  // Free dice — persist to flag on change so value survives re-renders
+  html.on("change", ".free-dice-input", async (ev) => {
+    const val = parseInt(ev.currentTarget.value, 10);
+    await this.actor.setFlag("stargazer", "freeDice", isNaN(val) ? "" : val);
+  });
+
   // Retrieve saved index
   const activeActionIndex = this.actor.getFlag("stargazer", "activeActionPoint") || 0;
   const activeResolveIndex = this.actor.getFlag("stargazer", "activeResolvePoint") || 0;
   const activeHeartIndex = this.actor.getFlag("stargazer", "activeHeartPoint") || 0;
+
+  // Apply bar colors from flags
+  const resolveColor = this.actor.getFlag("stargazer", "resolveColor") || "#ff482b";
+  const heartColor   = this.actor.getFlag("stargazer", "heartColor")   || "#efda06";
+
+  // Inject scoped style overrides — inline styles can't beat the `~ *` CSS sibling rule
+  const styleId = `sgz-bar-colors-${this.actor.id}`;
+  document.getElementById(styleId)?.remove();
+  const styleEl = document.createElement("style");
+  styleEl.id = styleId;
+  styleEl.textContent = `
+    .resolve-number.active, .resolve-number.active ~ * { background-color: ${resolveColor} !important; }
+    .heart-number.active,   .heart-number.active ~ *   { background-color: ${heartColor}   !important; }
+  `;
+  document.head.appendChild(styleEl);
+
+  const _updateBarStyles = (resColor, htColor) => {
+    styleEl.textContent = `
+      .resolve-number.active, .resolve-number.active ~ * { background-color: ${resColor} !important; }
+      .heart-number.active,   .heart-number.active ~ *   { background-color: ${htColor}  !important; }
+    `;
+  };
+
+  // Bar name inputs — auto-size width to content, save on change
+  const _sizeNameInput = (el) => {
+    el.style.width = Math.max(1.7, el.value.length) + "ch";
+  };
+  html.find(".resource-name-input").each((_, el) => _sizeNameInput(el));
+  html.on("input", ".resource-name-input", (ev) => _sizeNameInput(ev.currentTarget));
+  html.on("change", ".resource-name-input", async (ev) => {
+    const resource = ev.currentTarget.dataset.resource;
+    await this.actor.setFlag("stargazer", `${resource}Name`, ev.currentTarget.value);
+  });
+
+  // Color pickers — update style tag live and save on change
+  let currentResolveColor = resolveColor;
+  let currentHeartColor   = heartColor;
+  html.on("input", ".resource-color-input", (ev) => {
+    const resource = ev.currentTarget.dataset.resource;
+    const color = ev.currentTarget.value;
+    if (resource === "resolve") currentResolveColor = color;
+    else currentHeartColor = color;
+    _updateBarStyles(currentResolveColor, currentHeartColor);
+  });
+  html.on("change", ".resource-color-input", async (ev) => {
+    const resource = ev.currentTarget.dataset.resource;
+    const color = ev.currentTarget.value;
+    await this.actor.setFlag("stargazer", `${resource}Color`, color);
+  });
 
 
   // Find all action-number elements
@@ -825,7 +888,6 @@ async _onRoll(event) {
 
   if (!dataset.roll) return;
 
-  // Pull the roll template (e.g. "(@action.score)d6cs>=4")
   const rollTemplate = dataset.roll;
   const match = rollTemplate.match(/\(@([\w.]+)\)/);
   if (!match) {
@@ -833,7 +895,7 @@ async _onRoll(event) {
     return;
   }
 
-  const path = match[1];           // e.g. "action.score"
+  const path = match[1];
   const rollData = this.actor.getRollData();
   const diceCount = foundry.utils.getProperty(rollData, path);
   if (!Number.isNumeric(diceCount)) {
@@ -841,30 +903,61 @@ async _onRoll(event) {
     return;
   }
 
-  // Flags in the "stargazer" namespace
-  const hasAdvantage    = this.actor.getFlag("stargazer", "advantage");
-  const hasDisadvantage = this.actor.getFlag("stargazer", "disadvantage");
+  // Read free dice from flag (persisted) — DOM input is just the UI
+  const freeDice = parseInt(this.actor.getFlag("stargazer", "freeDice") || 0, 10) || 0;
 
-  // Determine the success threshold
-  let threshold = 4;
-  if (hasAdvantage && !hasDisadvantage)    threshold = 3;
-  else if (hasDisadvantage && !hasAdvantage) threshold = 5;
+  const baseDice  = Number(diceCount);
+  const totalDice = baseDice + freeDice;
 
-  // Build the final formula: e.g. "5d6cs>=3"
-  const finalFormula = `${diceCount}d6cs>=${threshold}`;
-
-  // Optional: annotate the chat with which mode was used
-  let flavor = dataset.label ? `${dataset.score} Dice` : "";
-  if (hasAdvantage && !hasDisadvantage)      flavor += " (Advantage: 3+)";
-  else if (hasDisadvantage && !hasAdvantage) flavor += " (Disadvantage: 5+)";
-
-  // Roll and send to chat
-  const roll = new Roll(finalFormula, rollData);
+  // Roll all dice in one roll for DSN to pick up, but track which are free
+  const formula = `${totalDice}d6`;
+  const roll = new Roll(formula, rollData);
   await roll.evaluate({ async: true });
-  roll.toMessage({
+
+  // Split results: first baseDice are action dice, remainder are free dice
+  const allResults = roll.dice[0].results.map(r => r.result);
+  const actionResults = allResults.slice(0, baseDice);
+  const freeResults   = allResults.slice(baseDice);
+
+  const countSuccesses = (arr) => arr.filter(v => v >= 4).length;
+  const actionSuccesses = countSuccesses(actionResults);
+  const freeSuccesses   = countSuccesses(freeResults);
+
+  // Build pip HTML helper
+  const pipHTML = (results, colorClass) =>
+    results.map(v => {
+      const success = v >= 4;
+      return `<span class="roll-pip ${colorClass} ${success ? "success" : "fail"}" title="${v}">${v}</span>`;
+    }).join("");
+
+  const actionPips = pipHTML(actionResults, "pip-action");
+  const freePips   = freeDice > 0 ? pipHTML(freeResults, "pip-free") : "";
+
+  const label = dataset.label ? `${dataset.score} Dice` : "Roll";
+
+  const chatContent = `
+    <div class="stargazer-roll-card">
+      <div class="roll-header">${label}</div>
+      <div class="roll-section">
+        <span class="roll-section-label">Action (${baseDice}d6):</span>
+        <span class="roll-pips">${actionPips}</span>
+        <span class="roll-successes">${actionSuccesses} ${actionSuccesses !== 1 ? "" : ""}</span>
+      </div>
+      ${freeDice > 0 ? `
+      <div class="roll-section roll-section-free">
+        <span class="roll-section-label">Free (${freeDice}d6):</span>
+        <span class="roll-pips">${freePips}</span>
+        <span class="roll-successes">${freeSuccesses} ${freeSuccesses !== 1 ? "" : ""}</span>
+      </div>
+      ` : ""}
+      <div class="roll-total">Total: <strong>${actionSuccesses + freeSuccesses}</strong> successes</div>
+    </div>`;
+
+  await ChatMessage.create({
+    content: chatContent,
     speaker: ChatMessage.getSpeaker({ actor: this.actor }),
-    flavor: flavor,
-    rollMode: game.settings.get("core", "rollMode"),
+    rolls: [roll],
+    sound: CONFIG.sounds?.dice,
   });
 
   return roll;
@@ -891,40 +984,20 @@ async _onAction(event) {
 }
 async _onResolve(event) {
   event.preventDefault();
-  
   const point = event.currentTarget;
   const allPoints = Array.from(point.parentNode.children);
-
-  // Remove "active" class from all action points
-  allPoints.forEach((p) => p.classList.remove("active"));
-
-  // Add "active" class to the clicked one
+  allPoints.forEach((p) => { p.classList.remove("active"); p.style.backgroundColor = ""; });
   point.classList.add("active");
-
-  // Get the index of the selected action point
   const index = allPoints.indexOf(point);
-  console.log("Saving active action point index:", index);
-
-  // Save to actor's flags
   await this.actor.setFlag("stargazer", "activeResolvePoint", index);
 }
 async _onHeart(event) {
   event.preventDefault();
-  
   const point = event.currentTarget;
   const allPoints = Array.from(point.parentNode.children);
-
-  // Remove "active" class from all action points
-  allPoints.forEach((p) => p.classList.remove("active"));
-
-  // Add "active" class to the clicked one
+  allPoints.forEach((p) => { p.classList.remove("active"); p.style.backgroundColor = ""; });
   point.classList.add("active");
-
-  // Get the index of the selected action point
   const index = allPoints.indexOf(point);
-  console.log("Saving active action point index:", index);
-
-  // Save to actor's flags
   await this.actor.setFlag("stargazer", "activeHeartPoint", index);
 }
 

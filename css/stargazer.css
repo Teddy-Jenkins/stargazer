@@ -307,7 +307,7 @@ nav.sheet-tabs {
 }
 
 .action-number.active, .action-number.active ~ * {
-  background-color: #ff482b;
+  background-color: #4898f5;
 }
 
 .action-number.active:hover, .action-number.active ~ *:hover {
@@ -330,7 +330,7 @@ nav.sheet-tabs {
 }
 
 .resolve-number.active, .resolve-number.active ~ * {
-  background-color: #4898f5;
+  background-color: #ff482b;
 }
 
 .resolve-number.active:hover, .resolve-number.active ~ *:hover {
@@ -424,28 +424,94 @@ nav.sheet-tabs {
 }
 
 .dice-roller-box {
-    grid-template-columns: 1fr 1fr 1fr;
-    display: grid;
-    grid-column: 1 / span 3;
-}
-
-.dice-roller {
   display: flex;
   align-items: center;
-  grid-gap: 5px;
+  justify-content: center;
+  gap: 6px;
+  grid-column: 2 / span 4;
 }
 
-.dice-roller > h4 {
+.dice-roller-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.dice-roller-col input {
+  text-align: center !important;
+  font-size: 1rem;
+  width: 35px;
+}
+
+.dice-roller-label {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #888;
+  line-height: 1;
+}
+
+.dice-roll-btn {
   max-width: 70%;
   margin: auto;
   font-size: 1rem;
+  cursor: pointer;
 }
 
-.dice-roller > input {
+.free-dice-input {
   text-align: center !important;
   font-size: 1rem;
-  max-width: 35px;
+  width: 35px;
 }
+
+/* Resource bar header (editable name + color picker) */
+.resource-header {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 0;
+}
+
+.resource-name-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid transparent;
+  text-align: left;
+  font-size: 1.17rem;
+  font-weight: 700;
+  font-family: inherit;
+  color: inherit;
+  width: 1ch;
+  min-width: 9ch;
+  max-width: 100%;
+  padding: 0 0 0 3px;
+  margin: 0;
+  cursor: text;
+  line-height: 1.2;
+}
+
+.resource-name-input:hover,
+.resource-name-input:focus {
+  border-bottom-color: #666;
+  outline: none;
+}
+
+.resource-color-input {
+  width: 14px;
+  height: 14px;
+  border: none;
+  border-radius: 2px;
+  padding: 0;
+  cursor: pointer;
+  background: none;
+  flex-shrink: 0;
+  opacity: 0.6;
+}
+
+.resource-color-input:hover { opacity: 1; }
+.resource-color-input::-webkit-color-swatch-wrapper { padding: 0; }
+.resource-color-input::-webkit-color-swatch { border: 1px solid #555; border-radius: 2px; }
 
 .dice-roller-mod {
   text-align: center;
@@ -458,6 +524,22 @@ nav.sheet-tabs {
 .dice-roller-dis {
   padding-left: 15px;
 }
+
+/* ── Roll Card ───────────────────────────── */
+.stargazer-roll-card { font-family: "Roboto", sans-serif; background: #1a1a1a; color: #ddd; border: 1px solid #444; border-radius: 4px; overflow: hidden; font-size: 0.85rem; }
+.roll-header { background: #222; border-bottom: 1px solid #444; padding: 5px 10px; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #aaa; font-weight: 500; }
+.roll-section { display: flex; align-items: center; gap: 8px; padding: 5px 10px; flex-wrap: wrap; }
+.roll-section-free { border-top: 1px dashed #333; }
+.roll-section-label { font-size: 0.72rem; color: #999; min-width: 90px; flex-shrink: 0; }
+.roll-pips { display: flex; gap: 3px; flex-wrap: wrap; }
+.roll-pip { display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 3px; font-size: 0.78rem; font-weight: 600; }
+.pip-action.success { background: #1a4a1a; border: 1px solid #2e7d32; color: #81c784; }
+.pip-action.fail    { background: #2a1a1a; border: 1px solid #555; color: #888; }
+.pip-free.success   { background: #1a3a4a; border: 1px solid #1565c0; color: #90caf9; }
+.pip-free.fail      { background: #1a1a2a; border: 1px solid #444; color: #777; }
+.roll-successes { font-size: 0.75rem; color: #bbb; margin-left: auto; flex-shrink: 0; font-weight: bolder;}
+.roll-total { padding: 5px 10px 7px; border-top: 1px solid #333; font-size: 0.8rem; color: #ccc; text-align: right; }
+.roll-total strong { color: #fff; font-size: 0.95rem; }
 
 .notes-container{
   grid-column: auto / 2;
@@ -1268,4 +1350,19 @@ nav.sheet-tabs {
   color: #999;
   font-style: italic;
   padding: 2rem;
+}
+
+/* ── Player List Momentum Badge ─────────────────── */
+.sgz-momentum-badge {
+  display: inline-block;
+  background: #1565c0;
+  color: #ffffff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  margin-left: 4px;
+  min-width: 18px;
+  text-align: center;
+  line-height: 1.4;
 }

@@ -10,22 +10,15 @@
           <h2 class="charname"><input name="name" type="text" value="{{actor.name}}" placeholder="Name"/></h2>
 
           <div class="dice-roller-box">
-              <div class="dice-roller-mod dice-roller-adv">
-                <label>
-                  <input type="checkbox" name="flags.stargazer.advantage" {{#if flags.stargazer.advantage}}checked{{/if}}><br>
-                  ADV
-                </label>
-              </div>
-              <div class="dice-roller" data-skill="Action">
-                <h4 for="system.action.score" class="rollable" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
+              <div class="dice-roller-col">
                 <input class="" type="text" name="system.action.score" value="{{system.action.score}}" data-dtype="Number"/>
+                <span class="dice-roller-label">Dice</span>
               </div>
-              <div class="dice-roller-mod dice-roller-dis">
-                <label>
-                  <input type="checkbox" name="flags.stargazer.disadvantage" {{#if flags.stargazer.disadvantage}}checked{{/if}}><br>
-                  DIS
-                </label>
+              <div class="dice-roller-col">
+                <input class="free-dice-input" type="text" value="{{freeDiceValue}}" data-dtype="Number" title="Free dice added to roll (shown separately)"/>
+                <span class="dice-roller-label">Free</span>
               </div>
+              <h4 for="system.action.score" class="rollable dice-roll-btn" data-roll="(@action.score)d6cs>=4" data-score="{{system.action.score}}" data-label="Action">Roll</h4>
           </div>
           
         </div>
@@ -71,7 +64,10 @@
                 </section>
               </div>
               <div>
-                <h2>Resolve</h2>
+                <div class="resource-header">
+                  <input class="resource-name-input" type="text" data-resource="resolve" value="{{resolveName}}" placeholder="" title="Click to rename"/>
+                  <input class="resource-color-input" type="color" data-resource="resolve" value="{{resolveColor}}" title="Bar color"/>
+                </div>
                 <section class="resource-list">
                   <div class="resolve-number">13</div>
                   <div class="resolve-number">12</div>
@@ -90,7 +86,10 @@
                 </section>
             </div>
             <div>
-              <h2>Heart</h2>
+              <div class="resource-header">
+                <input class="resource-name-input" type="text" data-resource="heart" value="{{heartName}}" placeholder="" title="Click to rename"/>
+                <input class="resource-color-input" type="color" data-resource="heart" value="{{heartColor}}" title="Bar color"/>
+              </div>
                 <section class="resource-list">
                   <div class="heart-number">13</div>
                   <div class="heart-number">12</div>

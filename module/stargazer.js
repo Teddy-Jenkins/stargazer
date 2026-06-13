@@ -3,6 +3,7 @@ import { StargazerActor } from "./actor/actor.js";
 import { StargazerActorSheet } from "./actor/actor-sheet.js";
 import { StargazerItem } from "./item/item.js";
 import { StargazerItemSheet } from "./item/item-sheet.js";
+import { ConsequenceTracker } from "./consequence-tracker.js";
 import { preloadHandlebarsTemplates } from "./helpers/templates.js";
 import { STARGAZER } from "./helpers/config.js";
 import * as models from './data/_module.mjs';
@@ -20,11 +21,8 @@ Hooks.once("init", function () {
     StargazerItem
   };
 
-  // Add custom constants for configuration.
-  CONFIG.Combat.initiative = {
-    formula: "1d10 + @skills.Reflex.value",
-    decimals: 2
-  };
+  // Init for consequence tracker.
+  ConsequenceTracker.init();
 
   // Define custom Document classes
   CONFIG.STARGAZER = STARGAZER;
@@ -139,6 +137,64 @@ if (!Handlebars.helpers.lookupItem) {
 }
 
 
+
+  // ── Momentum badges in player list ──────────────────────────────────────
+  const _getMomentum = (actor) => {
+    if (!actor) return "—";
+    // Momentum is a visual bar; activeActionPoint flag stores the index of the active pip.
+    // The bar runs from 13 (index 0) down to 0 (index 13), so value = 13 - index.
+    const idx = actor.getFlag?.("stargazer", "activeActionPoint") ?? null;
+    if (idx === null || idx === undefined) return "—";
+    return String(13 - Number(idx));
+  };
+
+  const _makeBadge = (momentum, actorName) => {
+    const badge = document.createElement("span");
+    badge.className = "sgz-momentum-badge";
+    badge.title = `${actorName ?? "No character"} — Momentum`;
+    badge.textContent = momentum;
+    badge.style.cssText = [
+      "display:inline-block",
+      "background:#1565c0",
+      "color:#ffffff",
+      "font-size:0.72rem",
+      "font-weight:700",
+      "padding:1px 5px",
+      "border-radius:3px",
+      "margin-left:4px",
+      "min-width:18px",
+      "text-align:center",
+      "line-height:1.4",
+      "vertical-align:middle",
+    ].join(";");
+    return badge;
+  };
+
+  const _injectMomentum = (app, html) => {
+    const root = html instanceof HTMLElement ? html : html[0];
+    if (!root) return;
+    root.querySelectorAll("[data-user-id]").forEach(li => {
+      const user = game.users.get(li.dataset.userId);
+      if (!user) return;
+      const actor = user.character;
+      const momentum = _getMomentum(actor);
+      li.querySelector(".sgz-momentum-badge")?.remove();
+      li.appendChild(_makeBadge(momentum, actor?.name));
+    });
+  };
+  Hooks.on("renderPlayers", _injectMomentum);
+  Hooks.on("renderPlayerList", _injectMomentum);
+
+  Hooks.on("updateActor", () => {
+    document.querySelectorAll("#players [data-user-id], .players-list [data-user-id]").forEach(li => {
+      const user = game.users.get(li.dataset.userId);
+      if (!user) return;
+      const actor = user.character;
+      const momentum = _getMomentum(actor);
+      li.querySelector(".sgz-momentum-badge")?.remove();
+      li.appendChild(_makeBadge(momentum, actor?.name));
+    });
+  });
 
   // Preload Handlebars templates
   return preloadHandlebarsTemplates();
