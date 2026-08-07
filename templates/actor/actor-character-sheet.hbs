@@ -157,13 +157,53 @@
 
           <div class="rskill-container">
             <div class="actions">
-              <h3>Actions</h3>
-              <div class="rskill-notes">
-                {{editor 
-                enrichedskillNotes
-                engine='prosemirror'
-                target="system.notes.skillNotes" button=true owner=owner editable=editable
-                }}
+              <header class="actions-header">
+                <h3>Actions</h3>
+                <a class="action-create" aria-label="Add Action" title="Add Action"><i class="fas fa-plus"></i></a>
+              </header>
+
+              <div class="actions-list">
+                {{#each actions as |action index|}}
+                  <div class="action-entry" data-index="{{index}}">
+                    <div class="action-row">
+                      <input
+                        type="text"
+                        class="action-name"
+                        value="{{action.name}}"
+                        placeholder="Action Name"
+                        aria-label="Action name {{index}}"
+                      />
+                      <a class="action-delete" aria-label="Remove Action" title="Remove Action"><i class="fas fa-trash"></i></a>
+                    </div>
+
+                    <div class="action-edges">
+                      {{#each action.edges as |edge eindex|}}
+                        <div
+                          class="edge-pip edge-{{edge.type}} {{#if edge.dulled}}dulled{{/if}}"
+                          data-edge-index="{{eindex}}"
+                          title="{{edge.type}} Edge — click to toggle dull"
+                          role="button"
+                          tabindex="0"
+                        >
+                          <span class="edge-label">{{edge.type}}</span>
+                          <a class="edge-remove" aria-label="Remove Edge" title="Remove Edge"><i class="fas fa-times"></i></a>
+                        </div>
+                      {{/each}}
+
+                      <div class="edge-add-control">
+                        <select class="edge-type-select" aria-label="Edge type">
+                          <option value="skill">Skill (Failure)</option>
+                          <option value="grit">Grit (Harm)</option>
+                          <option value="finesse">Finesse (Friction)</option>
+                          <option value="vigilance">Vigilance (Loss)</option>
+                          <option value="heart">Heart (Fatigue)</option>
+                          <option value="providence">Providence (Threat)</option>
+                        </select>
+                        <a class="edge-add" aria-label="Add Edge" title="Add Edge"><i class="fas fa-plus"></i></a>
+                      </div>
+                    </div>
+                  </div>
+                {{/each}}
               </div>
             </div>
           </div>
@@ -250,35 +290,54 @@
     </div>
 
     <div class="tab items" data-group="primary" data-tab="items">
-<div class="inventory-list inventory-box">
-  <div class="inventory-header">
-    <div class="inventory-title-section">
-      <h3 class="item-name">Inventory</h3>
-      <div class="flexrow carry-cap">
-        <span>Carried Slots:</span>
-        <input type="text" name="system.carryCap.current" value="{{system.carryCap.current}}" data-dtype="Number" placeholder="0" readonly/>
-        <span>/</span>
-        <input type="text" name="system.carryCap.maximum" value="{{system.carryCap.maximum}}" data-dtype="Number" placeholder="Max" />
+
+      <div class="inventory-columns">
+        <div class="catalogues-container">
+          <header class="catalogues-header">
+            <h3>Catalogues</h3>
+            <a class="catalogue-create" aria-label="Add Catalogue" title="Add Catalogue"><i class="fas fa-plus"></i></a>
+          </header>
+
+          <div class="catalogues-list">
+            {{#each catalogues as |catalogue index|}}
+              <div class="catalogue-entry" data-index="{{index}}">
+                <div class="catalogue-row">
+                  <input
+                    type="text"
+                    class="catalogue-name"
+                    value="{{catalogue.name}}"
+                    placeholder="Catalogue Name"
+                    aria-label="Catalogue name {{index}}"
+                  />
+                  <div class="catalogue-box-controls">
+                    <a class="catalogue-box-remove" aria-label="Remove Checkbox" title="Remove Checkbox"><i class="fas fa-minus"></i></a>
+                    <span class="catalogue-box-count">{{catalogue.boxes.length}}</span>
+                    <a class="catalogue-box-add" aria-label="Add Checkbox" title="Add Checkbox"><i class="fas fa-plus"></i></a>
+                  </div>
+                  <a class="catalogue-delete" aria-label="Remove Catalogue" title="Remove Catalogue"><i class="fas fa-trash"></i></a>
+                </div>
+
+                <div class="catalogue-boxes">
+                  {{#each catalogue.boxes as |box bindex|}}
+                    <input
+                      type="checkbox"
+                      class="catalogue-box"
+                      data-box-index="{{bindex}}"
+                      {{#if box.checked}}checked{{/if}}
+                      aria-label="Checkbox {{bindex}} for {{catalogue.name}}"
+                    />
+                  {{/each}}
+                </div>
+              </div>
+            {{/each}}
+          </div>
+        </div>
+
+        <div class="stuff-container">
+          <h3>Stuff</h3>
+          <textarea class="stuff-notes" placeholder="What you've got on you...">{{stuffNotes}}</textarea>
+        </div>
       </div>
-    </div>
-    <div class="item-controls">
-      <a class="item-control inventory-create" data-type="item" title="Create Item"><i class="fas fa-box"></i></a>
-      <a class="item-control inventory-create" data-type="container" title="Create Container"><i class="fas fa-suitcase-rolling"></i></a>
-    </div>
-  </div>
-
-  <ol class="item-list">
-    {{#each topLevelItems as |item index|}}
-      {{> item-entry item=item}}
-    {{/each}}
-  </ol>
-
-
-</div>
-
-
-
-
 
     </div>
 

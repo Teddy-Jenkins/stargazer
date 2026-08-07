@@ -1366,3 +1366,323 @@ nav.sheet-tabs {
   text-align: center;
   line-height: 1.4;
 }
+
+/* ===== ACTIONS & EDGES ===== */
+
+.actions-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+}
+
+.action-create {
+  cursor: pointer;
+  color: #90caf9;
+  padding: 0.25rem;
+  flex-shrink: 0;
+}
+
+.action-create:hover {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(90,160,255,0.9);
+}
+
+.actions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  overflow-y: auto;
+}
+
+.action-entry {
+  background: var(--input-background-color, #1a1a1a);
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 4px;
+  padding: 0.5rem;
+  color: var(--color-text-light-primary, #ddd);
+}
+
+.action-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Foundry's core `body.game .app input[type="text"]` rule is more specific than a
+   single class and forces dark text meant for its default light input background.
+   Our cards are dark, so we force light text here with !important to win that battle. */
+.action-name {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--input-border-color, #555) !important;
+  color: var(--color-text-light-primary, #ddd) !important;
+  font-size: 0.95rem;
+  padding: 0.15rem 0.1rem;
+}
+
+.action-name:hover,
+.action-name:focus {
+  border-bottom-color: #90caf9 !important;
+  outline: none;
+}
+
+.action-name::placeholder {
+  color: var(--color-text-light-secondary, #999);
+}
+
+.action-delete {
+  flex-shrink: 0;
+  cursor: pointer;
+  color: #f55;
+  padding: 0 0.1rem;
+}
+
+.action-delete:hover {
+  color: #ff8a80;
+}
+
+.action-edges {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 5px;
+  margin-top: 0.4rem;
+}
+
+.edge-pip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  border-radius: 3px;
+  border: 1px solid #555;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+  font-weight: 600;
+  text-transform: capitalize;
+  cursor: pointer;
+  user-select: none;
+  transition: filter 0.15s ease, opacity 0.15s ease;
+}
+
+.edge-pip:hover {
+  filter: brightness(1.2);
+}
+
+/* Edge type colors, matched to consequence types */
+.edge-skill      { background: #2a2a2a; border-color: #777; color: #ddd; }        /* Failure - black */
+.edge-grit       { background: #3a1414; border-color: #c0392b; color: #ff8a80; }  /* Harm - red */
+.edge-finesse    { background: #3a3308; border-color: #d4b106; color: #ffe066; }  /* Friction - yellow */
+.edge-vigilance  { background: #123014; border-color: #2e7d32; color: #81c784; }  /* Loss - green */
+.edge-heart      { background: #14303a; border-color: #1565c0; color: #90caf9; }  /* Fatigue - blue */
+.edge-providence { background: #2a1440; border-color: #7b2fbf; color: #d1a3ff; }  /* Threat - purple */
+
+.edge-pip.dulled {
+  opacity: 0.4;
+  filter: grayscale(0.7);
+  border-style: dashed;
+}
+
+.edge-pip.dulled:hover {
+  opacity: 0.65;
+  filter: grayscale(0.4);
+}
+
+.edge-label {
+  pointer-events: none;
+}
+
+.edge-remove {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: inherit;
+  opacity: 0.6;
+  cursor: pointer;
+  font-size: 0.85em;
+}
+
+.edge-remove:hover {
+  opacity: 1;
+  color: #fff;
+}
+
+.edge-add-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.edge-type-select {
+  color-scheme: light dark;
+  background: var(--input-background-color, #1a1a1a) !important;
+  color: var(--color-text-light-primary, #ddd) !important;
+  border: 1px solid var(--input-border-color, #555) !important;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  padding: 1px 3px;
+}
+
+.edge-add {
+  cursor: pointer;
+  color: #90caf9;
+  font-size: 0.8rem;
+  padding: 0 0.15rem;
+}
+
+.edge-add:hover {
+  color: #fff;
+}
+
+/* ===== INVENTORY: CATALOGUES & STUFF ===== */
+
+.inventory-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 0 0.75rem;
+}
+
+.catalogues-container {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.catalogues-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+  border-bottom: 2px solid #444;
+  padding-bottom: 0.3rem;
+  margin-bottom: 0.5rem;
+}
+
+.catalogues-header h3 {
+  margin: 0;
+}
+
+.catalogue-create {
+  cursor: pointer;
+  color: #90caf9;
+  padding: 0.25rem;
+}
+
+.catalogue-create:hover {
+  color: #fff;
+  text-shadow: 0 0 8px rgba(90,160,255,0.9);
+}
+
+.catalogues-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.catalogue-entry {
+  background: var(--input-background-color, #1a1a1a);
+  border: 1px solid var(--input-border-color, #444);
+  border-radius: 4px;
+  padding: 0.5rem;
+  color: var(--color-text-light-primary, #ddd);
+}
+
+.catalogue-row {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.catalogue-name {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 1px solid var(--input-border-color, #555) !important;
+  color: var(--color-text-light-primary, #ddd) !important;
+  font-size: 0.95rem;
+  padding: 0.15rem 0.1rem;
+}
+
+.catalogue-name:hover,
+.catalogue-name:focus {
+  border-bottom-color: #90caf9 !important;
+  outline: none;
+}
+
+.catalogue-name::placeholder {
+  color: var(--color-text-light-secondary, #999);
+}
+
+.catalogue-box-controls {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  font-size: 0.75rem;
+  color: var(--color-text-light-secondary, #aaa);
+}
+
+.catalogue-box-add,
+.catalogue-box-remove {
+  cursor: pointer;
+  color: #90caf9;
+  padding: 0 0.2rem;
+}
+
+.catalogue-box-add:hover,
+.catalogue-box-remove:hover {
+  color: #fff;
+}
+
+.catalogue-box-count {
+  min-width: 1.2em;
+  text-align: center;
+}
+
+.catalogue-delete {
+  flex-shrink: 0;
+  cursor: pointer;
+  color: #f55;
+  padding: 0 0.1rem;
+}
+
+.catalogue-delete:hover {
+  color: #ff8a80;
+}
+
+.catalogue-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 0.5rem;
+}
+
+.catalogue-box {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  accent-color: #4898f5;
+  cursor: pointer;
+}
+
+.stuff-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+.stuff-notes {
+  width: 100%;
+  min-height: 200px;
+  resize: vertical;
+  background: rgb(209, 209, 202);
+  border: 1px solid #999;
+  border-radius: 5px;
+  padding: 0.5rem;
+  font-family: "Roboto", sans-serif;
+  font-size: 0.9rem;
+  color: #111;
+}
