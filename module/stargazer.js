@@ -26,7 +26,7 @@ Hooks.once("init", function () {
   // Init for consequence tracker.
   ConsequenceTracker.init();
 
-const ENABLE_CARD_SYSTEM = false; // toggle to re-enable the card table + hand tray
+const ENABLE_CARD_SYSTEM = true; // toggle to re-enable the card table + hand tray
 
 if (ENABLE_CARD_SYSTEM) {
   initCardTable();

@@ -48,6 +48,7 @@ const HAND_POS_FLAG   = "handPos";
 const POS_FLAG_KEY    = "cardPos";
 const TORN_FLAG_KEY   = "tornCorners"; // ["tl","tr","bl","br"] subset — shared with card-table.js
 const COLOR_FLAG_KEY  = "cardColor";   // hex number or null — shared with card-table.js
+const DISCARD_PILE_FLAG = "discardForDeckId"; // marks a Cards "pile" doc as a deck's discard pile — shared with card-table.js
 // Preset palette cycled through by ctrl+click, matching the consequence-type
 // color table: Failure/Black, Harm/Red, Friction/Yellow, Loss/Green,
 // Fatigue/Blue, Threat/Purple. Must match card-table.js's PRESET_COLORS.
@@ -149,6 +150,7 @@ export class HandTray {
       </div>
       <div class="sgz-tray-body">
         <div class="sgz-tray-cards"></div>
+        <button type="button" class="sgz-tray-new-card" title="Create a new freeform card in your hand">+ New Card</button>
       </div>
     `;
 
@@ -159,6 +161,8 @@ export class HandTray {
 
     el.addEventListener("mouseenter", () => this._expand());
     el.addEventListener("mouseleave", () => this._collapse());
+
+    el.querySelector(".sgz-tray-new-card").addEventListener("click", () => this._createStandaloneCard());
 
     el.querySelector(".sgz-tray-strip").addEventListener("wheel", (ev) => {
       ev.preventDefault();
@@ -292,6 +296,111 @@ export class HandTray {
     await card.setFlag(MODULE_NS, COLOR_FLAG_KEY, next);
   }
 
+  /**
+   * Ctrl+right-click on a hand card: send it to its source deck's discard
+   * pile (created lazily via the same helper card-table.js's Discard/Delete
+   * gesture uses), or delete it outright if it's standalone. Mirrors
+   * CardTableLayer._discardOrDelete — kept as a separate implementation per
+   * this file's existing no-shared-module pattern for card interactions.
+   */
+  async _discardOrDelete(card) {
+    const origin = card.origin;
+    const deck = !origin ? null : (typeof origin === "string" ? (game.cards.get(origin) ?? null) : origin);
+    if (!deck) {
+      await card.delete();
+      return;
+    }
+    try {
+      let discard = game.cards.find(c => c.getFlag(MODULE_NS, DISCARD_PILE_FLAG) === deck.id);
+      if (!discard) {
+        discard = await Cards.create({
+          name: `${deck.name} — Discard`,
+          type: "pile",
+          ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
+          flags: { [MODULE_NS]: { [DISCARD_PILE_FLAG]: deck.id } },
+        });
+      }
+      if (card.parent?.id === discard.id) return;
+      await card.parent.pass(discard, [card.id]);
+    } catch (err) {
+      console.error("Stargazer | HandTray: failed to discard card to deck's discard pile:", err);
+      ui.notifications.error("Stargazer | Couldn't discard that card — see console.");
+    }
+  }
+
+  /** Double-click: edit a card's name/description in place. Instance-only — never touches the deck prototype. */
+  _openCardEditor(card) {
+    new Dialog({
+      title: `Edit Card — ${card.name}`,
+      content: `
+        <form>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" value="${foundry.utils.escapeHTML(card.name ?? "")}" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" rows="4">${foundry.utils.escapeHTML(card.description ?? "")}</textarea>
+          </div>
+        </form>`,
+      buttons: {
+        save: {
+          icon: '<i class="fa-solid fa-check"></i>',
+          label: "Save",
+          callback: async (html) => {
+            const name = html.find('[name="name"]').val().trim();
+            const description = html.find('[name="description"]').val();
+            await card.update({ name: name || card.name, description });
+          },
+        },
+        cancel: { icon: '<i class="fa-solid fa-xmark"></i>', label: "Cancel" },
+      },
+      default: "save",
+    }).render(true);
+  }
+
+  /** "+ New Card" button: create a freeform standalone card directly in this player's hand */
+  async _createStandaloneCard() {
+    if (!this.hand) return;
+    new Dialog({
+      title: "New Card",
+      content: `
+        <form>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" value="New Card" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" rows="4"></textarea>
+          </div>
+        </form>`,
+      buttons: {
+        create: {
+          icon: '<i class="fa-solid fa-check"></i>',
+          label: "Create",
+          callback: async (html) => {
+            const name = html.find('[name="name"]').val().trim() || "New Card";
+            const description = html.find('[name="description"]').val();
+            const [created] = await this.hand.createEmbeddedDocuments("Card", [{
+              name,
+              description,
+              faces: [{ name, img: "icons/svg/card-joker.svg" }],
+              face: 0,
+              back: { name: "Card Back", img: "icons/svg/card-hand.svg" },
+            }]);
+            await created.setFlag(MODULE_NS, HAND_POS_FLAG, {
+              x: 20 + Math.random() * 60,
+              y: 20 + Math.random() * 40,
+            });
+          },
+        },
+        cancel: { icon: '<i class="fa-solid fa-xmark"></i>', label: "Cancel" },
+      },
+      default: "create",
+    }).render(true);
+  }
+
   _applyCardColor(el, card) {
     const color = card.getFlag(MODULE_NS, COLOR_FLAG_KEY);
     el.style.borderColor = color != null ? colorNumToCss(color) : "";
@@ -367,7 +476,10 @@ export class HandTray {
         if (lone) {
           lone.el.style.visibility = "";
           this._removeStackBadge(lone.el);
-          if (persist && lone.pos.stackId) {
+          // Skip the destructive clear while a merge is still writing its
+          // other member(s) — see _mergeInFlight in _persistHandPos,
+          // _dropToCanvas, and computeIncomingDropPlacement's callers.
+          if (persist && lone.pos.stackId && !this._mergeInFlight) {
             lone.card.setFlag(MODULE_NS, HAND_POS_FLAG, { ...lone.pos, stackId: null, stackZ: null });
           }
         }
@@ -404,11 +516,21 @@ export class HandTray {
 
   _wireTrayDrag(el, card) {
     el.addEventListener("contextmenu", (ev) => {
-      if (!ev.shiftKey) return; // no other right-click behavior defined for hand cards
+      if (ev.ctrlKey || ev.metaKey) {
+        ev.preventDefault();
+        this._discardOrDelete(card);
+        return;
+      }
+      if (!ev.shiftKey) return;
       ev.preventDefault();
       const rect = el.getBoundingClientRect();
       const corner = this._cornerAt({ x: ev.clientX - rect.left, y: ev.clientY - rect.top });
       this._restoreCorner(card, corner);
+    });
+
+    el.addEventListener("dblclick", (ev) => {
+      ev.preventDefault();
+      this._openCardEditor(card);
     });
 
     // Only one of {group drag, single drag} is ever active per mousedown —
@@ -463,9 +585,15 @@ export class HandTray {
 
       // Reveal the next card in the stack right away, since this drag is
       // about to peel this one off and leave the rest behind.
+      // _refreshStackBadges excludes this card entirely (that's what lets
+      // the sibling underneath become the new top) — which also means it
+      // never touches this card's own badge. Clear it directly, or it stays
+      // floating above the card you're now dragging away, still showing the
+      // old stack count.
       const pickupPos = card.getFlag(MODULE_NS, HAND_POS_FLAG);
       if (pickupPos?.stackId) {
         this._refreshStackBadges(card.id, { persist: false });
+        this._removeStackBadge(el);
       }
 
       // ── Normal single-card drag ────────────────────────────────────────────
@@ -632,6 +760,12 @@ export class HandTray {
     const layer = canvas.stargazerCards;
     let x = canvasPos.x, y = canvasPos.y, stackId = null, stackZ = null;
     const snap = layer?._findSnapTarget?.(x, y, new Set());
+    // Two sequential writes follow when joining a brand-new stack (the
+    // target's, then this card's once it exists in the table pile) — guard
+    // both with the canvas layer's own _mergeInFlight, the same flag
+    // card-table.js's _persistPosition uses, so its _refreshStackVisuals
+    // doesn't see the target alone mid-sequence and destructively clear it.
+    if (layer) layer._mergeInFlight = true;
     if (snap) {
       x = snap.x;
       y = snap.y;
@@ -664,6 +798,8 @@ export class HandTray {
     } catch (err) {
       console.error("Stargazer | HandTray._dropToCanvas failed:", err);
       ui.notifications.error("Stargazer | Failed to move card to canvas.");
+    } finally {
+      if (layer) layer._mergeInFlight = false;
     }
   }
 
@@ -760,6 +896,12 @@ export class HandTray {
       // The dragged card itself is handled below (final setFlag)
       toMigrate.delete(card.id);
 
+      // Migrating every re-homed card takes several sequential writes — guard
+      // the whole sequence so _refreshStackBadges' "lone stack member"
+      // cleanup doesn't see a not-yet-paired stackId mid-sequence and
+      // destructively null it out before the rest land. See the identical
+      // pattern (and full explanation) in card-table.js's _persistPosition.
+      this._mergeInFlight = true;
       for (const [, c] of toMigrate) {
         const p = c.getFlag(MODULE_NS, HAND_POS_FLAG) || {};
         // Normalize onto the anchor position too, so if this member is later
@@ -778,6 +920,7 @@ export class HandTray {
     // The dragged card becomes the new top of the stack it joins.
     const stackZ = stackId ? this._nextStackZ(stackId) : null;
     await card.setFlag(MODULE_NS, HAND_POS_FLAG, { ...current, x: finalX, y: finalY, stackId: stackId ?? null, stackZ });
+    this._mergeInFlight = false;
     const el = this.cardEls.get(card.id);
     if (el) {
       // Only ease when the snap point differs from where the pointer let go
@@ -852,8 +995,11 @@ export class HandTray {
       this._applyCardColor(el, card);
       this._renderCardTorn(el, card);
       const nameEl = el.querySelector(".sgz-hand-card-name");
-      if (nameEl && nameEl.textContent !== (card.name ?? "Card")) {
-        dbg("hook/updateCard", `Name changed on "${card.name}" — full re-render`);
+      const descEl = el.querySelector(".sgz-hand-card-desc");
+      const nameChanged = nameEl && nameEl.textContent !== (card.name ?? "Card");
+      const descChanged = (descEl?.textContent ?? "") !== (card.description ?? "");
+      if (nameChanged || descChanged) {
+        dbg("hook/updateCard", `Name/description changed on "${card.name}" — full re-render`);
         this._renderCard(card);
       }
       return;
@@ -1039,6 +1185,24 @@ export class HandTray {
   position: relative;
   width: 100%;
   height: 100%;
+}
+
+.sgz-tray-new-card {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  z-index: 5;
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 6px;
+  color: #ddd;
+  font-size: 0.7rem;
+  padding: 3px 8px;
+  cursor: pointer;
+}
+
+.sgz-tray-new-card:hover {
+  background: rgba(255,255,255,0.14);
 }
 
 .sgz-hand-card {

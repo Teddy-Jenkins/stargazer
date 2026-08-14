@@ -2,7 +2,7 @@
   "id": "stargazer",
   "title": "Stargazer",
   "description": "The Stargazer system for FoundryVTT!",
-  "version": "1.7.7",
+  "version": "1.7.8",
   "minimumCoreVersion": "12",
   "compatibleCoreVersion": "14",
   "socket": true,

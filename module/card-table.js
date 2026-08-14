@@ -26,6 +26,7 @@ const TABLE_PILE_FLAG = "isCardTable";
 const POS_FLAG_KEY = "cardPos"; // { x, y, rotation, faceUp }
 const TORN_FLAG_KEY = "tornCorners"; // ["tl","tr","bl","br"] subset — solid black corner triangles
 const COLOR_FLAG_KEY = "cardColor"; // hex number or null — freeform tag color (card border)
+const DISCARD_PILE_FLAG = "discardForDeckId"; // marks a Cards "pile" doc as a specific deck's discard pile
 
 // Preset palette cycled through by ctrl+click, matching the consequence-type
 // color table: Failure/Black, Harm/Red, Friction/Yellow, Loss/Green,
@@ -91,6 +92,15 @@ export class CardTableLayer extends CanvasLayer {
     container.y = pos.y;
     container.rotation = pos.rotation || 0;
     container.cardId = card.id;
+    // Cached live document reference — event handlers below read/write through
+    // this instead of closing directly over the `card` parameter. Foundry can
+    // swap in a fresh Card instance on update, and refreshCard()'s "ease into
+    // place" path (position/stack-only changes) intentionally reuses this
+    // existing container rather than rebuilding it — so without this cache,
+    // every handler here would keep reading flags off the original,
+    // increasingly stale object forever. refreshCard() updates this pointer
+    // on every update so handlers always see current data.
+    container.stargazerCard = card;
     container.eventMode = "static";
     container.cursor = "pointer";
     container.hitArea = new PIXI.Rectangle(-CARD_WIDTH / 2, -CARD_HEIGHT / 2, CARD_WIDTH, CARD_HEIGHT);
@@ -114,6 +124,13 @@ export class CardTableLayer extends CanvasLayer {
     });
     label.anchor.set(0.5);
     container.addChild(label);
+    // Cached so refreshCard()'s ease-in-place path (position/stack-only
+    // updates, no rebuild) can still push a text edit onto the existing
+    // sprite — see _refreshCardText. Without this, editing a card via the
+    // double-click dialog updates the document but the on-screen card never
+    // shows it until something else forces a full _renderCard rebuild.
+    container.stargazerNameText = label;
+    container.stargazerDescText = null;
 
     if (faceUp && card.description) {
       const desc = new PIXI.Text(card.description, {
@@ -127,6 +144,7 @@ export class CardTableLayer extends CanvasLayer {
       desc.anchor.set(0.5);
       desc.y = 30;
       container.addChild(desc);
+      container.stargazerDescText = desc;
     }
 
     const overlay = new PIXI.Graphics();
@@ -139,12 +157,46 @@ export class CardTableLayer extends CanvasLayer {
     container.on("rightclick", async (ev) => {
       ev.stopPropagation();
       const native = ev.nativeEvent ?? ev.data?.originalEvent;
-      if (native?.shiftKey) {
-        const local = ev.getLocalPosition(container);
-        await this._restoreCorner(card, this._cornerAt(local));
+      const liveCard = container.stargazerCard;
+      if (native?.ctrlKey || native?.metaKey) {
+        await this._discardOrDelete(liveCard);
         return;
       }
-      await this._flipCard(card);
+      if (native?.shiftKey) {
+        const local = ev.getLocalPosition(container);
+        await this._restoreCorner(liveCard, this._cornerAt(local));
+        return;
+      }
+      await this._flipCard(liveCard);
+    });
+
+    // Double-click: open the name/description editor. PIXI has no native
+    // dblclick event, so track two pointerdown's within a short window.
+    let lastDownAt = 0;
+    container.on("pointerdown", () => {
+      const now = Date.now();
+      if (now - lastDownAt < 350) {
+        this._openCardEditor(container.stargazerCard);
+        lastDownAt = 0;
+      } else {
+        lastDownAt = now;
+      }
+    });
+
+    // Shift+mousewheel over a stack cycles which card sits on top. Only
+    // intercept (stopPropagation/preventDefault) once we know it's actually a
+    // shift-held wheel over a real stack — otherwise let it fall through to
+    // Foundry's normal canvas zoom.
+    container.on("wheel", async (ev) => {
+      const native = ev.nativeEvent ?? ev.data?.originalEvent;
+      if (!native?.shiftKey) return;
+      const liveCard = container.stargazerCard;
+      const pos = liveCard.getFlag(MODULE_NS, POS_FLAG_KEY) || {};
+      const stackId = pos.stackId;
+      if (!stackId || !this.tablePile) return;
+      ev.stopPropagation();
+      native.preventDefault?.();
+      await this._cycleStack(stackId, native.deltaY > 0 ? 1 : -1);
     });
 
     this.addChild(container);
@@ -162,11 +214,12 @@ export class CardTableLayer extends CanvasLayer {
   _drawCardBg(bg, { faceUp, isStacked, tagColor }) {
     bg.clear();
     bg.beginFill(faceUp ? 0xf5f0e6 : 0x2a2a3a, 1);
-    // Stack membership (gold ring) takes visual priority over a card's own
-    // color tag, matching how it already took priority over the plain
-    // face-up/face-down border color.
-    const borderColor = isStacked ? 0xd4a017 : (tagColor ?? (faceUp ? 0x8a7a5a : 0x6a6a8a));
-    bg.lineStyle(isStacked ? 3 : (tagColor != null ? 3 : 2), borderColor, 1);
+    // Stack membership is already communicated by the floating count badge
+    // (_setStackBadge), so the border itself no longer needs to change when
+    // stacked — that was overriding the card's own color tag and hiding it
+    // whenever the card sat on top of a stack.
+    const borderColor = tagColor ?? (faceUp ? 0x8a7a5a : 0x6a6a8a);
+    bg.lineStyle(tagColor != null ? 3 : 2, borderColor, 1);
     bg.drawRoundedRect(-CARD_WIDTH / 2, -CARD_HEIGHT / 2, CARD_WIDTH, CARD_HEIGHT, 10);
     bg.endFill();
   }
@@ -216,12 +269,96 @@ export class CardTableLayer extends CanvasLayer {
     await card.setFlag(MODULE_NS, TORN_FLAG_KEY, current.filter(c => c !== corner));
   }
 
+  /**
+   * Ctrl+right-click on a card: send it to its source deck's discard pile
+   * (created lazily), or delete it outright if it's a standalone card with
+   * no deck of origin. `card.origin` is Foundry's own tracking of which
+   * Cards document a drawn card came from — it survives being passed
+   * between piles/hands, which is also what makes deck.recall() able to
+   * pull discarded cards back in later without any extra bookkeeping here.
+   */
+  async _discardOrDelete(card) {
+    const deck = _resolveOriginDeck(card);
+    if (!deck) {
+      await card.delete();
+      return;
+    }
+    try {
+      const discard = await getOrCreateDiscardPile(deck);
+      if (card.parent?.id === discard.id) return; // already discarded
+      await card.parent.pass(discard, [card.id]);
+    } catch (err) {
+      console.error("Stargazer | Failed to discard card to deck's discard pile:", err);
+      ui.notifications.error("Stargazer | Couldn't discard that card — see console.");
+    }
+  }
+
+  /** Double-click: edit a card's name/description in place. Instance-only — never touches the deck prototype. */
+  _openCardEditor(card) {
+    new Dialog({
+      title: `Edit Card — ${card.name}`,
+      content: `
+        <form>
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" name="name" value="${foundry.utils.escapeHTML(card.name ?? "")}" />
+          </div>
+          <div class="form-group">
+            <label>Description</label>
+            <textarea name="description" rows="4">${foundry.utils.escapeHTML(card.description ?? "")}</textarea>
+          </div>
+        </form>`,
+      buttons: {
+        save: {
+          icon: '<i class="fa-solid fa-check"></i>',
+          label: "Save",
+          callback: async (html) => {
+            const name = html.find('[name="name"]').val().trim();
+            const description = html.find('[name="description"]').val();
+            await card.update({ name: name || card.name, description });
+          },
+        },
+        cancel: { icon: '<i class="fa-solid fa-xmark"></i>', label: "Cancel" },
+      },
+      default: "save",
+    }).render(true);
+  }
+
   /** Advance the card's color tag through the preset palette, then back to "none" */
   async _cycleCardColor(card) {
     const current = card.getFlag(MODULE_NS, COLOR_FLAG_KEY);
     const idx = PRESET_COLORS.indexOf(current);
     const next = idx === -1 ? PRESET_COLORS[0] : (idx === PRESET_COLORS.length - 1 ? null : PRESET_COLORS[idx + 1]);
     await card.setFlag(MODULE_NS, COLOR_FLAG_KEY, next);
+  }
+
+  /**
+   * Shift+wheel over a stack: rotate which card is on top without touching
+   * stackId on anyone, just each member's stackZ — so this doesn't need the
+   * _mergeInFlight guard the way stack-formation does, since every member
+   * keeps a matching stackId the whole time and _refreshStackVisuals' "lone
+   * card" cleanup never has a reason to fire mid-sequence.
+   * direction > 0: current top moves to the bottom, revealing the card below.
+   * direction < 0: current bottom moves to the top.
+   */
+  async _cycleStack(stackId, direction) {
+    const pile = this.tablePile;
+    if (!pile) return;
+    const members = pile.cards
+      .filter(c => c.getFlag(MODULE_NS, POS_FLAG_KEY)?.stackId === stackId)
+      .sort((a, b) => (a.getFlag(MODULE_NS, POS_FLAG_KEY)?.stackZ ?? 0) - (b.getFlag(MODULE_NS, POS_FLAG_KEY)?.stackZ ?? 0));
+    if (members.length < 2) return;
+
+    const ordered = direction > 0
+      ? [members[members.length - 1], ...members.slice(0, -1)]
+      : [...members.slice(1), members[0]];
+
+    for (let i = 0; i < ordered.length; i++) {
+      const c = ordered[i];
+      const cur = c.getFlag(MODULE_NS, POS_FLAG_KEY) || {};
+      await c.setFlag(MODULE_NS, POS_FLAG_KEY, { ...cur, stackZ: i });
+    }
+    this._refreshStackVisuals();
   }
 
   /** Simple rAF alpha tween — used for new-card fade-in on the table */
@@ -273,9 +410,14 @@ export class CardTableLayer extends CanvasLayer {
       const ctrlHeld = isLeftClick && (nativeMod.ctrlKey || nativeMod.metaKey);
       const shiftHeld = isLeftClick && nativeMod.shiftKey;
 
-      const pos = card.getFlag(MODULE_NS, POS_FLAG_KEY) || {};
+      // Always read through the cached live reference, not the closed-over
+      // `card` param — see the comment on container.stargazerCard above.
+      const liveCard = container.stargazerCard;
+      const pos = liveCard.getFlag(MODULE_NS, POS_FLAG_KEY) || {};
       const stackId = pos.stackId;
       const pile = this.tablePile;
+
+      console.log("[SGZ:debug] pointerdown", { name: liveCard.name, ctrlHeld, shiftHeld, stackId, hasPile: !!pile, isLeftClick, button: nativeMod?.button });
 
       if (ctrlHeld && shiftHeld) {
         // Shift+Ctrl+drag: grab the whole stack together. (Not plain Alt+drag —
@@ -285,21 +427,25 @@ export class CardTableLayer extends CanvasLayer {
         // Ctrl are both already proven to reach us cleanly.)
         if (stackId && pile) {
           const stackCards = pile.cards.filter(c => c.getFlag(MODULE_NS, POS_FLAG_KEY)?.stackId === stackId);
+          console.log("[SGZ:debug] group-drag check", { grabbedCard: liveCard.name, stackId, stackCardCount: stackCards.length, members: stackCards.map(c => ({ name: c.name, id: c.id, stackId: c.getFlag(MODULE_NS, POS_FLAG_KEY)?.stackId })) });
           if (stackCards.length >= 2) {
             this._startGroupDrag(container, ev, stackCards);
             return;
           }
+        } else {
+          console.log("[SGZ:debug] group-drag skipped: stackId or pile missing", { stackId, hasPile: !!pile });
         }
         // Not actually part of a multi-card stack — fall through to a normal
         // single-card drag below rather than doing nothing.
+        console.log("[SGZ:debug] falling through to single-card drag");
       } else if (ctrlHeld) {
         // Ctrl(+Cmd)+left-click: cycle the card's color tag. Never starts a drag.
-        this._cycleCardColor(card);
+        this._cycleCardColor(liveCard);
         return;
       } else if (shiftHeld) {
         // Shift+left-click: tear whichever corner was clicked. Never starts a drag.
         const local = ev.getLocalPosition(container);
-        this._tearCorner(card, this._cornerAt(local));
+        this._tearCorner(liveCard, this._cornerAt(local));
         return;
       }
 
@@ -309,8 +455,15 @@ export class CardTableLayer extends CanvasLayer {
       lastPos = { x: container.x, y: container.y };
 
       // Reveal the next card in the stack immediately on pickup, since this
-      // drag is about to leave it behind.
-      if (stackId) this._refreshStackVisuals(card.id, { persist: false });
+      // drag is about to leave it behind. _refreshStackVisuals excludes this
+      // card entirely (that's what lets the sibling underneath become the
+      // new visible top) — which also means it never touches this card's own
+      // badge. Clear that badge directly, or it stays floating above the
+      // card you're now dragging away, still showing the old stack count.
+      if (stackId) {
+        this._refreshStackVisuals(liveCard.id, { persist: false });
+        this._removeStackBadge(container);
+      }
 
       dragging = true;
       container.alpha = 0.85;
@@ -358,6 +511,13 @@ export class CardTableLayer extends CanvasLayer {
               const cardsRect = (tray.cardsEl ?? trayEl).getBoundingClientRect();
               const dropX = clientX - cardsRect.left - HAND_CARD_W / 2;
               const dropY = clientY - cardsRect.top  - HAND_CARD_H / 2;
+              // computeIncomingDropPlacement may write the target's stackId
+              // as the first of two sequential writes (this card's own
+              // handPos flag, set below, is the second) — guard the whole
+              // sequence with the tray's _mergeInFlight, or its own
+              // _refreshStackBadges could see the target alone mid-sequence
+              // and destructively clear it before this card's write lands.
+              tray._mergeInFlight = true;
               const placement = await tray.computeIncomingDropPlacement(dropX, dropY);
               // pass()'s updateData forwarding and return value are both
               // unreliable in this Foundry version — snapshot ids before/
@@ -371,16 +531,18 @@ export class CardTableLayer extends CanvasLayer {
               } else {
                 console.error("Stargazer | Failed to find newly-passed card in hand after pass().");
               }
+              tray._mergeInFlight = false;
               canvas.stargazerCards?.removeCard(card.id);
               return;
             } catch (err) {
+              tray._mergeInFlight = false;
               console.error("Stargazer | Failed to pass card to hand:", err);
             }
           }
         }
       }
 
-      await this._persistPosition(card, lastPos);
+      await this._persistPosition(container.stargazerCard, lastPos);
     };
   }
 
@@ -389,6 +551,7 @@ export class CardTableLayer extends CanvasLayer {
     const members = stackCards
       .map(c => ({ card: c, container: this.cardSprites.get(c.id) }))
       .filter(m => m.container);
+    console.log("[SGZ:debug] _startGroupDrag entered", { requested: stackCards.length, resolvedMembers: members.length, ids: members.map(m => m.card.id) });
     members.forEach(m => { m.container.alpha = 0.85; m.container.visible = true; });
 
     const startLocal = initialEv.getLocalPosition(this);
@@ -406,7 +569,16 @@ export class CardTableLayer extends CanvasLayer {
       if (native) lastClientPos = { x: native.clientX, y: native.clientY };
     };
 
+    // Both "pointerup" and "pointerupoutside" are bound below (a release can
+    // dispatch either depending on exactly where the cursor ends up), and
+    // .once() only unregisters the listener it's called on, not its sibling —
+    // so without this guard, a single mouse release could run this whole
+    // handler twice, double-passing cards to the hand tray and colliding on
+    // their own already-migrated _id.
+    let groupUpHandled = false;
     const onGroupUp = async (up) => {
+      if (groupUpHandled) return;
+      groupUpHandled = true;
       members.forEach(m => { if (m.container.parent) m.container.alpha = 1; });
       canvas.stage.off("pointermove", onGroupMove);
 
@@ -429,6 +601,11 @@ export class CardTableLayer extends CanvasLayer {
               const cardsRect = (tray.cardsEl ?? trayEl).getBoundingClientRect();
               const dropX = clientX - cardsRect.left - HAND_CARD_W / 2;
               const dropY = clientY - cardsRect.top  - HAND_CARD_H / 2;
+              // Guard the whole multi-member sequence below — every member's
+              // write shares sharedStackId, so mid-sequence each one looks
+              // like an unpaired lone member to the tray's own
+              // _refreshStackBadges until the rest land too.
+              tray._mergeInFlight = true;
               const placement = await tray.computeIncomingDropPlacement(dropX, dropY);
               // All passed members share one stackId so the group arrives
               // in the tray still stacked together, exactly as it was on
@@ -446,9 +623,11 @@ export class CardTableLayer extends CanvasLayer {
                   console.error("Stargazer | Failed to find newly-passed card in hand after pass() (group drop).");
                 }
               }
+              tray._mergeInFlight = false;
               ids.forEach(id => this.removeCard(id));
               return;
             } catch (err) {
+              tray._mergeInFlight = false;
               console.error("Stargazer | Failed to pass stack to hand:", err);
             }
           }
@@ -462,6 +641,15 @@ export class CardTableLayer extends CanvasLayer {
 
       let mergeStackId = null;
       let mergeX = lastGroupPos.x, mergeY = lastGroupPos.y;
+      // The whole merge — the target's write (if joining a new stack) plus
+      // every dragged member's write below — happens as a sequence of
+      // separate document updates. Suppress the "lone stack member" cleanup
+      // in _refreshStackVisuals for the whole sequence: with 2+ dragged
+      // members, each one is momentarily peeled off its old groupmates and
+      // not yet joined to the new ones as these writes land one at a time,
+      // and without the guard each intermediate state gets destructively
+      // nulled out by the cleanup before the next write ever lands.
+      this._mergeInFlight = true;
       if (snap) {
         const oPos = snap.other.getFlag(MODULE_NS, POS_FLAG_KEY);
         mergeX = oPos.x;
@@ -484,6 +672,7 @@ export class CardTableLayer extends CanvasLayer {
           stackZ: mergeStackId ? baseZ + i : cur.stackZ,
         });
       }
+      this._mergeInFlight = false;
       this._refreshStackVisuals();
     };
 
@@ -505,6 +694,12 @@ export class CardTableLayer extends CanvasLayer {
       snappedY = snap.y;
       stackId = oPos.stackId ?? `stack-${Date.now()}`;
       if (!oPos.stackId) {
+        // Forming a brand-new stack takes two separate document writes (the
+        // target, then this card) — suppress the "lone stack member" cleanup
+        // in _refreshStackVisuals while both are in flight, or the target's
+        // own updateCard hook sees a not-yet-paired stackId and destructively
+        // nulls it out before this card's write ever lands.
+        this._mergeInFlight = true;
         await snap.other.setFlag(MODULE_NS, POS_FLAG_KEY, { ...oPos, stackId, stackZ: oPos.stackZ ?? 0 });
       }
       console.log(`[SGZ:snap/canvas] "${card.name}" snapped to "${snap.other.name}" → stackId="${stackId}"`);
@@ -519,6 +714,7 @@ export class CardTableLayer extends CanvasLayer {
       stackId: stackId ?? null,
       stackZ,
     });
+    this._mergeInFlight = false;
 
     this._refreshStackVisuals();
   }
@@ -590,11 +786,14 @@ export class CardTableLayer extends CanvasLayer {
     for (const [, members] of groups) {
       if (members.length <= 1) {
         // Stale/dissolved stack — show the lone card and clear its flag.
+        // Skip the destructive clear while a merge is still writing its
+        // other member(s) — see _mergeInFlight in _persistPosition and
+        // _startGroupDrag's onGroupUp.
         const lone = members[0];
         if (lone) {
           lone.container.visible = true;
           this._removeStackBadge(lone.container);
-          if (persist && lone.pos.stackId) {
+          if (persist && lone.pos.stackId && !this._mergeInFlight) {
             lone.card.setFlag(MODULE_NS, POS_FLAG_KEY, { ...lone.pos, stackId: null, stackZ: null });
           }
         }
@@ -602,6 +801,7 @@ export class CardTableLayer extends CanvasLayer {
       }
 
       const top = members.reduce((a, b) => (b.pos.stackZ ?? 0) > (a.pos.stackZ ?? 0) ? b : a);
+      console.log("[SGZ:debug] stack group", { stackId: top.pos.stackId, size: members.length, memberNames: members.map(m => m.card.name), topName: top.card.name });
       for (const m of members) {
         const isTop = m === top;
         m.container.visible = isTop;
@@ -654,7 +854,11 @@ export class CardTableLayer extends CanvasLayer {
 
   /** Re-render a single card when its document updates (called from the updateCard hook) */
   refreshCard(card) {
-    if (!this.tablePile || card.parent?.id !== this.tablePile.id) return;
+    console.log("[SGZ:debug] refreshCard called", { name: card.name, id: card.id, parentId: card.parent?.id, tablePileId: this.tablePile?.id, pos: card.getFlag(MODULE_NS, POS_FLAG_KEY) });
+    if (!this.tablePile || card.parent?.id !== this.tablePile.id) {
+      console.log("[SGZ:debug] refreshCard EARLY RETURN (wrong pile or no pile)");
+      return;
+    }
 
     const existing = this.cardSprites.get(card.id);
     const pos = card.getFlag(MODULE_NS, POS_FLAG_KEY) || {};
@@ -664,10 +868,20 @@ export class CardTableLayer extends CanvasLayer {
       // Only position/stack-membership changed (a drag, snap, or unstack) —
       // ease the existing container into place instead of destroying and
       // rebuilding it, so drops and stack joins glide instead of popping.
+      // Refresh the cached live-document pointer every time, even though the
+      // container itself isn't rebuilt — otherwise every handler wired back
+      // in _renderCard would keep reading flags off whatever Card instance
+      // existed at creation time, permanently missing anything that changed
+      // afterward (this was the actual cause of stack-drag never triggering:
+      // stackId always read back as null post-merge).
+      existing.stargazerCard = card;
+      console.log("[SGZ:debug] refreshCard: ease-in-place, stargazerCard refreshed", { name: card.name, cachedStackId: existing.stargazerCard.getFlag(MODULE_NS, POS_FLAG_KEY)?.stackId });
       this._animateTo(existing, pos.x, pos.y);
       this._restyleStackBorder(existing, card, !!pos.stackId);
       this._drawCardOverlay(existing, card);
+      this._refreshCardText(existing, card);
     } else {
+      console.log("[SGZ:debug] refreshCard: rebuilding via _renderCard", { name: card.name, hadExisting: !!existing });
       this._renderCard(card);
     }
     this._refreshStackVisuals();
@@ -682,11 +896,91 @@ export class CardTableLayer extends CanvasLayer {
     this._drawCardBg(bg, { faceUp, isStacked, tagColor });
   }
 
+  /**
+   * Push the card's current name/description onto its existing text
+   * objects, without rebuilding the container. This is what the
+   * ease-in-place path in refreshCard() was missing — a card.update() from
+   * the edit dialog (or anything else) only reaches the screen through
+   * this, since faceUp not changing means _renderCard is never called.
+   */
+  _refreshCardText(container, card) {
+    const faceUp = container.stargazerFaceUp;
+
+    const label = container.stargazerNameText;
+    if (label) label.text = faceUp ? (card.name || "Card") : "🂠";
+
+    const wantsDesc = faceUp && !!card.description;
+    let desc = container.stargazerDescText;
+    if (wantsDesc) {
+      if (!desc) {
+        desc = new PIXI.Text(card.description, {
+          fontFamily: "Roboto, sans-serif",
+          fontSize: 11,
+          fill: 0x444444,
+          align: "center",
+          wordWrap: true,
+          wordWrapWidth: CARD_WIDTH - 16,
+        });
+        desc.anchor.set(0.5);
+        desc.y = 30;
+        container.addChild(desc);
+        container.stargazerDescText = desc;
+      } else if (desc.text !== card.description) {
+        desc.text = card.description;
+      }
+    } else if (desc) {
+      container.removeChild(desc);
+      desc.destroy();
+      container.stargazerDescText = null;
+    }
+  }
+
   /** Remove a card's sprite (called from deleteCard hook) */
   removeCard(cardId) {
     this.cardSprites.get(cardId)?.destroy({ children: true });
     this.cardSprites.delete(cardId);
     this._refreshStackVisuals();
+  }
+}
+
+/**
+ * Ensure a Cards document (table pile / deck / discard pile) has at least
+ * OWNER as its default permission, so every player — not just the GM — can
+ * see it and write to it (move, stack, draw, discard...). Only a GM can
+ * actually perform this update: a player with default:NONE has no
+ * permission to elevate their own access, so this must run GM-side and
+ * proactively, not be something a player triggers on first failure.
+ */
+async function _ensureOwnerDefault(doc) {
+  if ((doc.ownership?.default ?? 0) >= CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER) return false;
+  await doc.update({ ownership: { ...doc.ownership, default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER } });
+  return true;
+}
+
+/**
+ * GM-only, self-healing permission sweep over every Cards document this
+ * module owns (table pile, demo deck, any decks' discard piles). Runs
+ * automatically on world ready so a world whose table/deck was created
+ * before the ownership fix existed gets repaired without anyone having to
+ * remember to re-click "Deal Test Cards".
+ */
+async function migrateCardPermissions() {
+  if (!game.user.isGM) return;
+  const targets = game.cards.filter(c =>
+    c.getFlag(MODULE_NS, TABLE_PILE_FLAG) ||
+    (c.type === "deck" && c.getFlag(MODULE_NS, "isDemoDeck")) ||
+    c.getFlag(MODULE_NS, DISCARD_PILE_FLAG)
+  );
+  let fixedCount = 0;
+  for (const doc of targets) {
+    try {
+      if (await _ensureOwnerDefault(doc)) fixedCount++;
+    } catch (err) {
+      console.error(`Stargazer | Failed to repair ownership on Cards "${doc.name}" (${doc.id}):`, err);
+    }
+  }
+  if (fixedCount) {
+    console.log(`Stargazer | Repaired default ownership on ${fixedCount} Cards document(s) so all players can use them.`);
   }
 }
 
@@ -701,6 +995,9 @@ export function initCardTable() {
     group: "interface",
   };
   console.log("Stargazer | Card table layer registered in CONFIG.Canvas.layers");
+
+  // Self-healing permission repair — GM-only, runs once per world load.
+  Hooks.once("ready", () => { migrateCardPermissions(); });
 
   Hooks.on("canvasReady", () => {
     if (!canvas.stargazerCards) {
@@ -734,20 +1031,188 @@ export function initCardTable() {
     canvas.stargazerCards.removeCard(card.id);
   });
 
-  // GM scene control: bootstrap a test deck + table pile, deal a few cards
+  // Scene controls: GM-only bootstrap button, plus deck/card actions any
+  // player can use once the table and deck exist.
   Hooks.on("getSceneControlButtons", (controls) => {
-    if (!game.user.isGM) return;
     if (!controls.tokens?.tools) return;
-    controls.tokens.tools.dealTestCards = {
-      name: "dealTestCards",
-      title: "Deal Test Cards (Stage 1 demo)",
-      icon: "fa-solid fa-cards",
+
+    if (game.user.isGM) {
+      controls.tokens.tools.dealTestCards = {
+        name: "dealTestCards",
+        title: "Deal Test Cards (Stage 1 demo)",
+        icon: "fa-solid fa-cards",
+        order: Object.keys(controls.tokens.tools).length,
+        button: true,
+        visible: true,
+        onChange: () => dealTestCards(),
+      };
+    }
+
+    controls.tokens.tools.sgzDrawCard = {
+      name: "sgzDrawCard",
+      title: "Draw Card",
+      icon: "fa-solid fa-hand-holding",
       order: Object.keys(controls.tokens.tools).length,
       button: true,
       visible: true,
-      onChange: () => dealTestCards(),
+      onChange: () => drawCardToTable(),
+    };
+    controls.tokens.tools.sgzShuffleDeck = {
+      name: "sgzShuffleDeck",
+      title: "Shuffle Deck",
+      icon: "fa-solid fa-shuffle",
+      order: Object.keys(controls.tokens.tools).length,
+      button: true,
+      visible: true,
+      onChange: () => shuffleDeck(),
+    };
+    controls.tokens.tools.sgzRecallDeck = {
+      name: "sgzRecallDeck",
+      title: "Recall Deck",
+      icon: "fa-solid fa-arrow-rotate-left",
+      order: Object.keys(controls.tokens.tools).length,
+      button: true,
+      visible: true,
+      onChange: () => recallDeck(),
+    };
+    controls.tokens.tools.sgzNewCard = {
+      name: "sgzNewCard",
+      title: "New Card",
+      icon: "fa-solid fa-plus",
+      order: Object.keys(controls.tokens.tools).length,
+      button: true,
+      visible: true,
+      onChange: () => createStandaloneCard(),
     };
   });
+}
+
+/**
+ * Resolve a Card's origin deck to an actual Cards document. `card.origin`
+ * is Foundry's built-in tracking of which deck a card was drawn from, but
+ * whether it resolves to the live document or just its id string has
+ * varied across API versions — handle both rather than assume.
+ */
+function _resolveOriginDeck(card) {
+  const origin = card.origin;
+  if (!origin) return null;
+  return typeof origin === "string" ? (game.cards.get(origin) ?? null) : origin;
+}
+
+/** Find the registered table Pile and demo Deck, if they've been set up yet */
+function _getTableAndDeck() {
+  const pile = game.cards.find(c => c.getFlag(MODULE_NS, TABLE_PILE_FLAG));
+  const deck = game.cards.find(c => c.type === "deck" && c.getFlag(MODULE_NS, "isDemoDeck"));
+  return { pile, deck };
+}
+
+/** A scattered position near the current view center, for newly placed cards */
+function _scatterPosition() {
+  const center = { x: canvas.stage.pivot.x || 1000, y: canvas.stage.pivot.y || 1000 };
+  return {
+    x: center.x + (Math.random() - 0.5) * 300,
+    y: center.y + (Math.random() - 0.5) * 300,
+  };
+}
+
+/** Find-or-create the discard Pile for a given deck. Any player can discard, so it's owner-for-all like the table pile. */
+async function getOrCreateDiscardPile(deck) {
+  let discard = game.cards.find(c => c.getFlag(MODULE_NS, DISCARD_PILE_FLAG) === deck.id);
+  if (!discard) {
+    discard = await Cards.create({
+      name: `${deck.name} — Discard`,
+      type: "pile",
+      ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
+      flags: { [MODULE_NS]: { [DISCARD_PILE_FLAG]: deck.id } },
+    });
+  }
+  return discard;
+}
+
+/** Player-facing: draw one card from the registered deck onto the table at a scattered position */
+async function drawCardToTable() {
+  const { pile, deck } = _getTableAndDeck();
+  if (!pile || !deck) {
+    return ui.notifications.warn("No table pile or deck set up yet — ask the GM to deal test cards first.");
+  }
+  if (!deck.availableCards.length) {
+    return ui.notifications.info(`${deck.name} is empty. Shuffle or recall it first.`);
+  }
+  try {
+    // deal()'s return value isn't reliable — snapshot ids before/after and
+    // treat the difference as "newly dealt", same technique used elsewhere
+    // in this module for pass().
+    const idsBefore = new Set(pile.cards.map(c => c.id));
+    await deck.deal([pile], 1, { how: 0 });
+    const newCard = pile.cards.find(c => !idsBefore.has(c.id));
+    if (!newCard) {
+      console.error("Stargazer | drawCardToTable: deal() completed but no new card was found in the pile.");
+      return;
+    }
+    const { x, y } = _scatterPosition();
+    await newCard.setFlag(MODULE_NS, POS_FLAG_KEY, { x, y, rotation: 0, faceUp: true });
+  } catch (err) {
+    console.error("Stargazer | drawCardToTable failed:", err);
+    ui.notifications.error("Stargazer | Couldn't draw a card — see console.");
+  }
+}
+
+/** Player-facing: shuffle the registered deck */
+async function shuffleDeck() {
+  const { deck } = _getTableAndDeck();
+  if (!deck) return ui.notifications.warn("No deck set up yet — ask the GM to deal test cards first.");
+  await deck.shuffle();
+  ui.notifications.info(`${deck.name} shuffled.`);
+}
+
+/** Player-facing: recall the registered deck — returns every dealt/discarded instance and restores default order */
+async function recallDeck() {
+  const { deck } = _getTableAndDeck();
+  if (!deck) return ui.notifications.warn("No deck set up yet — ask the GM to deal test cards first.");
+  await deck.recall();
+  ui.notifications.info(`${deck.name} recalled — all drawn and discarded cards returned.`);
+}
+
+/** Player-facing: create a freeform standalone card (no deck, no prototype) directly on the table */
+async function createStandaloneCard() {
+  const { pile } = _getTableAndDeck();
+  if (!pile) return ui.notifications.warn("No table pile set up yet — ask the GM to deal test cards first.");
+
+  new Dialog({
+    title: "New Card",
+    content: `
+      <form>
+        <div class="form-group">
+          <label>Name</label>
+          <input type="text" name="name" value="New Card" />
+        </div>
+        <div class="form-group">
+          <label>Description</label>
+          <textarea name="description" rows="4"></textarea>
+        </div>
+      </form>`,
+    buttons: {
+      create: {
+        icon: '<i class="fa-solid fa-check"></i>',
+        label: "Create",
+        callback: async (html) => {
+          const name = html.find('[name="name"]').val().trim() || "New Card";
+          const description = html.find('[name="description"]').val();
+          const [created] = await pile.createEmbeddedDocuments("Card", [{
+            name,
+            description,
+            faces: [{ name, img: "icons/svg/card-joker.svg" }],
+            face: 0,
+            back: { name: "Card Back", img: "icons/svg/card-hand.svg" },
+          }]);
+          const { x, y } = _scatterPosition();
+          await created.setFlag(MODULE_NS, POS_FLAG_KEY, { x, y, rotation: 0, faceUp: true });
+        },
+      },
+      cancel: { icon: '<i class="fa-solid fa-xmark"></i>', label: "Cancel" },
+    },
+    default: "create",
+  }).render(true);
 }
 
 /** GM-only bootstrap: ensure a Table pile exists, ensure a demo deck exists, draw a few cards onto the table at scattered positions */
@@ -760,8 +1225,18 @@ async function dealTestCards() {
       pile = await Cards.create({
         name: "Table",
         type: "pile",
+        // The table pile has to be writable by every player, not just the
+        // GM who happened to create it — any player can pick up, move,
+        // stack, or pass a card off the table (see design doc: "Pile —
+        // cards on the table, visible/ownable by anyone"). Without this,
+        // Cards.create() defaults to OWNER for the creator only and NONE
+        // for everyone else, meaning non-GM players never even receive the
+        // pile's data.
+        ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
         flags: { [MODULE_NS]: { [TABLE_PILE_FLAG]: true } },
       });
+    } else {
+      await _ensureOwnerDefault(pile);
     }
 
     let deck = game.cards.find(c => c.type === "deck" && c.getFlag(MODULE_NS, "isDemoDeck"));
@@ -769,6 +1244,9 @@ async function dealTestCards() {
       deck = await Cards.create({
         name: "Demo Deck",
         type: "deck",
+        // Same reasoning as the table pile above: players need to draw,
+        // shuffle, and recall this deck themselves, not just the GM.
+        ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
         flags: { [MODULE_NS]: { isDemoDeck: true } },
       });
       const demoCards = ["Harm", "Friction", "Loss", "Fatigue", "Threat"].map((n, i) => ({
@@ -780,6 +1258,8 @@ async function dealTestCards() {
         sort: i,
       }));
       await deck.createEmbeddedDocuments("Card", demoCards);
+    } else {
+      await _ensureOwnerDefault(deck);
     }
 
     // Draw 3 fresh cards from the deck into the Table pile (if deck has cards left)
@@ -815,7 +1295,7 @@ async function dealTestCards() {
       await card.setFlag(MODULE_NS, POS_FLAG_KEY, {
         x: center.x + (Math.random() - 0.5) * 300,
         y: center.y + (Math.random() - 0.5) * 300,
-        rotation: (Math.random() - 0.5) * 0.3,
+        rotation: 0,
         faceUp: false,
       });
     }

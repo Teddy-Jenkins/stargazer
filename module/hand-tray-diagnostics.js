@@ -7,8 +7,16 @@
  *   diag.runSuite('pass');  // run one suite by key
  *   diag.stopAll();         // remove all listeners
  *
+ * Suites: pass, stack, longpress, domsync (original tray bugs), plus
+ *   permissions, deckops, discard, standalone, stackcolor — covering the
+ *   ownership fix, deck draw/shuffle/recall, the Ctrl+right-click
+ *   discard-or-delete gesture, standalone card creation, and the
+ *   stacked-card color-border regression.
+ *
  * Each test logs PASS / FAIL / INFO to the console under the "SGZ-DIAG" group.
- * Tests are non-destructive: they observe, never permanently mutate world state.
+ * Most tests are non-destructive; a few (deckops, discard, standalone) create
+ * and clean up scratch state — they draw/recall/delete their own test cards
+ * rather than touching anything you placed by hand.
  */
 
 // ─── helpers ────────────────────────────────────────────────────────────────
@@ -18,6 +26,8 @@ const HAND_FLAG    = "isPlayerHand";
 const HAND_POS_FLAG = "handPos";
 const TABLE_FLAG   = "isCardTable";
 const POS_FLAG_KEY  = "cardPos";
+const COLOR_FLAG_KEY = "cardColor";
+const DISCARD_PILE_FLAG = "discardForDeckId";
 
 let _cleanups = [];
 
@@ -47,6 +57,24 @@ function getHand() {
 
 function getPile() {
   return game.cards.find(c => c.getFlag(MODULE_NS, TABLE_FLAG));
+}
+
+/** The registered demo deck (same lookup card-table.js uses internally) */
+function getDeck() {
+  return game.cards.find(c => c.type === "deck" && c.getFlag(MODULE_NS, "isDemoDeck"));
+}
+
+/** A given deck's discard pile, if one has been created yet (lazy — may not exist) */
+function getDiscardPile(deck) {
+  if (!deck) return null;
+  return game.cards.find(c => c.getFlag(MODULE_NS, DISCARD_PILE_FLAG) === deck.id) ?? null;
+}
+
+/** Resolve a Card's `origin` to the live Cards document, whether the field holds an id string or a document reference */
+function resolveOrigin(card) {
+  const origin = card.origin;
+  if (!origin) return null;
+  return typeof origin === "string" ? (game.cards.get(origin) ?? null) : origin;
 }
 
 function getTray() {
@@ -445,13 +473,344 @@ async function suiteDOMSync() {
   console.groupEnd();
 }
 
+// ─── Suite 5: Table/deck/discard-pile permissions ─────────────────────────
+// Tests the "make everyone owner" fix: does the table pile, deck, and any
+// discard pile have default OWNER, so non-GM players can actually see and
+// write to them?
+
+async function suitePermissions() {
+  const SUITE = "permissions";
+  console.group(`[SGZ-DIAG:${SUITE}] Table/deck/discard ownership`);
+
+  const OWNER = CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER;
+  const pile = getPile();
+  const deck = getDeck();
+
+  if (pile) {
+    assert((pile.ownership?.default ?? 0) >= OWNER, SUITE,
+      "Table pile default ownership is OWNER (or higher)",
+      `Table pile default ownership is ${pile.ownership?.default} — non-GM players can't see or write to it`,
+      pile.ownership
+    );
+  } else {
+    log("INFO", SUITE, "No table pile yet — run Deal Test Cards first.");
+  }
+
+  if (deck) {
+    assert((deck.ownership?.default ?? 0) >= OWNER, SUITE,
+      `Deck "${deck.name}" default ownership is OWNER (or higher)`,
+      `Deck "${deck.name}" default ownership is ${deck.ownership?.default} — non-GM players can't draw/shuffle/recall it`,
+      deck.ownership
+    );
+  } else {
+    log("INFO", SUITE, "No deck yet — run Deal Test Cards first.");
+  }
+
+  const discardPiles = game.cards.filter(c => c.getFlag(MODULE_NS, DISCARD_PILE_FLAG));
+  if (discardPiles.length) {
+    for (const d of discardPiles) {
+      assert((d.ownership?.default ?? 0) >= OWNER, SUITE,
+        `Discard pile "${d.name}" default ownership is OWNER`,
+        `Discard pile "${d.name}" default ownership is ${d.ownership?.default} — non-GM players can't discard into it`,
+        d.ownership
+      );
+    }
+  } else {
+    log("INFO", SUITE, "No discard piles exist yet — they're created lazily on first discard.");
+  }
+
+  console.groupEnd();
+}
+
+// ─── Suite 6: Deck operations round trip (draw / shuffle / recall) ────────
+// Draws a card, checks its origin resolves back to the deck, recalls it,
+// and confirms both the pile and the deck's available count return to
+// their pre-test state. Also sanity-checks that shuffle() doesn't change
+// the card count. Self-cleans via recall() either way.
+
+async function suiteDeckOps() {
+  const SUITE = "deck-ops";
+  console.group(`[SGZ-DIAG:${SUITE}] Draw / shuffle / recall round trip`);
+
+  const pile = getPile();
+  const deck = getDeck();
+  if (!pile || !deck) {
+    log("INFO", SUITE, "Need both a table pile and a deck. Run Deal Test Cards first.");
+    console.groupEnd();
+    return;
+  }
+
+  const availableBefore = deck.availableCards.length;
+  log("INFO", SUITE, `Deck "${deck.name}": ${availableBefore} available card(s) before test.`);
+
+  if (availableBefore === 0) {
+    log("INFO", SUITE, "Deck is empty — skipping draw/recall check. Recall it manually first, then re-run.");
+  } else {
+    const idsBefore = new Set(pile.cards.map(c => c.id));
+    await deck.deal([pile], 1, { how: 0 });
+    const newCard = pile.cards.find(c => !idsBefore.has(c.id));
+
+    assert(!!newCard, SUITE,
+      "deal() produced a new card in the table pile (id-diff technique)",
+      "deal() completed but no new card was found via id-diff — Draw Card would silently do nothing in play"
+    );
+
+    if (newCard) {
+      const resolvedOrigin = resolveOrigin(newCard);
+      assert(resolvedOrigin?.id === deck.id, SUITE,
+        "Drawn card's origin correctly resolves back to the source deck",
+        "Drawn card's origin does NOT resolve to the source deck — discard-to-pile and recall both depend on this",
+        { rawOrigin: newCard.origin, resolvedOriginId: resolvedOrigin?.id, deckId: deck.id }
+      );
+
+      await deck.recall();
+      await new Promise(r => setTimeout(r, 200));
+
+      const stillInPile = pile.cards.get(newCard.id);
+      assert(!stillInPile, SUITE,
+        "recall() removed the drawn card from the table pile",
+        "Drawn card is still sitting in the table pile after recall() — Recall Deck button wouldn't clear the table"
+      );
+
+      const availableAfter = deck.availableCards.length;
+      assert(availableAfter === availableBefore, SUITE,
+        `Deck's available count restored to ${availableBefore} after recall`,
+        `Deck's available count is ${availableAfter}, expected ${availableBefore} — recall did not fully restore the deck`
+      );
+    }
+  }
+
+  const countBeforeShuffle = deck.availableCards.length;
+  await deck.shuffle();
+  const countAfterShuffle = deck.availableCards.length;
+  assert(countBeforeShuffle === countAfterShuffle, SUITE,
+    "shuffle() preserved the deck's available card count",
+    `shuffle() changed the available count from ${countBeforeShuffle} to ${countAfterShuffle} — cards may have been lost/duplicated`
+  );
+
+  console.groupEnd();
+}
+
+// ─── Suite 7: Discard-or-delete gesture (Ctrl+right-click) ────────────────
+// Exercises both branches of _discardOrDelete without needing a real
+// right-click: deck-sourced cards should land in a lazily-created discard
+// pile (and survive a subsequent recall); standalone cards should just be
+// deleted outright.
+
+async function suiteDiscard() {
+  const SUITE = "discard";
+  console.group(`[SGZ-DIAG:${SUITE}] Discard-or-delete gesture`);
+
+  const pile = getPile();
+  const deck = getDeck();
+  if (!pile || !deck) {
+    log("INFO", SUITE, "Need both a table pile and a deck. Run Deal Test Cards first.");
+    console.groupEnd();
+    return;
+  }
+
+  // --- Deck-sourced branch ---
+  if (deck.availableCards.length === 0) {
+    log("INFO", SUITE, "Deck is empty — skipping deck-sourced discard branch. Recall it first.");
+  } else {
+    const idsBefore = new Set(pile.cards.map(c => c.id));
+    await deck.deal([pile], 1, { how: 0 });
+    const drawn = pile.cards.find(c => !idsBefore.has(c.id));
+
+    if (!drawn) {
+      log("INFO", SUITE, "Could not draw a card to test the deck-sourced discard branch.");
+    } else {
+      const discardExistedBefore = !!getDiscardPile(deck);
+      let discard = getDiscardPile(deck);
+      if (!discard) {
+        discard = await Cards.create({
+          name: `${deck.name} — Discard`,
+          type: "pile",
+          ownership: { default: CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER },
+          flags: { [MODULE_NS]: { [DISCARD_PILE_FLAG]: deck.id } },
+        });
+      }
+
+      await drawn.parent.pass(discard, [drawn.id]);
+      await new Promise(r => setTimeout(r, 200));
+
+      const landedInDiscard = discard.cards.some(c => c.name === drawn.name);
+      assert(landedInDiscard, SUITE,
+        "Deck-sourced card landed in its deck's discard pile after pass()",
+        "Deck-sourced card did NOT land in the discard pile — check pass() permissions/errors in the console"
+      );
+
+      assert((discard.ownership?.default ?? 0) >= CONST.DOCUMENT_OWNERSHIP_LEVELS.OWNER, SUITE,
+        "Discard pile has default OWNER permission",
+        "Discard pile's default permission is below OWNER — non-GM players won't be able to discard into it"
+      );
+
+      // Cleanup: recall pulls the discarded card back to the deck; only
+      // remove the discard pile document itself if this test created it.
+      await deck.recall();
+      if (!discardExistedBefore) {
+        const stillThere = getDiscardPile(deck);
+        if (stillThere) await stillThere.delete().catch(() => {});
+      }
+    }
+  }
+
+  // --- Standalone branch ---
+  const [scratch] = await pile.createEmbeddedDocuments("Card", [{
+    name: "SGZ-DIAG scratch card",
+    faces: [{ name: "scratch", img: "icons/svg/card-joker.svg" }],
+    face: 0,
+  }]);
+
+  assert(!scratch.origin, SUITE,
+    "Standalone scratch card has no origin (correctly untied to any deck)",
+    "Standalone scratch card unexpectedly has an origin set — it would be mistaken for deck-sourced",
+    { origin: scratch.origin }
+  );
+
+  const scratchId = scratch.id;
+  await scratch.delete();
+  const stillExists = pile.cards.get(scratchId);
+  assert(!stillExists, SUITE,
+    "Standalone card was deleted outright, matching the discard-or-delete gesture's non-deck branch",
+    "Standalone card still exists in the pile after delete()"
+  );
+
+  console.groupEnd();
+}
+
+// ─── Suite 8: Standalone card creation (Pile + Hand) ───────────────────────
+// Checks that a freshly created standalone card gets a valid position flag
+// on both surfaces — the "+ New Card" tray button and the canvas "New Card"
+// scene control both depend on this being set or the card renders at 0,0
+// (canvas) or is invisible (tray, since _refreshStackBadges assumes a pos).
+
+async function suiteStandaloneCreation() {
+  const SUITE = "standalone";
+  console.group(`[SGZ-DIAG:${SUITE}] Standalone card creation (Pile + Hand)`);
+
+  const pile = getPile();
+  const hand = getHand();
+
+  if (pile) {
+    const [pileCard] = await pile.createEmbeddedDocuments("Card", [{
+      name: "SGZ-DIAG standalone (pile)",
+      faces: [{ name: "x", img: "icons/svg/card-joker.svg" }],
+      face: 0,
+    }]);
+    await pileCard.setFlag(MODULE_NS, POS_FLAG_KEY, { x: 500, y: 500, rotation: 0, faceUp: true });
+    const pos = pileCard.getFlag(MODULE_NS, POS_FLAG_KEY);
+    assert(pos && typeof pos.x === "number" && typeof pos.y === "number", SUITE,
+      "New standalone table card has a valid cardPos flag",
+      "New standalone table card is missing/malformed cardPos — it would render at the canvas origin",
+      pos
+    );
+    await pileCard.delete();
+  } else {
+    log("INFO", SUITE, "No table pile — skipping pile-side check.");
+  }
+
+  if (hand) {
+    const [handCard] = await hand.createEmbeddedDocuments("Card", [{
+      name: "SGZ-DIAG standalone (hand)",
+      faces: [{ name: "x", img: "icons/svg/card-joker.svg" }],
+      face: 0,
+    }]);
+    await handCard.setFlag(MODULE_NS, HAND_POS_FLAG, { x: 40, y: 40 });
+    const pos = handCard.getFlag(MODULE_NS, HAND_POS_FLAG);
+    assert(pos && typeof pos.x === "number" && typeof pos.y === "number", SUITE,
+      "New standalone hand card has a valid handPos flag",
+      "New standalone hand card is missing/malformed handPos",
+      pos
+    );
+    await handCard.delete();
+  } else {
+    log("INFO", SUITE, "No hand available — skipping hand-side check.");
+  }
+
+  console.groupEnd();
+}
+
+// ─── Suite 9: Stacked card color-tag border regression check ──────────────
+// Regression test for the bug where a gold "stacked" ring overrode a card's
+// own color tag. Spies on Graphics#lineStyle during _restyleStackBorder to
+// capture the color actually drawn, rather than trying to read PIXI's
+// internal geometry (which varies by PIXI version).
+
+async function suiteStackBorderColor() {
+  const SUITE = "stack-color";
+  console.group(`[SGZ-DIAG:${SUITE}] Stacked card color-tag border regression check`);
+
+  const layer = canvas.stargazerCards;
+  const pile = getPile();
+  if (!layer || !pile) {
+    log("INFO", SUITE, "Card table layer or pile unavailable.");
+    console.groupEnd();
+    return;
+  }
+
+  let card = Array.from(pile.cards).find(c => {
+    const pos = c.getFlag(MODULE_NS, POS_FLAG_KEY);
+    return pos?.stackId && c.getFlag(MODULE_NS, COLOR_FLAG_KEY) != null;
+  });
+
+  let taggedForTest = false;
+  if (!card) {
+    card = Array.from(pile.cards)[0];
+    if (!card) {
+      log("INFO", SUITE, "No cards on the table to test with.");
+      console.groupEnd();
+      return;
+    }
+    await card.setFlag(MODULE_NS, COLOR_FLAG_KEY, 0xc0392b);
+    taggedForTest = true;
+  }
+
+  const container = layer.cardSprites.get(card.id);
+  const bg = container?.children[0];
+  if (!bg) {
+    log("INFO", SUITE, "No rendered background graphic found for the test card.");
+    if (taggedForTest) await card.unsetFlag(MODULE_NS, COLOR_FLAG_KEY);
+    console.groupEnd();
+    return;
+  }
+
+  let capturedColor = null;
+  const origLineStyle = bg.lineStyle.bind(bg);
+  bg.lineStyle = function (width, color, ...rest) {
+    capturedColor = color;
+    return origLineStyle(width, color, ...rest);
+  };
+
+  layer._restyleStackBorder(container, card, /* isStacked */ true);
+  bg.lineStyle = origLineStyle;
+
+  const tagColor = card.getFlag(MODULE_NS, COLOR_FLAG_KEY);
+  assert(capturedColor === tagColor, SUITE,
+    `Stacked card's border draws its own color tag (0x${(tagColor ?? 0).toString(16)})`,
+    `Stacked card's border color (0x${(capturedColor ?? 0).toString(16)}) doesn't match its tag (0x${(tagColor ?? 0).toString(16)}) — the old gold-ring override may have regressed`,
+    { capturedColor, tagColor }
+  );
+
+  // Restore the visible state either way.
+  layer._restyleStackBorder(container, card, true);
+  if (taggedForTest) await card.unsetFlag(MODULE_NS, COLOR_FLAG_KEY);
+
+  console.groupEnd();
+}
+
 // ─── Runner ──────────────────────────────────────────────────────────────────
 
 const SUITES = {
-  pass:       suitePassHook,
-  stack:      suiteStackScroll,
-  longpress:  suiteLongPress,
-  domsync:    suiteDOMSync,
+  pass:        suitePassHook,
+  stack:       suiteStackScroll,
+  longpress:   suiteLongPress,
+  domsync:     suiteDOMSync,
+  permissions: suitePermissions,
+  deckops:     suiteDeckOps,
+  discard:     suiteDiscard,
+  standalone:  suiteStandaloneCreation,
+  stackcolor:  suiteStackBorderColor,
 };
 
 export async function runSuite(key) {
