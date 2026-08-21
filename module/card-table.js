@@ -44,6 +44,9 @@ const CORNER_ZONE = 26;
 // How far in from the card's true edge the triangle's apex sits, so the
 // color-tag border remains visible as a thin frame around each tear.
 const CORNER_INSET = 6;
+// Inset from the card's top/bottom/side edges that name/description text
+// must stay within — keeps both anchored inside the card's own rectangle.
+const TEXT_PADDING = 10;
 
 export class CardTableLayer extends CanvasLayer {
 
@@ -120,9 +123,17 @@ export class CardTableLayer extends CanvasLayer {
       fill: faceUp ? 0x222222 : 0xcccccc,
       align: "center",
       wordWrap: true,
-      wordWrapWidth: CARD_WIDTH - 16,
+      wordWrapWidth: CARD_WIDTH - TEXT_PADDING * 2,
     });
-    label.anchor.set(0.5);
+    // Face-up: name sits at the top of the card, not centered. Face-down: the
+    // card-back glyph stays centered — it's a symbol, not a name, so top-
+    // anchoring it would look wrong.
+    if (faceUp) {
+      label.anchor.set(0.5, 0);
+      label.y = -CARD_HEIGHT / 2 + TEXT_PADDING;
+    } else {
+      label.anchor.set(0.5);
+    }
     container.addChild(label);
     // Cached so refreshCard()'s ease-in-place path (position/stack-only
     // updates, no rebuild) can still push a text edit onto the existing
@@ -133,16 +144,37 @@ export class CardTableLayer extends CanvasLayer {
     container.stargazerDescText = null;
 
     if (faceUp && card.description) {
-      const desc = new PIXI.Text(card.description, {
+      const descStyle = new PIXI.TextStyle({
         fontFamily: "Roboto, sans-serif",
         fontSize: 11,
         fill: 0x444444,
         align: "center",
         wordWrap: true,
-        wordWrapWidth: CARD_WIDTH - 16,
+        wordWrapWidth: CARD_WIDTH - TEXT_PADDING * 2,
+        breakWords: true,
       });
-      desc.anchor.set(0.5);
-      desc.y = 30;
+      // Description starts right below the (possibly multi-line) name and is
+      // truncated to whatever vertical room remains above the card's bottom
+      // edge — long descriptions get an ellipsis instead of spilling past
+      // the card's own rectangle.
+      const descTop = label.y + label.height + 6;
+      const descMaxHeight = Math.max(0, (CARD_HEIGHT / 2 - TEXT_PADDING) - descTop);
+      const fittedText = this._truncateToFit(card.description, descStyle, descMaxHeight);
+      const desc = new PIXI.Text(fittedText, descStyle);
+      desc.anchor.set(0.5, 0);
+      desc.y = descTop;
+      console.log("[SGZ:debug] desc sizing", {
+        cardName: card.name,
+        labelY: label.y, labelHeight: label.height,
+        descTop, descMaxHeight,
+        originalLen: (card.description || "").length,
+        fittedLen: fittedText.length,
+        wasTruncated: fittedText !== card.description,
+        descRenderedHeight: desc.height,
+        descBottomEdge: desc.y + desc.height,
+        cardBottomBoundary: CARD_HEIGHT / 2 - TEXT_PADDING,
+        overflowsBy: (desc.y + desc.height) - (CARD_HEIGHT / 2 - TEXT_PADDING),
+      });
       container.addChild(desc);
       container.stargazerDescText = desc;
     }
@@ -313,9 +345,25 @@ export class CardTableLayer extends CanvasLayer {
           icon: '<i class="fa-solid fa-check"></i>',
           label: "Save",
           callback: async (html) => {
-            const name = html.find('[name="name"]').val().trim();
-            const description = html.find('[name="description"]').val();
-            await card.update({ name: name || card.name, description });
+            const nameEl = html.find ? html.find('[name="name"]')[0] : html.querySelector('[name="name"]');
+            const descEl = html.find ? html.find('[name="description"]')[0] : html.querySelector('[name="description"]');
+            const name = (nameEl?.value ?? "").trim();
+            const description = descEl?.value ?? "";
+            // card.name is a GETTER that resolves to faces[card.face].name whenever
+            // the card has an active face (which every card here does — see
+            // _createStandaloneCard's `faces: [{ name, img }], face: 0`). Writing
+            // only the top-level `name` field updates data nothing reads from —
+            // the face entry has to be updated too, or the display never changes.
+            const faces = foundry.utils.deepClone(card.faces ?? []);
+            const idx = card.face ?? 0;
+            if (faces[idx]) faces[idx].name = name || card.name;
+            else faces[idx] = { name: name || card.name, img: "icons/svg/card-joker.svg" };
+            try {
+              await card.update({ name: name || card.name, faces, description });
+            } catch (err) {
+              console.error("Stargazer | Failed to save card edit:", err);
+              ui.notifications.error("Stargazer | Couldn't save that card edit — see console.");
+            }
           },
         },
         cancel: { icon: '<i class="fa-solid fa-xmark"></i>', label: "Cancel" },
@@ -907,32 +955,71 @@ export class CardTableLayer extends CanvasLayer {
     const faceUp = container.stargazerFaceUp;
 
     const label = container.stargazerNameText;
-    if (label) label.text = faceUp ? (card.name || "Card") : "🂠";
+    if (label) {
+      label.text = faceUp ? (card.name || "Card") : "🂠";
+      // Re-set position/anchor every refresh, not just at creation — a name
+      // edit can change how many lines the label wraps to, which shifts
+      // where the description needs to start below it.
+      if (faceUp) {
+        label.anchor.set(0.5, 0);
+        label.y = -CARD_HEIGHT / 2 + TEXT_PADDING;
+      } else {
+        label.anchor.set(0.5);
+        label.y = 0;
+      }
+    }
 
     const wantsDesc = faceUp && !!card.description;
     let desc = container.stargazerDescText;
     if (wantsDesc) {
+      const descStyle = new PIXI.TextStyle({
+        fontFamily: "Roboto, sans-serif",
+        fontSize: 11,
+        fill: 0x444444,
+        align: "center",
+        wordWrap: true,
+        wordWrapWidth: CARD_WIDTH - TEXT_PADDING * 2,
+        breakWords: true,
+      });
+      const descTop = label.y + label.height + 6;
+      const descMaxHeight = Math.max(0, (CARD_HEIGHT / 2 - TEXT_PADDING) - descTop);
+      const fitted = this._truncateToFit(card.description, descStyle, descMaxHeight);
       if (!desc) {
-        desc = new PIXI.Text(card.description, {
-          fontFamily: "Roboto, sans-serif",
-          fontSize: 11,
-          fill: 0x444444,
-          align: "center",
-          wordWrap: true,
-          wordWrapWidth: CARD_WIDTH - 16,
-        });
-        desc.anchor.set(0.5);
-        desc.y = 30;
+        desc = new PIXI.Text(fitted, descStyle);
+        desc.anchor.set(0.5, 0);
         container.addChild(desc);
         container.stargazerDescText = desc;
-      } else if (desc.text !== card.description) {
-        desc.text = card.description;
+      } else if (desc.text !== fitted) {
+        desc.text = fitted;
       }
+      desc.y = descTop;
     } else if (desc) {
       container.removeChild(desc);
       desc.destroy();
       container.stargazerDescText = null;
     }
+  }
+
+  /**
+   * Wrap `text` against `style` and, if it wraps to more lines than fit
+   * within `maxHeight`, cut it down to however many whole lines do fit and
+   * append an ellipsis — so description text can never draw past the card's
+   * own bottom edge, no matter how long the source text is.
+   */
+  _truncateToFit(text, style, maxHeight) {
+    const source = text ?? "";
+    const metrics = PIXI.TextMetrics.measureText(source, style);
+    const lineHeight = metrics.lineHeight || Math.ceil(style.fontSize * 1.3);
+    const maxLines = Math.max(1, Math.floor(maxHeight / lineHeight));
+    if (metrics.lines.length <= maxLines) return source;
+
+    const lines = metrics.lines.slice(0, maxLines);
+    let last = lines[maxLines - 1];
+    while (last.length > 1 && PIXI.TextMetrics.measureText(last + "…", style).width > style.wordWrapWidth) {
+      last = last.slice(0, -1);
+    }
+    lines[maxLines - 1] = last.replace(/\s+$/, "") + "…";
+    return lines.join("\n");
   }
 
   /** Remove a card's sprite (called from deleteCard hook) */

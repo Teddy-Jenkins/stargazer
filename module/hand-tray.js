@@ -348,9 +348,25 @@ export class HandTray {
           icon: '<i class="fa-solid fa-check"></i>',
           label: "Save",
           callback: async (html) => {
-            const name = html.find('[name="name"]').val().trim();
-            const description = html.find('[name="description"]').val();
-            await card.update({ name: name || card.name, description });
+            const nameEl = html.find ? html.find('[name="name"]')[0] : html.querySelector('[name="name"]');
+            const descEl = html.find ? html.find('[name="description"]')[0] : html.querySelector('[name="description"]');
+            const name = (nameEl?.value ?? "").trim();
+            const description = descEl?.value ?? "";
+            // card.name is a GETTER that resolves to faces[card.face].name whenever
+            // the card has an active face (which every card here does — see
+            // _createStandaloneCard's `faces: [{ name, img }], face: 0`). Writing
+            // only the top-level `name` field updates data nothing reads from —
+            // the face entry has to be updated too, or the display never changes.
+            const faces = foundry.utils.deepClone(card.faces ?? []);
+            const idx = card.face ?? 0;
+            if (faces[idx]) faces[idx].name = name || card.name;
+            else faces[idx] = { name: name || card.name, img: "icons/svg/card-joker.svg" };
+            try {
+              await card.update({ name: name || card.name, faces, description });
+            } catch (err) {
+              console.error("Stargazer | Failed to save card edit:", err);
+              ui.notifications.error("Stargazer | Couldn't save that card edit — see console.");
+            }
           },
         },
         cancel: { icon: '<i class="fa-solid fa-xmark"></i>', label: "Cancel" },
@@ -1216,12 +1232,16 @@ export class HandTray {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   padding: 6px;
   box-sizing: border-box;
   user-select: none;
   transition: box-shadow 0.1s, transform 0.1s;
   box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+  /* Name/description are clamped by line-count below, but this is the hard
+     backstop — nothing, under any circumstance, draws past the card's own
+     fixed box. */
+  overflow: hidden;
 }
 
 .sgz-hand-card:hover {
@@ -1274,6 +1294,7 @@ export class HandTray {
   display: -webkit-box;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
+  word-break: break-word;
 }
 
 .sgz-stack-badge {
