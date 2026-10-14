@@ -1,0 +1,105 @@
+<div class="investigation-sheet-form">
+
+  <div class="integrity-box">
+    <label>Integrity</label>
+    <input type="number" name="flags.stargazer.investigation.integrity" value="{{data.integrity}}" />
+  </div>
+
+  <header class="sheet-header">
+    <div class="header-row">
+      <div class="field-inline title-field">
+        <label>Investigation:</label>
+        <input type="text" name="name" value="{{entry.name}}" placeholder="Case Name" />
+      </div>
+      <div class="case-status">
+        <label>Case Status:</label>
+        <label class="status-option">
+          <input type="radio" name="flags.stargazer.investigation.status" value="open" {{#if (eq data.status "open")}}checked{{/if}} /> Open
+        </label>
+        <label class="status-option">
+          <input type="radio" name="flags.stargazer.investigation.status" value="closed" {{#if (eq data.status "closed")}}checked{{/if}} /> Closed
+        </label>
+        <label class="status-option">
+          <input type="radio" name="flags.stargazer.investigation.status" value="reopened" {{#if (eq data.status "reopened")}}checked{{/if}} /> Re-opened
+        </label>
+      </div>
+    </div>
+
+    <div class="header-row three-up">
+      <div class="field-inline">
+        <label>Client:</label>
+        <input type="text" name="flags.stargazer.investigation.client" value="{{data.client}}" />
+      </div>
+      <div class="field-inline">
+        <label>Victim:</label>
+        <input type="text" name="flags.stargazer.investigation.victim" value="{{data.victim}}" />
+      </div>
+      <div class="field-inline">
+        <label>Perpetrator:</label>
+        <input type="text" name="flags.stargazer.investigation.perpetrator" value="{{data.perpetrator}}" />
+      </div>
+    </div>
+  </header>
+
+  <table class="poi-table">
+    <thead>
+      <tr>
+        <th class="col-poi">Person of Interest<br/><span class="sub">(relationship to victim)</span></th>
+        <th class="col-alibi">Can Be Located At</th>
+        <th class="col-means">Means</th>
+        <th class="col-motive">Motive</th>
+        <th class="col-opportunity">Opportunity</th>
+        <th class="col-sus">SUS.</th>
+        <th class="col-controls"></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each data.personsOfInterest as |poi i|}}
+      <tr data-index="{{i}}">
+        <td>
+          <input type="text" name="flags.stargazer.investigation.personsOfInterest.{{i}}.name" value="{{poi.name}}" placeholder="Name" />
+          <input type="text" class="relationship" name="flags.stargazer.investigation.personsOfInterest.{{i}}.relationship" value="{{poi.relationship}}" placeholder="(relationship)" />
+        </td>
+        <td><textarea name="flags.stargazer.investigation.personsOfInterest.{{i}}.alibi" rows="2">{{poi.alibi}}</textarea></td>
+        <td><textarea name="flags.stargazer.investigation.personsOfInterest.{{i}}.means" rows="2">{{poi.means}}</textarea></td>
+        <td><textarea name="flags.stargazer.investigation.personsOfInterest.{{i}}.motive" rows="2">{{poi.motive}}</textarea></td>
+        <td><textarea name="flags.stargazer.investigation.personsOfInterest.{{i}}.opportunity" rows="2">{{poi.opportunity}}</textarea></td>
+        <td class="col-sus">
+          <select name="flags.stargazer.investigation.personsOfInterest.{{i}}.suspicious">
+            <option value="" {{#unless poi.suspicious}}selected{{/unless}}></option>
+            <option value="true" {{#if (eq poi.suspicious "true")}}selected{{/if}}>True</option>
+            <option value="false" {{#if (eq poi.suspicious "false")}}selected{{/if}}>False</option>
+          </select>
+        </td>
+        <td class="col-controls">
+          <a class="row-delete" data-index="{{i}}" title="Remove Row"><i class="fas fa-trash"></i></a>
+        </td>
+      </tr>
+      {{/each}}
+    </tbody>
+  </table>
+
+  <a class="row-add"><i class="fas fa-plus"></i> Add Person of Interest</a>
+
+  <div class="evidence-columns">
+    <div class="evidence-col">
+      <h3>Locations of Interest</h3>
+      <textarea name="flags.stargazer.investigation.locations" rows="8">{{data.locations}}</textarea>
+    </div>
+    <div class="evidence-col">
+      <h3>Documentary Evidence</h3>
+      <textarea name="flags.stargazer.investigation.documentaryEvidence" rows="8">{{data.documentaryEvidence}}</textarea>
+    </div>
+    <div class="evidence-col stacked">
+      <div class="evidence-sub">
+        <h3>Testimonial Evidence</h3>
+        <textarea name="flags.stargazer.investigation.testimonialEvidence" rows="3">{{data.testimonialEvidence}}</textarea>
+      </div>
+      <div class="evidence-sub">
+        <h3>Forensic Evidence</h3>
+        <textarea name="flags.stargazer.investigation.forensicEvidence" rows="3">{{data.forensicEvidence}}</textarea>
+      </div>
+    </div>
+  </div>
+
+</div>

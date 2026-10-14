@@ -1,0 +1,302 @@
+/* ===========================================================
+   Investigation Sheet — "case file" paper look
+   Scoped to .investigation-sheet-form, with !important overrides
+   where needed to beat Foundry's core form-field theming
+   (core inputs/textareas/selects ship dark backgrounds, heavy
+   padding, and box-shadows that otherwise bleed through).
+   =========================================================== */
+
+
+/* Paper-look theme variables, defined on the sheet root so every
+   section inherits them even if it isn't nested inside
+   .investigation-sheet-form. Light values by default; overridden
+   below under .theme-dark. */
+.investigation-sheet {
+  --ink: #1b1b1b;
+  --rule: #1b1b1b;
+  --paper: #f5f2ea;
+  --tint: rgba(0, 0, 0, 0.04);
+  --tint-strong: rgba(0, 0, 0, 0.06);
+  --muted: #888;
+  --muted-strong: #333;
+}
+
+.theme-dark .investigation-sheet {
+  --ink: #e8e4d8;
+  --rule: #d9d4c4;
+  --paper: #2a2823;
+  --tint: rgba(255, 255, 255, 0.06);
+  --tint-strong: rgba(255, 255, 255, 0.1);
+  --muted: #b0a996;
+  --muted-strong: #cfc9b8;
+}
+
+.investigation-sheet .sheet-header,
+.investigation-sheet .integrity-box,
+.investigation-sheet .evidence-col,
+.investigation-sheet .poi-table {
+  color: var(--ink);
+  border-color: var(--rule);
+}
+
+.investigation-sheet .investigation-sheet-form label,
+.investigation-sheet .poi-table th {
+  color: var(--ink);
+}
+
+.investigation-sheet .investigation-sheet-form input::placeholder,
+.investigation-sheet .investigation-sheet-form textarea::placeholder {
+  color: var(--muted);
+}
+
+.investigation-sheet .poi-table th,
+.investigation-sheet .poi-table td {
+  border-color: var(--rule);
+}
+
+.application.investigation-sheet .window-content {
+  background: var(--paper) !important;
+  padding: 0 !important;
+}
+
+.investigation-sheet-form {
+  position: relative;
+  font-family: "Courier New", "Courier Prime", monospace;
+  color: var(--ink);
+  background: var(--paper);
+  padding: 1.25em 1.5em 1.5em 1.5em;
+  font-size: 12px;
+  line-height: 1.25;
+}
+
+/* ---- Reset Foundry's default field chrome ---- */
+.investigation-sheet-form input,
+.investigation-sheet-form textarea,
+.investigation-sheet-form select {
+  font-family: inherit !important;
+  font-size: inherit !important;
+  line-height: inherit !important;
+  color: var(--ink) !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+  padding: 0 0.1em !important;
+  margin: 0 !important;
+  height: auto !important;
+}
+
+.investigation-sheet-form input[type="text"],
+.investigation-sheet-form input[type="number"] {
+  border-bottom: 1px dotted var(--muted) !important;
+}
+.investigation-sheet-form input[type="text"]:focus,
+.investigation-sheet-form input[type="number"]:focus,
+.investigation-sheet-form textarea:focus,
+.investigation-sheet-form select:focus {
+  outline: none !important;
+  border-bottom: 1px solid var(--ink) !important;
+  background: var(--tint) !important;
+}
+
+.investigation-sheet-form textarea {
+  width: 100%;
+  resize: vertical;
+  border: 1px dotted var(--muted) !important;
+  padding: 0.25em 0.3em !important;
+}
+.investigation-sheet-form textarea:focus {
+  border: 1px solid var(--ink) !important;
+  background: var(--tint) !important;
+}
+
+.investigation-sheet-form select {
+  border-bottom: 1px dotted var(--muted) !important;
+}
+
+/* Integrity box, pinned to a corner of the sheet */
+.integrity-box {
+  position: absolute;
+  top: 0.25em;
+  right: 0.25em;
+  border: 1px solid var(--rule);
+  padding: 0.15em 0.5em 0.3em 0.5em;
+  text-align: center;
+  min-width: 4em;
+  background: var(--paper);
+}
+.integrity-box label {
+  display: block;
+  font-weight: bold;
+  font-size: 0.75em;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.15em !important;
+  padding-bottom: 0.1em;
+}
+.integrity-box input {
+  width: 2.6em;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
+  border-bottom: none !important;
+}
+
+/* Header */
+.sheet-header {
+  padding-right: 5.5em; /* keep clear of the integrity box */
+  margin-bottom: 0.6em;
+}
+.header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 0.3em;
+  margin-bottom: 0.35em;
+  gap: 1em;
+}
+.header-row.three-up {
+  justify-content: flex-start;
+}
+.field-inline {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4em;
+}
+.field-inline label {
+  font-weight: bold;
+  white-space: nowrap;
+}
+.field-inline input {
+  flex: 1;
+  min-width: 6em;
+}
+.title-field {
+  flex: 1;
+}
+.title-field label {
+  font-weight: bold;
+}
+.header-row.three-up .field-inline {
+  flex: 1;
+}
+
+.case-status {
+  display: flex;
+  align-items: center;
+  gap: 0.6em;
+  white-space: nowrap;
+}
+.case-status label {
+  font-weight: bold;
+}
+.status-option {
+  font-weight: normal !important;
+  display: flex;
+  align-items: center;
+  gap: 0.25em;
+}
+.status-option input[type="radio"] {
+  margin: 0 !important;
+  width: auto !important;
+}
+
+/* Persons of Interest table */
+.poi-table {
+  width: 100%;
+  border-collapse: collapse;
+  border-top: 1px solid var(--rule);
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 0.2em;
+  table-layout: fixed;
+}
+.poi-table th,
+.poi-table td {
+  border: 1px solid var(--rule);
+  padding: 0.3em 0.35em;
+  vertical-align: top;
+  text-align: left;
+}
+.poi-table thead th {
+  font-weight: bold;
+  background: var(--tint-strong);
+}
+.poi-table th .sub {
+  font-weight: normal;
+  font-size: 0.85em;
+}
+.poi-table td input[type="text"] {
+  display: block;
+  width: 100%;
+  margin-bottom: 0.1em !important;
+}
+.poi-table td .relationship {
+  font-style: italic;
+  font-size: 0.9em;
+}
+.poi-table textarea {
+  min-height: 2.4em;
+  border: none !important;
+}
+.col-sus {
+  width: 3.8em;
+  text-align: center;
+}
+.col-sus select {
+  width: 100%;
+  text-align: center;
+}
+.col-controls {
+  width: 1.4em;
+  text-align: center;
+  border: none !important;
+  padding: 0.3em 0 !important;
+}
+.col-controls .row-delete {
+  color: var(--muted);
+  cursor: pointer;
+}
+.col-controls .row-delete:hover {
+  color: #a00;
+}
+
+.row-add {
+  display: inline-block;
+  margin: 0.2em 0 0.9em 0;
+  font-size: 0.85em;
+  cursor: pointer;
+  color: var(--muted-strong);
+}
+.row-add:hover {
+  text-decoration: underline;
+}
+
+/* Bottom evidence columns */
+.evidence-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1.25em;
+  border-top: 1px solid var(--rule);
+  padding-top: 0.6em;
+}
+.evidence-col h3 {
+  color: var(--ink) !important;
+  text-align: center;
+  text-decoration: underline;
+  font-size: 0.95em;
+  margin: 0 0 0.3em 0 !important;
+  border: none !important;
+}
+.evidence-col textarea {
+  min-height: 8em;
+}
+.evidence-col.stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6em;
+}
+.evidence-sub textarea {
+  min-height: 3.8em;
+}

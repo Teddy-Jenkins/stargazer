@@ -26,11 +26,46 @@ const SOCKET_NAME = "system.stargazer";
 const FLAG_NS     = "stargazer";
 const FLAG_KEY    = "consequences";
 
+// Settings key prefix — one world setting per consequence type, holding its display name
+const SETTING_PREFIX = "consequenceName_";
+
 // ─── Public API ─────────────────────────────────────────────────────────────
 
 export class ConsequenceTracker {
 
+  /** Returns the current (possibly user-renamed) label for a consequence type key */
+  static label(key) {
+    const fallback = CONSEQUENCE_TYPES[key]?.label ?? key;
+    try {
+      const value = game.settings.get("stargazer", `${SETTING_PREFIX}${key}`);
+      return value?.trim() ? value : fallback;
+    } catch (e) {
+      // Setting not registered yet (e.g. called before init) — fall back silently
+      return fallback;
+    }
+  }
+
+  /** Registers one world-scoped, GM-configurable name setting per consequence type */
+  static registerSettings() {
+    for (const [key, def] of Object.entries(CONSEQUENCE_TYPES)) {
+      game.settings.register("stargazer", `${SETTING_PREFIX}${key}`, {
+        name: `Consequence Name: ${def.label}`,
+        hint: `Display name used for the ${def.label} consequence type.`,
+        scope: "world",
+        config: true,
+        type: String,
+        default: def.label,
+        onChange: () => {
+          // Re-render any open chat log / sheets showing consequence cards
+          ui.chat?.render();
+        },
+      });
+    }
+  }
+
   static init() {
+    ConsequenceTracker.registerSettings();
+
     // Inject styles and seed live state from flags on ready
     Hooks.once("ready", () => {
       ConsequenceTracker._injectStyles();
@@ -134,7 +169,7 @@ export class ConsequenceTracker {
     const rows = Object.entries(CONSEQUENCE_TYPES).map(([key, def]) => `
       <div class="consequence-row">
         <span class="con-color-swatch" style="background:${def.color}"></span>
-        <span class="con-label">${def.label}${def.allOrNothing ? ' <span class="con-tag">all-or-nothing</span>' : ''}</span>
+        <span class="con-label">${ConsequenceTracker.label(key)}${def.allOrNothing ? ' <span class="con-tag">all-or-nothing</span>' : ''}</span>
         <div class="con-stepper">
           <button type="button" class="con-dec" data-type="${key}">−</button>
           <span class="con-count" id="count-${key}">0</span>
@@ -263,7 +298,7 @@ export class ConsequenceTracker {
           <div class="con-card-label">
             <span class="con-color-swatch" style="background:${def.color}"></span>
             <span class="con-remaining-count">${remaining}</span>
-            <span>${def.label}</span>
+            <span>${ConsequenceTracker.label(type)}</span>
             ${def.allOrNothing ? '<span class="con-tag">all-or-nothing</span>' : ''}
           </div>
           <div class="con-card-tokens">${tokens}</div>

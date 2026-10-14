@@ -1,1 +1,5 @@
-{}
+{"TYPES": {
+  "JournalEntryPage": {
+    "stargazer.investigation": "Investigation"
+  }
+}}

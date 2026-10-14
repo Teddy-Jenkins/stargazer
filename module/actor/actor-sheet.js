@@ -1,3 +1,5 @@
+import { EdgeTypes } from "../edge-types.js";
+
 /**
  * Extend the basic ActorSheet with some very simple modifications
  * @extends {ActorSheet}
@@ -98,13 +100,33 @@ export class StargazerActorSheet extends ActorSheet {
     const rawActions = Array.isArray(this.actor.getFlag("stargazer", "actions"))
       ? this.actor.getFlag("stargazer", "actions")
       : [];
-    context.actions = rawActions.map(a => ({
-      name: (a && typeof a.name === "string") ? a.name : "",
-      edges: Array.isArray(a?.edges) ? a.edges.map(e => ({
-        type: e?.type || "skill",
-        dulled: !!e?.dulled
-      })) : []
-    }));
+    // Canonical Edge order (Skill, Grit, Finesse, Vigilance, Heart, Providence) —
+    // used to group same-type Edge pips together for display, regardless of the
+    // order they were added in.
+    const edgeOrder = EdgeTypes.getOptions().map(o => o.key);
+
+    context.actions = rawActions.map(a => {
+      const edges = Array.isArray(a?.edges) ? a.edges.map((e, index) => {
+        const type = e?.type || "skill";
+        return {
+          type,
+          dulled: !!e?.dulled,
+          label: EdgeTypes.label(type),
+          // Original position in the stored array — the template uses this (not
+          // its position after sorting) so remove/toggle still target the right
+          // entry once pips are grouped by type.
+          index
+        };
+      }) : [];
+      edges.sort((x, y) => edgeOrder.indexOf(x.type) - edgeOrder.indexOf(y.type));
+      return {
+        name: (a && typeof a.name === "string") ? a.name : "",
+        edges
+      };
+    });
+
+    // Edge type options for the "add Edge" dropdown — names honor GM settings
+    context.edgeTypes = EdgeTypes.getOptions();
 
     // --- Inventory: Catalogues & Stuff (flag-backed) ---
     const rawCatalogues = Array.isArray(this.actor.getFlag("stargazer", "catalogues"))

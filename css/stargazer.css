@@ -1447,7 +1447,7 @@ nav.sheet-tabs {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 5px;
+  gap: 6px 8px;
   margin-top: 0.4rem;
 }
 
@@ -1508,27 +1508,51 @@ nav.sheet-tabs {
   color: #fff;
 }
 
+/* Its own full-width row below the pips — a flex child with flex-basis:100% in a
+   wrapping flex container is forced onto a new line, which both separates "add an
+   Edge" from the existing Edges and gives the select room instead of getting
+   squeezed to near-zero by flex-shrink (the cause of the unusably narrow dropdown). */
 .edge-add-control {
-  display: inline-flex;
+  display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 5px;
+  flex: 0 0 100%;
+  margin-top: 6px;
+  padding-top: 5px;
+  border-top: 1px dashed var(--input-border-color, #444);
 }
 
 .edge-type-select {
-  color-scheme: light dark;
+  /* Forcing "dark" (not "light dark") matters: with "light dark" the browser is
+     free to render the native popup *list* using light-scheme defaults — white
+     background, near-white text — even though our explicit colors still style
+     the closed box correctly. That mismatch is what makes the opened dropdown
+     look empty/blank. Forcing dark keeps the popup's native widget colors dark
+     too, and the explicit rule on `option` below is a belt-and-suspenders
+     override for engines that otherwise ignore inherited color on options. */
+  color-scheme: dark;
   background: var(--input-background-color, #1a1a1a) !important;
   color: var(--color-text-light-primary, #ddd) !important;
   border: 1px solid var(--input-border-color, #555) !important;
   border-radius: 3px;
-  font-size: 0.7rem;
-  padding: 1px 3px;
+  font-size: 0.75rem;
+  padding: 3px 6px;
+  flex: 1 1 auto;
+  min-width: 10em;
+  max-width: 100%;
+}
+
+.edge-type-select option {
+  background: var(--input-background-color, #1a1a1a);
+  color: var(--color-text-light-primary, #ddd);
 }
 
 .edge-add {
   cursor: pointer;
   color: #90caf9;
-  font-size: 0.8rem;
-  padding: 0 0.15rem;
+  font-size: 0.95rem;
+  padding: 0 0.3rem;
+  flex-shrink: 0;
 }
 
 .edge-add:hover {

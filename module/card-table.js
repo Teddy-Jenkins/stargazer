@@ -163,18 +163,6 @@ export class CardTableLayer extends CanvasLayer {
       const desc = new PIXI.Text(fittedText, descStyle);
       desc.anchor.set(0.5, 0);
       desc.y = descTop;
-      console.log("[SGZ:debug] desc sizing", {
-        cardName: card.name,
-        labelY: label.y, labelHeight: label.height,
-        descTop, descMaxHeight,
-        originalLen: (card.description || "").length,
-        fittedLen: fittedText.length,
-        wasTruncated: fittedText !== card.description,
-        descRenderedHeight: desc.height,
-        descBottomEdge: desc.y + desc.height,
-        cardBottomBoundary: CARD_HEIGHT / 2 - TEXT_PADDING,
-        overflowsBy: (desc.y + desc.height) - (CARD_HEIGHT / 2 - TEXT_PADDING),
-      });
       container.addChild(desc);
       container.stargazerDescText = desc;
     }
@@ -192,11 +180,6 @@ export class CardTableLayer extends CanvasLayer {
       const liveCard = container.stargazerCard;
       if (native?.ctrlKey || native?.metaKey) {
         await this._discardOrDelete(liveCard);
-        return;
-      }
-      if (native?.shiftKey) {
-        const local = ev.getLocalPosition(container);
-        await this._restoreCorner(liveCard, this._cornerAt(local));
         return;
       }
       await this._flipCard(liveCard);
@@ -287,18 +270,19 @@ export class CardTableLayer extends CanvasLayer {
     overlay.endFill();
   }
 
-  /** Tear one corner (idempotent — no-op if already torn) */
-  async _tearCorner(card, corner) {
+  /**
+   * Tear the corner if it's intact, restore it if it's already torn. Used
+   * instead of separate tear/restore gestures so corner-adjustment lives
+   * entirely on Shift+left-click — Shift+right-click can't be used for this
+   * (or anything else): Firefox and, to a lesser extent, Chromium treat
+   * Shift+right-click as a hard override that always shows the native
+   * context menu regardless of preventDefault(), so a page can never
+   * reliably intercept it.
+   */
+  async _toggleCorner(card, corner) {
     const current = card.getFlag(MODULE_NS, TORN_FLAG_KEY) || [];
-    if (current.includes(corner)) return;
-    await card.setFlag(MODULE_NS, TORN_FLAG_KEY, [...current, corner]);
-  }
-
-  /** Restore one corner (idempotent — no-op if already intact) */
-  async _restoreCorner(card, corner) {
-    const current = card.getFlag(MODULE_NS, TORN_FLAG_KEY) || [];
-    if (!current.includes(corner)) return;
-    await card.setFlag(MODULE_NS, TORN_FLAG_KEY, current.filter(c => c !== corner));
+    const next = current.includes(corner) ? current.filter(c => c !== corner) : [...current, corner];
+    await card.setFlag(MODULE_NS, TORN_FLAG_KEY, next);
   }
 
   /**
@@ -491,9 +475,10 @@ export class CardTableLayer extends CanvasLayer {
         this._cycleCardColor(liveCard);
         return;
       } else if (shiftHeld) {
-        // Shift+left-click: tear whichever corner was clicked. Never starts a drag.
+        // Shift+left-click: toggle whichever corner was clicked — tear if
+        // intact, restore if already torn. Never starts a drag.
         const local = ev.getLocalPosition(container);
-        this._tearCorner(liveCard, this._cornerAt(local));
+        this._toggleCorner(liveCard, this._cornerAt(local));
         return;
       }
 
@@ -900,6 +885,16 @@ export class CardTableLayer extends CanvasLayer {
     await card.setFlag(MODULE_NS, POS_FLAG_KEY, { ...current, faceUp: !current.faceUp });
   }
 
+  /**
+   * Local-client-only visibility toggle: hides/shows every card sprite on
+   * the table canvas instantly. This is a pure PIXI `.visible` flip on the
+   * layer's own container — no document writes, no hook round-trip, no
+   * rebuild — so it's immediate and doesn't touch anyone else's view.
+   */
+  setCardsVisible(visible) {
+    this.visible = visible;
+  }
+
   /** Re-render a single card when its document updates (called from the updateCard hook) */
   refreshCard(card) {
     console.log("[SGZ:debug] refreshCard called", { name: card.name, id: card.id, parentId: card.parent?.id, tablePileId: this.tablePile?.id, pos: card.getFlag(MODULE_NS, POS_FLAG_KEY) });
@@ -1096,6 +1091,22 @@ export function initCardTable() {
       return;
     }
     canvas.stargazerCards.draw();
+
+    // Right-click is used for card flip/discard/corner-restore, but the
+    // browser's own native `contextmenu` DOM event is a separate thing from
+    // PIXI's synthesized `rightclick`/`rightdown` — suppressing one does
+    // nothing to the other. Without this, the OS/browser's right-click menu
+    // pops up over the canvas on every right-click regardless of what our
+    // card handlers do. Bound on the actual canvas element, not per-card, so
+    // it covers the canvas generally (standard practice for a game canvas —
+    // nothing here relies on the browser's native menu). Re-bound on every
+    // canvasReady rather than once at init, since canvas.app.view can be
+    // swapped out across some Foundry canvas re-initializations.
+    const view = canvas.app?.view;
+    if (view && !view.dataset.sgzContextMenuBound) {
+      view.addEventListener("contextmenu", (event) => event.preventDefault());
+      view.dataset.sgzContextMenuBound = "1";
+    }
   });
 
   // Live updates: a card moved/flipped by anyone re-renders for everyone
@@ -1117,6 +1128,11 @@ export function initCardTable() {
     if (!canvas.stargazerCards) return;
     canvas.stargazerCards.removeCard(card.id);
   });
+
+  // Local-only state for the show/hide toggle button below — persists across
+  // getSceneControlButtons re-renders (Foundry rebuilds the tools object
+  // often, e.g. on every layer switch) so the button doesn't reset itself.
+  let sgzCardsHidden = false;
 
   // Scene controls: GM-only bootstrap button, plus deck/card actions any
   // player can use once the table and deck exist.
@@ -1170,6 +1186,24 @@ export function initCardTable() {
       button: true,
       visible: true,
       onChange: () => createStandaloneCard(),
+    };
+
+    // Local-only show/hide toggle — hides every card on the table canvas
+    // and the user's own hand tray with no document writes and no refresh,
+    // just a client-side visibility flip. Doesn't affect other users.
+    controls.tokens.tools.sgzToggleCardsVisible = {
+      name: "sgzToggleCardsVisible",
+      title: "Hide/Show Cards",
+      icon: "fa-solid fa-eye",
+      order: Object.keys(controls.tokens.tools).length,
+      toggle: true,
+      active: sgzCardsHidden,
+      visible: true,
+      onChange: (event, active) => {
+        sgzCardsHidden = active;
+        canvas.stargazerCards?.setCardsVisible(!active);
+        getTrayInstance()?.setVisible(!active);
+      },
     };
   });
 }

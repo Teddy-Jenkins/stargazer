@@ -177,27 +177,24 @@
                     </div>
 
                     <div class="action-edges">
-                      {{#each action.edges as |edge eindex|}}
+                      {{#each action.edges as |edge|}}
                         <div
                           class="edge-pip edge-{{edge.type}} {{#if edge.dulled}}dulled{{/if}}"
-                          data-edge-index="{{eindex}}"
-                          title="{{edge.type}} Edge — click to toggle dull"
+                          data-edge-index="{{edge.index}}"
+                          title="{{edge.label}} Edge — click to toggle dull"
                           role="button"
                           tabindex="0"
                         >
-                          <span class="edge-label">{{edge.type}}</span>
+                          <span class="edge-label">{{edge.label}}</span>
                           <a class="edge-remove" aria-label="Remove Edge" title="Remove Edge"><i class="fas fa-times"></i></a>
                         </div>
                       {{/each}}
 
                       <div class="edge-add-control">
                         <select class="edge-type-select" aria-label="Edge type">
-                          <option value="skill">Skill (Failure)</option>
-                          <option value="grit">Grit (Harm)</option>
-                          <option value="finesse">Finesse (Friction)</option>
-                          <option value="vigilance">Vigilance (Loss)</option>
-                          <option value="heart">Heart (Fatigue)</option>
-                          <option value="providence">Providence (Threat)</option>
+                          {{#each ../edgeTypes}}
+                          <option value="{{this.key}}">{{this.label}}</option>
+                          {{/each}}
                         </select>
                         <a class="edge-add" aria-label="Add Edge" title="Add Edge"><i class="fas fa-plus"></i></a>
                       </div>

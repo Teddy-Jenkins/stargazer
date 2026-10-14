@@ -9,7 +9,12 @@
   "templateVersion": 2,
   "author": "Charlie L",
   "esmodules": ["module/stargazer.js"],
-  "styles": ["css/stargazer.css"],
+  "styles": ["css/investigation-sheet.css", "css/stargazer.css"],
+  "documentTypes": {
+  "JournalEntryPage": {
+    "stargazer.investigation": {}
+    }
+  },
   "scripts": [],
   "packs": [],
   "languages": [

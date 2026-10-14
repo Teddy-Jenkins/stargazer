@@ -112,6 +112,16 @@ export class HandTray {
     this.el = null;
   }
 
+  /**
+   * Local-client-only show/hide toggle for the whole tray — a plain CSS
+   * display flip, no document writes, no rebuild. Mirrors
+   * CardTableLayer#setCardsVisible so one button can hide both surfaces
+   * at once.
+   */
+  setVisible(visible) {
+    if (this.el) this.el.style.display = visible ? "" : "none";
+  }
+
   // ── Hand document management ───────────────────────────────────────────────
 
   async _ensureHand() {

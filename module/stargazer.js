@@ -4,9 +4,11 @@ import { StargazerActorSheet } from "./actor/actor-sheet.js";
 import { StargazerItem } from "./item/item.js";
 import { StargazerItemSheet } from "./item/item-sheet.js";
 import { ConsequenceTracker } from "./consequence-tracker.js";
+import { EdgeTypes } from "./edge-types.js";
 import { initCardTable } from "./card-table.js";
 import { initHandTray } from "./hand-tray.js";
 import { preloadHandlebarsTemplates } from "./helpers/templates.js";
+import { investigationSheet } from "./journal/investigation-journal.js";
 import { STARGAZER } from "./helpers/config.js";
 import * as models from './data/_module.mjs';
 
@@ -15,7 +17,7 @@ Hooks.once("init", function () {
   console.log("Stargazer | Initializing system");
 
 
-
+  investigationSheet();
 
   // Add utility classes to the global game object so that they're more easily accessible in global contexts.
   game.stargazer = {
@@ -25,6 +27,9 @@ Hooks.once("init", function () {
 
   // Init for consequence tracker.
   ConsequenceTracker.init();
+
+  // Register GM-configurable Edge type names.
+  EdgeTypes.registerSettings();
 
 const ENABLE_CARD_SYSTEM = true; // toggle to re-enable the card table + hand tray
 
